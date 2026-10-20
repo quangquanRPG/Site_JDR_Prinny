@@ -1,0 +1,25 @@
+/* ─────────────────────────────────────────────────────────────
+   Encaisser des dégâts
+   ───────────────────────────────────────────────────────────── */
+
+.degats {
+  margin-top: 12px; background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+}
+.champ-degat { display: flex; flex-direction: column; gap: 4px; }
+.champ-degat input {
+  width: 90px; padding: 5px 8px; font-size: 1rem;
+  background: var(--champ); border: 1px solid var(--bord); border-radius: 6px;
+}
+.champ-degat input:focus { outline: none; border-color: var(--accent); }
+.degats .btn.principal { padding: 6px 14px; }
+.toggle-magie { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--doux); padding-bottom: 5px; cursor: pointer; }
+.toggle-magie .switch { margin-top: 0; }
+.toggle-magie.on { color: #8a5cc7; font-weight: 600; }
+.switch.magie input:checked + span { background: #8a5cc7; }
+.recap .magie { color: #8a5cc7; font-weight: 600; }
+.recap { flex-basis: 100%; font-size: .85rem; color: var(--doux); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.recap b { color: var(--texte); font-weight: 600; }
+.recap .m { color: var(--malus); font-weight: 600; }
+
+.recap .divin { color: #b08a1e; font-weight: 700; }

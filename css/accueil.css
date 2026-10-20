@@ -1,0 +1,85 @@
+/* ─────────────────────────────────────────────────────────────
+   Accueil : onglets Connexion / Créer un compte, formulaire
+   ───────────────────────────────────────────────────────────── */
+
+.onglets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--bord);
+  margin-bottom: 20px;
+}
+.onglet {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--doux);
+  font-family: "Cinzel", serif;
+  font-size: .85rem;
+  letter-spacing: .06em;
+  padding: 10px 4px;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.onglet:hover { color: var(--texte); }
+.onglet.actif { color: var(--or-clair); border-bottom-color: var(--or); }
+.onglets.seul { grid-template-columns: 1fr; }
+
+fieldset.champ { border: 0; padding: 0; margin: 0 0 16px; min-width: 0; }
+fieldset.champ legend {
+  font-size: .9rem;
+  color: var(--doux);
+  margin-bottom: 4px;
+  padding: 0;
+}
+.bascule {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--bord);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #15110e;
+}
+.bascule label { position: relative; cursor: pointer; }
+.bascule input { position: absolute; opacity: 0; pointer-events: none; }
+.bascule span {
+  display: block;
+  text-align: center;
+  padding: 9px 6px;
+  font-family: "Cinzel", serif;
+  font-size: .82rem;
+  letter-spacing: .05em;
+  color: var(--doux);
+  transition: background .15s, color .15s;
+}
+.bascule label + label span { border-left: 1px solid var(--bord); }
+.bascule label:hover span { color: var(--texte); }
+.bascule input:checked + span { background: rgba(201,164,92,.16); color: var(--or-clair); }
+.bascule input:focus-visible + span { box-shadow: inset 0 0 0 2px var(--or); }
+
+.avec-bouton { position: relative; display: block; }
+.avec-bouton input { padding-right: 44px; }
+.voir {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  background: none; border: 0; cursor: pointer;
+  font-size: 1rem; opacity: .55; padding: 6px;
+  color: var(--texte);
+}
+.voir:hover, .voir.actif { opacity: 1; }
+
+.case {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--doux);
+  margin: 4px 0 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.case input { accent-color: var(--or); width: 16px; height: 16px; }
+
+.note-demo {
+  margin: 20px 0 0;
+  font-size: .82rem;
+  color: var(--doux);
+  text-align: center;
+  border-top: 1px dashed var(--bord);
+  padding-top: 14px;
+}

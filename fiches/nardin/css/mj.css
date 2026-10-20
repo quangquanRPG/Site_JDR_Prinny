@@ -1,0 +1,36 @@
+/* ─────────────────────────────────────────────────────────────
+   Outils du MJ : formulaire « Ajouter un don » et réglages
+   ───────────────────────────────────────────────────────────── */
+
+.form-don {
+  margin-top: 12px; background: var(--carte); border: 1px solid var(--accent);
+  border-radius: 10px; padding: 14px; display: grid; gap: 10px;
+}
+.form-don h3 { margin: 0; font-family: Cinzel, Georgia, serif; font-size: 1rem; color: var(--accent); }
+
+.form-don input, .form-don select, .form-don textarea {
+  background: var(--champ); border: 1px solid var(--bord); border-radius: 6px; padding: 6px 8px;
+}
+.form-don input[name="nom"] { flex: 1; min-width: 160px; }
+.form-don textarea { width: 100%; min-height: 54px; resize: vertical; }
+.form-don .espace { flex: 1; }
+.effet-ligne { display: flex; gap: 8px; align-items: center; }
+.effet-ligne input { width: 70px; }
+
+.reglages {
+  background: var(--carte); border: 1px solid var(--accent); border-radius: 10px;
+  padding: 14px; display: grid; gap: 16px;
+}
+.reglages input[type="text"], .reglages input[type="number"], .reglages select {
+  background: var(--champ); border: 1px solid var(--bord); border-radius: 6px; padding: 6px 8px;
+}
+.reglage-nom { display: grid; gap: 4px; }
+.reglage-reussite { max-width: 120px; }
+.reglage-comp { display: grid; gap: 8px; grid-template-columns: repeat(3, 1fr); margin-top: 6px; }
+@media (max-width: 520px) { .reglage-comp { grid-template-columns: repeat(2, 1fr); } }
+.reglage-comp label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .9rem; }
+.reglage-comp input { width: 64px; text-align: center; }
+.reglage-coches { display: grid; gap: 4px 16px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-top: 6px; }
+.reglage-coches label { display: flex; align-items: baseline; gap: 6px; font-size: .9rem; cursor: pointer; }
+.reglage-coches small { color: var(--doux); }
+.reglage-coches input { accent-color: var(--accent); }

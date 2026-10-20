@@ -1,0 +1,50 @@
+/* ─────────────────────────────────────────────────────────────
+   Espace perso : listes « Mes JDR » et « Mes personnages »
+   ───────────────────────────────────────────────────────────── */
+
+.carte--large { max-width: 600px; }
+
+.titre-section {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+  border-top: 1px solid var(--bord);
+  padding-top: 20px;
+  margin: 4px 0 14px;
+}
+
+.form-jdr {
+  background: #17130f;
+  border: 1px solid var(--bord);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.liste-jdr { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.jdr {
+  border: 1px solid var(--bord);
+  border-left: 3px solid var(--or);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.015);
+  animation: apparition .3s ease-out;
+}
+.jdr h3 {
+  font-family: "Cinzel", serif;
+  font-size: .98rem;
+  margin: 0 0 2px;
+  color: var(--texte);
+  overflow-wrap: anywhere;
+}
+.jdr p { margin: 0; color: var(--doux); font-size: .95rem; white-space: pre-line; overflow-wrap: anywhere; }
+.jdr .date { font-size: .8rem; opacity: .75; margin-top: 6px; }
+
+a.jdr {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+a.jdr:hover { background: rgba(201,164,92,.07); border-color: var(--or); }
+a.jdr:active { transform: translateY(1px); }
+a.jdr:focus-visible { outline: 2px solid var(--or); outline-offset: 2px; }

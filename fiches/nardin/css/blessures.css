@@ -1,0 +1,20 @@
+/* ─────────────────────────────────────────────────────────────
+   Blessures graves
+   ───────────────────────────────────────────────────────────── */
+
+.blessures {
+  margin-top: 12px; background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  padding: 10px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+}
+.blessures-nom { font-weight: 600; font-size: .95rem; }
+.pips { display: flex; gap: 6px; }
+.pip {
+  width: 22px; height: 22px; border-radius: 50%; padding: 0;
+  border: 2px solid var(--malus); background: none; cursor: pointer; transition: background .15s;
+}
+.pip.on { background: var(--malus); }
+.pip:disabled { cursor: default; }
+.pip:not(:disabled):hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--malus) 25%, transparent); }
+.blessures-compte { font-size: .9rem; color: var(--doux); }
+.blessures-malus { margin-left: auto; font-size: .85rem; color: var(--doux); }
+.blessures-malus b { color: var(--malus); }

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grimoire des Aventuriers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- VERSION (?v=…) : à changer partout dans ce fichier à chaque mise à jour
+       (Ctrl+H « Remplacer tout ») pour forcer les navigateurs à recharger. -->
+  <link rel="stylesheet" href="css/base.css?v=2026-10-20f">
+  <link rel="stylesheet" href="css/accueil.css?v=2026-10-20f">
+  <link rel="stylesheet" href="css/espace.css?v=2026-10-20f">
+  <link rel="stylesheet" href="css/jdr.css?v=2026-10-20f">
+  <link rel="stylesheet" href="css/donnees-rp.css?v=2026-10-20f">
+  <link rel="stylesheet" href="css/fiche.css?v=2026-10-20f">
+</head>
+<body>
+  <main class="scene">
+
+    <!-- Chargement initial (vérifie si une session existe déjà) -->
+    <section id="vue-chargement" class="carte carte--centre">
+      <div class="sceau" aria-hidden="true"></div>
+      <p class="doux">Ouverture du grimoire…</p>
+    </section>
+
+    <!-- Accueil : connexion / création de compte -->
+    <section id="vue-accueil" class="carte" hidden>
+      <header class="entete">
+        <div class="sceau" aria-hidden="true"></div>
+        <h1 id="titre-site">Le Grimoire</h1>
+        <p class="sous-titre">Portail des aventuriers</p>
+      </header>
+
+      <div class="onglets" role="tablist">
+        <button type="button" class="onglet actif" data-mode="connexion" role="tab" aria-selected="true">Connexion</button>
+        <button type="button" class="onglet" data-mode="inscription" role="tab" aria-selected="false" id="onglet-inscription">Créer un compte</button>
+      </div>
+
+      <form id="form-auth" novalidate>
+        <label class="champ">
+          <span>Pseudo</span>
+          <input id="pseudo" name="pseudo" type="text" autocomplete="username" maxlength="24" required spellcheck="false">
+        </label>
+
+        <label class="champ">
+          <span>Mot de passe</span>
+          <span class="avec-bouton">
+            <input id="mdp" name="mdp" type="password" autocomplete="current-password" required>
+            <button type="button" class="voir" id="voir-mdp" aria-label="Afficher le mot de passe">👁</button>
+          </span>
+        </label>
+
+        <label class="champ" id="ligne-confirm" hidden>
+          <span>Confirmer le mot de passe</span>
+          <input id="mdp2" name="mdp2" type="password" autocomplete="new-password">
+        </label>
+
+        <fieldset class="champ" id="ligne-role" hidden>
+          <legend>Je suis</legend>
+          <div class="bascule">
+            <label><input type="radio" name="role" value="Joueur" checked><span>Joueur</span></label>
+            <label><input type="radio" name="role" value="MJ"><span>Maître du jeu</span></label>
+          </div>
+        </fieldset>
+
+        <label class="case">
+          <input id="rester" type="checkbox">
+          <span>Rester connecté</span>
+        </label>
+
+        <p id="message" class="message" role="alert" aria-live="polite"></p>
+
+        <button type="submit" class="bouton" id="bouton-envoyer">Entrer</button>
+      </form>
+
+      <p id="note-demo" class="note-demo" hidden>
+        Mode démo : les comptes sont enregistrés seulement dans ce navigateur.
+        Renseigne <code>API_URL</code> dans <code>config.js</code> pour utiliser le Google Sheet.
+      </p>
+    </section>
+
+    <!-- Espace personnel (à développer ensemble) -->
+    <section id="vue-espace" class="carte carte--large" hidden>
+      <header class="entete">
+        <div class="sceau" aria-hidden="true"></div>
+        <p class="sous-titre">Bienvenue,</p>
+        <h1 id="nom-joueur">…</h1>
+        <span id="badge-role" class="badge">Joueur</span>
+      </header>
+      <!-- Espace joueur : ses personnages -->
+      <div id="zone-joueur" hidden>
+        <div class="titre-section">
+          <h2>Mes personnages</h2>
+        </div>
+        <ul id="liste-mes-persos" class="liste-jdr"></ul>
+        <p id="etat-mes-persos" class="doux centre etat" hidden></p>
+      </div>
+
+      <!-- Espace MJ : ses JDR -->
+      <div id="zone-mj" hidden>
+        <div class="titre-section">
+          <h2>Mes JDR</h2>
+          <button type="button" class="bouton-petit" id="bouton-nouveau-jdr">+ Créer un JDR</button>
+        </div>
+
+        <form id="form-jdr" class="form-jdr" hidden novalidate>
+          <label class="champ">
+            <span>Nom du JDR</span>
+            <input id="jdr-nom" type="text" maxlength="60" required>
+          </label>
+          <label class="champ">
+            <span>Description <em>(facultatif)</em></span>
+            <textarea id="jdr-desc" rows="3" maxlength="300" placeholder="Univers, ambiance, système de jeu…"></textarea>
+          </label>
+          <p id="message-jdr" class="message" role="alert" aria-live="polite"></p>
+          <div class="boutons">
+            <button type="button" class="bouton bouton--secondaire" id="annuler-jdr">Annuler</button>
+            <button type="submit" class="bouton" id="creer-jdr">Créer</button>
+          </div>
+        </form>
+
+        <ul id="liste-jdr" class="liste-jdr"></ul>
+        <p id="etat-jdr" class="doux centre etat" hidden></p>
+      </div>
+
+      <button type="button" class="bouton bouton--secondaire" id="bouton-deconnexion">Se déconnecter</button>
+    </section>
+
+    <!-- Page d'un JDR (MJ) -->
+    <section id="vue-jdr" class="carte carte--large" hidden>
+      <a href="#" class="retour">← Mes JDR</a>
+      <header class="entete">
+        <p class="sous-titre">Jeu de rôle</p>
+        <h1 id="jdr-titre">…</h1>
+        <p id="jdr-texte" class="doux jdr-texte"></p>
+      </header>
+
+      <p id="etat-jdr-page" class="doux centre etat" hidden></p>
+
+      <nav id="menu-jdr" class="menu-jdr" aria-label="Menu du JDR">
+        <button type="button" class="tuile" data-panneau="type" aria-expanded="false">
+          <strong>Type de fiche perso</strong><small id="info-type">—</small>
+        </button>
+        <button type="button" class="tuile" data-panneau="rp" aria-expanded="false">
+          <strong>Données du RP</strong><small id="info-rp">Métaux, raretés, armes, armures</small>
+        </button>
+        <button type="button" class="tuile" data-panneau="persos" aria-expanded="false">
+          <strong>Voir les personnages</strong><small id="info-persos">—</small>
+        </button>
+        <button type="button" class="tuile" data-panneau="pj" aria-expanded="false">
+          <strong>Ajouter un personnage joueur</strong><small>Relié au compte d'un joueur</small>
+        </button>
+        <button type="button" class="tuile" data-panneau="pnj" aria-expanded="false">
+          <strong>Ajouter un PNJ</strong><small>Géré par le MJ</small>
+        </button>
+        <button type="button" class="tuile tuile--danger" data-panneau="suppr" aria-expanded="false">
+          <strong>Supprimer un personnage</strong><small>Suppression définitive</small>
+        </button>
+      </nav>
+
+      <div id="panneau" class="panneau" hidden></div>
+    </section>
+
+    <!-- Fiche d'un personnage (MJ du JDR ou joueur du personnage) -->
+    <section id="vue-fiche" class="vue-fiche" hidden>
+      <div class="barre-fiche">
+        <a href="#" class="retour" id="retour-fiche">← Retour</a>
+        <span id="etat-sauvegarde" class="etat-sauvegarde" aria-live="polite"></span>
+        <aside id="reussite-fiche" class="reussite-fiche" aria-live="polite" hidden></aside>
+      </div>
+      <p id="infos-fiche" class="doux infos-fiche"></p>
+      <p id="message-fiche" class="doux centre etat" hidden></p>
+      <div id="cadre-fiche"></div>
+    </section>
+
+  </main>
+
+  <!-- Réglages (les seuls fichiers à modifier pour configurer le site) -->
+  <script src="config.js?v=2026-10-20f"></script>
+  <script src="fiches.js?v=2026-10-20f"></script>
+  <!-- État partagé et outils -->
+  <script src="js/etat.js?v=2026-10-20f"></script>
+  <script src="js/outils/dom.js?v=2026-10-20f"></script>
+  <script src="js/outils/chiffrement.js?v=2026-10-20f"></script>
+  <script src="js/outils/stockage.js?v=2026-10-20f"></script>
+  <script src="js/regles.js?v=2026-10-20f"></script>
+  <!-- Serveur (Google Sheet via Apps Script, ou mode démo) -->
+  <script src="js/serveur/api.js?v=2026-10-20f"></script>
+  <script src="js/serveur/demo.js?v=2026-10-20f"></script>
+  <!-- Données du RP -->
+  <script src="js/donnees-rp/modele.js?v=2026-10-20f"></script>
+  <script src="js/donnees-rp/onglets.js?v=2026-10-20f"></script>
+  <!-- Vues -->
+  <script src="js/navigation.js?v=2026-10-20f"></script>
+  <script src="js/vues/accueil.js?v=2026-10-20f"></script>
+  <script src="js/vues/espace.js?v=2026-10-20f"></script>
+  <script src="js/vues/espace-joueur.js?v=2026-10-20f"></script>
+  <script src="js/vues/espace-mj.js?v=2026-10-20f"></script>
+  <!-- Page d'un JDR -->
+  <script src="js/vues/jdr/page.js?v=2026-10-20f"></script>
+  <script src="js/vues/jdr/panneaux.js?v=2026-10-20f"></script>
+  <script src="js/vues/jdr/panneau-type.js?v=2026-10-20f"></script>
+  <script src="js/vues/jdr/panneau-donnees-rp.js?v=2026-10-20f"></script>
+  <script src="js/vues/jdr/panneau-persos.js?v=2026-10-20f"></script>
+  <script src="js/vues/jdr/panneau-ajout.js?v=2026-10-20f"></script>
+  <!-- Fiche d'un personnage -->
+  <script src="js/vues/fiche/ouverture.js?v=2026-10-20f"></script>
+  <script src="js/vues/fiche/reussite.js?v=2026-10-20f"></script>
+  <script src="js/vues/fiche/sauvegarde.js?v=2026-10-20f"></script>
+  <script src="js/vues/fiche/echanges.js?v=2026-10-20f"></script>
+  <!-- Démarrage : toujours en dernier -->
+  <script src="js/demarrage.js?v=2026-10-20f"></script>
+</body>
+</html>

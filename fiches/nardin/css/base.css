@@ -1,0 +1,69 @@
+/* ─────────────────────────────────────────────────────────────
+   Base : couleurs (clair / sombre), page, titres, petits éléments communs
+   Chargé en premier ; chaque autre fichier correspond à un fichier de js/affichage/.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --bg: #f4efe6; --carte: #fffdf8; --bord: #d9cdb8;
+  --texte: #2b241b; --doux: #8a7b66; --accent: #7a3e1d;
+  --bonus: #2f7d4a; --malus: #b23a3a; --champ: #fff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17140f; --carte: #221d16; --bord: #3d3427;
+    --texte: #eee5d6; --doux: #a3947d; --accent: #e09a62;
+    --bonus: #6fcf8e; --malus: #ef7b7b; --champ: #1a1611;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17140f; --carte: #221d16; --bord: #3d3427;
+  --texte: #eee5d6; --doux: #a3947d; --accent: #e09a62;
+  --bonus: #6fcf8e; --malus: #ef7b7b; --champ: #1a1611;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 24px 16px 48px;
+  background: var(--bg); color: var(--texte);
+  font-family: Inter, system-ui, sans-serif;
+}
+.fiche { max-width: 760px; margin: 0 auto; }
+h1 { font-family: Cinzel, Georgia, serif; font-weight: 700; font-size: 1.8rem; margin: 0 0 4px; color: var(--accent); }
+.sous-titre { color: var(--doux); font-size: .9rem; margin-bottom: 20px; }
+h2 {
+  font-family: Cinzel, Georgia, serif; font-weight: 500; font-size: 1.05rem;
+  letter-spacing: .08em; text-transform: uppercase; margin: 32px 0 12px; color: var(--doux);
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Barre de démo : qui regarde la fiche */
+.demo-role {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  font-size: .85rem; color: var(--doux);
+  border: 1px dashed var(--bord); border-radius: 8px; padding: 8px 12px;
+}
+.demo-role select { background: var(--champ); border: 1px solid var(--bord); border-radius: 6px; padding: 4px 8px; }
+
+.sous-label {
+  display: flex; justify-content: space-between; align-items: center; margin: 18px 0 8px;
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--doux);
+}
+.sous-label--haut { margin-top: 0; }
+.lien { background: none; border: none; color: var(--doux); cursor: pointer; font-size: .75rem; text-decoration: underline; padding: 0; }
+.lien:hover { color: var(--accent); }
+
+.detail-objet { display: block; font-size: .78rem; font-weight: 400; color: var(--doux); margin-top: 2px; }
+
+.vide { color: var(--doux); font-style: italic; font-size: .9rem; }
+
+.ligne { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.label { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--doux); }
+.erreur { color: var(--malus); font-size: .85rem; }
+
+/* Fiche ouverte dans le site : pas de barre de démo, fond transparent */
+body.integre { padding: 4px 2px 24px; background: transparent; }
+body.integre .demo-role { display: none; }
+
+body.integre .panneau-reussite { display: none; }   /* dans le site, c'est la page parente qui l'affiche */
+body.integre { padding-bottom: 24px; }

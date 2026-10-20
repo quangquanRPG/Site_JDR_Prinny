@@ -1,0 +1,15 @@
+/* ─────────────────────────────────────────────────────────────
+   Sets d'armure
+   ───────────────────────────────────────────────────────────── */
+
+.armures { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.armure {
+  text-align: left; background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  padding: 10px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 3px;
+}
+.armure:hover { border-color: var(--accent); }
+.armure.equipee { border: 2px solid var(--accent); padding: 9px 11px; cursor: default; }
+.armure-nom { font-weight: 600; }
+.armure-prot { font-size: .85rem; color: var(--doux); }
+
+.armure-etat { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); font-weight: 600; }

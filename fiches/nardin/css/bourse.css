@@ -1,0 +1,21 @@
+/* ─────────────────────────────────────────────────────────────
+   Bourse
+   ───────────────────────────────────────────────────────────── */
+
+.bourse {
+  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  padding: 12px 14px; display: flex; gap: 12px; align-items: center;
+}
+.bourse-grille { flex: 1; display: grid; gap: 12px; grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 520px) { .bourse-grille { grid-template-columns: repeat(2, 1fr); } }
+.piece { display: flex; flex-direction: column; gap: 4px; }
+.piece-nom { display: flex; align-items: center; gap: 6px; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--doux); }
+.piece-pastille { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.piece-val { font-size: 1.5rem; font-weight: 600; line-height: 1.2; }
+.piece input {
+  width: 100%; max-width: 110px; font-size: 1.1rem; padding: 3px 6px;
+  background: var(--champ); border: 1px solid var(--accent); border-radius: 6px;
+}
+.bourse-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.bourse-actions .duo { display: flex; gap: 2px; }
+.bourse:hover .btn-icone.crayon { opacity: 1; }

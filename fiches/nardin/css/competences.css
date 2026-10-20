@@ -1,0 +1,21 @@
+/* ─────────────────────────────────────────────────────────────
+   Compétences
+   ───────────────────────────────────────────────────────────── */
+
+.competences { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 520px) { .competences { grid-template-columns: repeat(2, 1fr); } }
+.comp { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 12px 14px; }
+.comp-nom { font-weight: 600; font-size: .95rem; margin-bottom: 8px; }
+.comp-valeurs { display: flex; align-items: baseline; justify-content: space-between; }
+.actuel { font-size: 2rem; font-weight: 600; line-height: 1; }
+.actuel.up { color: var(--bonus); }
+.actuel.down { color: var(--malus); }
+.actuel small { font-size: .8rem; font-weight: 400; color: var(--doux); margin-left: 2px; }
+.defaut { font-size: 1rem; color: var(--doux); border: 1px solid var(--bord); border-radius: 6px; padding: 2px 8px; }
+.comp-legende {
+  display: flex; justify-content: space-between; font-size: .7rem; color: var(--doux);
+  margin-top: 6px; text-transform: uppercase; letter-spacing: .05em;
+}
+.comp-sources { margin-top: 8px; font-size: .75rem; color: var(--doux); line-height: 1.4; }
+.comp-sources .p { color: var(--bonus); }
+.comp-sources .m { color: var(--malus); }

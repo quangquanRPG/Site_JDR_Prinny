@@ -1,0 +1,117 @@
+/* ─────────────────────────────────────────────────────────────
+   Page d'un JDR : menu en tuiles, panneaux, personnages
+   ───────────────────────────────────────────────────────────── */
+
+.jdr-texte { margin: 8px 0 0; white-space: pre-line; overflow-wrap: anywhere; }
+
+.menu-jdr {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border-top: 1px solid var(--bord);
+  padding-top: 20px;
+}
+.tuile {
+  text-align: left;
+  background: #17130f;
+  border: 1px solid var(--bord);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--texte);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.tuile strong {
+  display: block;
+  font-family: "Cinzel", serif;
+  font-size: .86rem;
+  letter-spacing: .03em;
+  color: var(--or-clair);
+  margin-bottom: 2px;
+}
+.tuile small { display: block; color: var(--doux); font-size: .88rem; }
+.tuile:hover { border-color: var(--or); }
+.tuile.active { border-color: var(--or); background: rgba(201,164,92,.12); }
+.tuile:disabled { opacity: .5; cursor: default; }
+.tuile--danger strong { color: var(--erreur); }
+.tuile--danger:hover, .tuile--danger.active { border-color: var(--erreur); background: rgba(229,138,111,.08); }
+
+.panneau {
+  margin-top: 16px;
+  background: #17130f;
+  border: 1px solid var(--bord);
+  border-radius: 10px;
+  padding: 16px;
+  animation: apparition .25s ease-out;
+}
+.panneau > h2 { margin-bottom: 14px; }
+.panneau .bouton { margin-top: 4px; }
+
+.groupe + .groupe { margin-top: 16px; }
+.groupe h3 {
+  font-family: "Cinzel", serif;
+  font-size: .8rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--doux);
+  margin: 0 0 8px;
+}
+.liste-persos { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.perso {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  border: 1px solid var(--bord);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.perso-txt { min-width: 0; }
+.perso strong { display: block; overflow-wrap: anywhere; }
+.perso small { color: var(--doux); }
+.perso p { margin: 4px 0 0; color: var(--doux); font-size: .92rem; white-space: pre-line; overflow-wrap: anywhere; }
+
+.bouton-suppr {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--bord);
+  color: var(--erreur);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font: inherit;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.bouton-suppr:hover { border-color: var(--erreur); }
+.bouton-suppr.arme { background: var(--erreur); border-color: var(--erreur); color: #22180c; font-weight: 600; }
+
+.choix-fiches { display: grid; gap: 8px; }
+.choix-fiche {
+  display: flex; gap: 10px; align-items: flex-start;
+  border: 1px solid var(--bord);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+.choix-fiche:hover { border-color: var(--or); }
+.choix-fiche:has(input:checked) { border-color: var(--or); background: rgba(201,164,92,.1); }
+.choix-fiche input { accent-color: var(--or); margin-top: 5px; }
+.choix-fiche strong { display: block; }
+.choix-fiche small { color: var(--doux); }
+
+@media (max-width: 520px) {
+  .menu-jdr { grid-template-columns: 1fr; }
+}
+
+/* Bouton « Fiche » dans la liste des personnages */
+.bouton-fiche {
+  flex-shrink: 0;
+  border: 1px solid var(--or);
+  color: var(--or-clair);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: .85rem;
+  text-decoration: none;
+  transition: background .15s;
+}
+.bouton-fiche:hover { background: rgba(201,164,92,.12); }
+.perso small.vierge { font-style: italic; opacity: .8; }

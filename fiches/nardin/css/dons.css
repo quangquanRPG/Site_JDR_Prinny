@@ -1,0 +1,20 @@
+/* ─────────────────────────────────────────────────────────────
+   Dons & connaissances
+   ───────────────────────────────────────────────────────────── */
+
+.dons { display: grid; gap: 10px; }
+
+.don {
+  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  padding: 12px 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start;
+}
+.don.inactif { opacity: .55; }
+.don-titre { font-weight: 600; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.don-desc { font-size: .85rem; color: var(--doux); margin-top: 4px; }
+.effets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.effet { font-size: .78rem; font-weight: 600; border-radius: 6px; padding: 2px 8px; background: var(--bg); }
+.effet.p { color: var(--bonus); }
+.effet.m { color: var(--malus); }
+.effet.regle { color: var(--accent); }
+.partie-des[hidden], .partie-regle[hidden] { display: none; }

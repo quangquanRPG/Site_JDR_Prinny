@@ -1,0 +1,24 @@
+/* ─────────────────────────────────────────────────────────────
+   Armes portées et autres armes
+   ───────────────────────────────────────────────────────────── */
+
+.slots { display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 520px) { .slots { grid-template-columns: 1fr; } }
+.slot {
+  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  padding: 10px 12px; min-height: 84px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;
+}
+.slot.vide { border-style: dashed; background: none; color: var(--doux); font-size: .85rem; align-items: center; justify-content: center; }
+.slot.en-main { border: 2px solid var(--accent); padding: 9px 11px; }
+.slot-haut { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+.slot-nom { font-weight: 600; }
+.slot-actions { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.badge.main { color: var(--accent); border-color: var(--accent); }
+
+.inventaire { display: flex; flex-wrap: wrap; gap: 8px; }
+.objet {
+  display: flex; align-items: center; gap: 10px; background: var(--carte);
+  border: 1px solid var(--bord); border-radius: 8px; padding: 6px 6px 6px 12px; font-size: .9rem;
+}
+
+.slot-nom .badge { margin-left: 4px; vertical-align: 2px; }

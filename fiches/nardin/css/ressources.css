@@ -1,0 +1,60 @@
+/* ─────────────────────────────────────────────────────────────
+   Jauges PV / Mana / Énergie / Protection, efforts, fatigue, usure
+   ───────────────────────────────────────────────────────────── */
+
+.ressources { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 520px) { .ressources { grid-template-columns: 1fr; } }
+.res { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 12px 14px; }
+.res-haut { display: flex; justify-content: space-between; align-items: baseline; }
+.res-nom { font-weight: 600; font-size: .95rem; }
+.res-val { font-size: 1.5rem; font-weight: 600; }
+.res-val small { font-size: .95rem; font-weight: 400; color: var(--doux); }
+.res-barre { height: 8px; border-radius: 999px; background: var(--bg); margin-top: 8px; overflow: hidden; }
+.res-barre > div { height: 100%; border-radius: 999px; transition: width .2s; }
+.res-haut { align-items: center; min-height: 34px; }
+.res-droite { display: flex; align-items: center; gap: 4px; }
+
+.res:hover .btn-icone.crayon, .btn-icone.crayon:focus-visible { opacity: 1; }
+
+.res-edit input {
+  width: 54px; font-size: 1rem; padding: 2px 4px;
+  background: var(--champ); border: 1px solid var(--accent); border-radius: 6px;
+}
+.res-edit small { color: var(--doux); }
+.res-haut { gap: 10px; }
+.res-edit input { width: 46px; text-align: center; -moz-appearance: textfield; }
+.res-edit input::-webkit-outer-spin-button,
+.res-edit input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.ressources.deux { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 520px) { .ressources.deux { grid-template-columns: 1fr; } }
+.res-val small.etiquette { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; margin-left: 4px; }
+.res.protection  .res-barre > div { background: #7d8a99; }
+.res-source { display: block; font-size: .75rem; font-weight: 400; color: var(--doux); margin-top: 2px; }
+
+.res.protMagique .res-val { color: #8a5cc7; }
+.res.pv      .res-barre > div { background: #c94a4a; }
+.res.mana    .res-barre > div { background: #3f7fd1; }
+.res.energie .res-barre > div { background: #d9a227; }
+
+#ressources-etat { align-items: start; }   /* PV et Mana ne s'étirent pas à la hauteur de l'Énergie */
+/* Efforts : dépenser de l'énergie pour un bonus temporaire */
+.efforts { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+.effort {
+  display: inline-flex; flex-direction: column; align-items: center; line-height: 1.15;
+  background: var(--bg); border: 1px solid var(--bord); border-radius: 7px;
+  padding: 4px 7px; cursor: pointer; font-size: .78rem; color: var(--texte);
+}
+.effort small { color: var(--doux); font-size: .7rem; }
+.effort:hover:not(:disabled) { border-color: #d9a227; }
+.effort:disabled { opacity: .35; cursor: not-allowed; }
+.effort.actif { background: #d9a227; border-color: #d9a227; color: #22180c; opacity: 1; font-weight: 600; }
+.effort.actif small { color: #22180c; }
+.effort-actif { margin-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: .82rem; color: #d9a227; font-weight: 600; }
+.effort-actif .btn { font-size: .78rem; padding: 3px 8px; }
+.usure { margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px;
+         font-size: .82rem; font-weight: 600; color: #b08a1e; }
+.usure.active { color: var(--malus); }
+.usure .btn { font-size: .78rem; padding: 3px 8px; }
+
+.fatigue-info { margin-top: 8px; font-size: .82rem; font-weight: 600; color: var(--malus); }
+.fatigue-info.ignoree { color: var(--doux); font-weight: 400; font-style: italic; }

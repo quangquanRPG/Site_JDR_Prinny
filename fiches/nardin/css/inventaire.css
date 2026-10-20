@@ -1,0 +1,49 @@
+/* ─────────────────────────────────────────────────────────────
+   Inventaires
+   ───────────────────────────────────────────────────────────── */
+
+.inv-entete { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+.inv-compte { display: flex; align-items: center; gap: 6px; font-size: .9rem; color: var(--doux); }
+.inv-compte b { color: var(--texte); font-size: 1.05rem; }
+.inv-compte.plein b { color: var(--malus); }
+.inv-compte input {
+  width: 56px; text-align: center; font-size: 1rem; padding: 2px 4px;
+  background: var(--champ); border: 1px solid var(--accent); border-radius: 6px;
+}
+.inv-barre { height: 6px; border-radius: 999px; background: var(--carte); border: 1px solid var(--bord); overflow: hidden; margin-bottom: 12px; }
+.inv-barre > div { height: 100%; background: var(--accent); }
+.inv-barre.plein > div { background: var(--malus); }
+.inv-entete:hover .btn-icone.crayon { opacity: 1; }
+.cartes { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.carte {
+  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; min-height: 76px;
+}
+.carte.equipement { background: none; border-style: dashed; }
+.carte-haut { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+.carte-titre { font-weight: 600; }
+.carte-qte { font-size: .8rem; font-weight: 600; color: var(--doux); white-space: nowrap; }
+.carte-qte input {
+  width: 54px; font-size: .85rem; padding: 1px 4px;
+  background: var(--champ); border: 1px solid var(--bord); border-radius: 6px;
+}
+.carte-desc { font-size: .85rem; color: var(--doux); white-space: pre-wrap; }
+.carte-desc-edit {
+  width: 100%; min-height: 52px; resize: vertical; font-size: .85rem; padding: 4px 6px;
+  background: var(--champ); border: 1px solid var(--bord); border-radius: 6px;
+}
+.carte-desc-edit:focus { outline: none; border-color: var(--accent); }
+.inv-comptes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; }
+.carte.cachee { border-color: #8a5cc7; box-shadow: inset 3px 0 0 #8a5cc7; }
+.badge.cache { color: #8a5cc7; border-color: #8a5cc7; }
+.carte-pied { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-top: auto; padding-top: 4px; }
+.case-cache { display: flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--doux); }
+.carte.ajout .case-cache input { width: auto; margin: 0; }
+.carte-cout { font-size: .78rem; color: var(--doux); margin-top: auto; }
+.carte.ajout { border: 1px dashed var(--accent); gap: 6px; }
+.carte.ajout input, .carte.ajout textarea {
+  width: 100%; padding: 5px 8px; background: var(--champ); border: 1px solid var(--bord); border-radius: 6px;
+}
+.carte.ajout textarea { min-height: 48px; resize: vertical; }
+.carte.ajout .ligne { align-items: center; }
+.carte.ajout .ligne input { width: 70px; }
