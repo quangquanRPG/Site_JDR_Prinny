@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 //  Fiche : mise à jour automatique (« presque temps réel »)
-//  Toutes les 10 s, le site relit la fiche dans le Google Sheet et affiche
+//  Toutes les 30 s, le site relit la fiche dans le Google Sheet et affiche
 //  les changements faits par quelqu'un d'autre (MJ, joueur, compagnon).
 //  On ne met PAS à jour pendant que l'utilisateur agit : saisie en cours,
 //  modification pas encore enregistrée, ou action il y a moins de 3 s.
@@ -8,7 +8,7 @@
 // ─────────────────────────────────────────────────────────────
 "use strict";
 
-const INTERVALLE_ACTUALISATION = 10000;   // 10 secondes
+const INTERVALLE_ACTUALISATION = 30000;   // 30 secondes (environ 120 lectures par heure et par fiche ouverte : large marge sur les quotas Google)
 const CALME_AVANT_ACTUALISATION = 3000;   // pas de mise à jour moins de 3 s après une action
 
 function demarrerActualisation(f) {

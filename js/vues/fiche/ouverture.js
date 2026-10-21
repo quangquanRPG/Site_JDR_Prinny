@@ -52,7 +52,7 @@ async function ouvrirFiche(id) {
     messageFiche("");
     f.cadre = el("iframe", { src: type.page + (type.page.includes("?") ? "&" : "?") + "integre=1&v=" + VERSION, title: "Fiche de " + rep.perso.nom });
     $("#cadre-fiche").replaceChildren(f.cadre);
-    demarrerActualisation(f);                                  // relit la fiche toutes les 10 s
+    demarrerActualisation(f);                                  // relit la fiche toutes les 30 s
   } catch (e) {
     if (ficheOuverte === f) messageFiche(e.message);
   }

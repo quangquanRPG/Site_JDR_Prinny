@@ -3,7 +3,7 @@
    Ouverte depuis le Grimoire (fiches/nardin/index.html?integre=1 dans un cadre),
    la page reçoit le personnage et l'utilisateur, puis renvoie la fiche
    après chaque modification ; le site l'enregistre dans le Google Sheet.
-     site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique toutes les 10 s)
+     site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique toutes les 30 s)
      fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur,
                     jdr:saisie (un champ a le focus : le site attend avant de mettre à jour)
    ================================================================ */

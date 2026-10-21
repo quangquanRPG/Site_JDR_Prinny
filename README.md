@@ -26,7 +26,7 @@ site-jdr/
 │       ├── accueil.js · espace.js · espace-joueur.js · espace-mj.js
 │       ├── jdr/            page.js, panneaux.js et un fichier par panneau du menu
 │       └── fiche/          ouverture.js, echanges.js (messages avec la fiche), sauvegarde.js, reussite.js,
-│                           actualisation.js (relit la fiche toutes les 10 s)
+│                           actualisation.js (relit la fiche toutes les 30 s)
 ├── fiches/
 │   └── nardin/             fiche « Nardin », autonome (s'ouvre aussi seule pour tester)
 │       ├── index.html      structure de la fiche
@@ -71,7 +71,7 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 | Version | Contenu |
 |---|---|
 | 0.1 | Comptes MJ / joueurs, JDR, personnages, Données du RP, fiche Nardin (efforts, fatigue, réussite, armure divine) |
-| 0.2 | Fiches des compagnons en lecture seule · mise à jour automatique des fiches toutes les 10 s |
+| 0.2 | Fiches des compagnons en lecture seule · mise à jour automatique des fiches toutes les 30 s |
 
 ## Tester tout de suite (mode démo)
 
@@ -158,7 +158,7 @@ automatiquement dans la colonne *Fiche* de l'onglet Personnages (« Enregistré 
 - Ce que chacun peut modifier suit les règles de la fiche (ex. Nardin : le joueur change PV/Mana actuels,
   bourse, inventaire, armes en main… ; le MJ règle en plus les maximums, les dons, et dans **Réglages du MJ**
   le nom, les compétences de base et les armes / armures possédées).
-- **Mise à jour automatique** : une fiche ouverte relit le Google Sheet toutes les 10 secondes et affiche
+- **Mise à jour automatique** : une fiche ouverte relit le Google Sheet toutes les 30 secondes et affiche
   les changements faits par quelqu'un d'autre (« Mis à jour ↻ » en haut à droite). Pour ne pas écraser
   ce qu'on est en train de faire, elle attend tant qu'un champ est en cours de saisie, qu'une modification
   n'est pas encore enregistrée, ou moins de 3 s après une action. Pause quand l'onglet est caché.
