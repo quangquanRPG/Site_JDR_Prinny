@@ -24,6 +24,7 @@ function surMessageDeLaFiche(e) {
   } else if (m.type === "jdr:hauteur") {
     f.cadre.style.height = Math.max(400, Number(m.hauteur) || 0) + "px";
   } else if (m.type === "jdr:modif") {
+    if (f.acces === "lecture") return;   // fiche d'un autre joueur : rien n'est enregistré
     const texte = JSON.stringify(m.donnees);
     if (!f.recu) {
       f.recu = true;

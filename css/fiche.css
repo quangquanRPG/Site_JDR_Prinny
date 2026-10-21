@@ -70,3 +70,6 @@
   .reussite-fiche .sous.neutre, .reussite-fiche .faces { display: none; }
   .reussite-fiche .effet, .reussite-fiche .fatigue { margin-top: 0; }
 }
+
+/* Fiche d'un autre joueur (lecture seule) */
+.etat-sauvegarde.lecture { color: var(--doux); font-style: italic; }

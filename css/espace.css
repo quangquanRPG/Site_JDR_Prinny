@@ -48,3 +48,8 @@ a.jdr {
 a.jdr:hover { background: rgba(201,164,92,.07); border-color: var(--or); }
 a.jdr:active { transform: translateY(1px); }
 a.jdr:focus-visible { outline: 2px solid var(--or); outline-offset: 2px; }
+
+/* Compagnons d'aventure (fiches des autres joueurs) */
+#zone-compagnons { margin-top: 24px; }
+.note-compagnons { margin: -6px 0 12px; font-size: .92rem; font-style: italic; }
+a.jdr.compagnon { border-left-color: var(--bord); }

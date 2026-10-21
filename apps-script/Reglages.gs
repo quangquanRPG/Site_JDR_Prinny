@@ -34,5 +34,7 @@ const ONGLET_PERSOS = 'Personnages';
 const ENTETES_PERSOS = ['ID', 'JDR', 'Nom', 'Type', 'Joueur', 'Notes', 'Créé le', 'Fiche'];
 const COL_PERSO = { ID: 1, JDR: 2, NOM: 3, TYPE: 4, JOUEUR: 5, NOTES: 6, CREE: 7, FICHE: 8 };
 const TAILLE_MAX_FICHE = 45000; // une cellule Google Sheets contient au plus 50 000 caractères
+// Inventaires d'une fiche dont les objets cachés sont retirés pour les autres joueurs
+const INVENTAIRES_FICHE = ['inventaire', 'inventaireNonImportant'];
 // Type : PJ (personnage joueur) ou PNJ. Fiche : contenu JSON de la fiche perso.
 const SESSION_EXPIREE = { ok: false, session: false, erreur: 'Session expirée, reconnecte-toi.' };

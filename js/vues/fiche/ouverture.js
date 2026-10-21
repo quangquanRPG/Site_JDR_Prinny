@@ -35,6 +35,7 @@ async function ouvrirFiche(id) {
     const mj = rep.acces === "mj";
     $("#retour-fiche").href = mj ? "#jdr/" + rep.jdr.id : "#";
     $("#retour-fiche").textContent = mj ? "← " + rep.jdr.nom : "← Mes personnages";
+    if (rep.acces === "lecture") etatSauvegarde("Lecture seule", "lecture");   // fiche d'un autre joueur
     $("#infos-fiche").textContent = rep.jdr.nom + " · " + (rep.perso.type === "PJ" ? "joué par " + rep.perso.joueur : "PNJ");
     document.title = rep.perso.nom + " · " + (CFG.NOM_SITE || "Grimoire");
 

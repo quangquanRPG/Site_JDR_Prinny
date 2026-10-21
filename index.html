@@ -9,12 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <!-- VERSION (?v=…) : à changer partout dans ce fichier à chaque mise à jour
        (Ctrl+H « Remplacer tout ») pour forcer les navigateurs à recharger. -->
-  <link rel="stylesheet" href="css/base.css?v=2026-10-20f">
-  <link rel="stylesheet" href="css/accueil.css?v=2026-10-20f">
-  <link rel="stylesheet" href="css/espace.css?v=2026-10-20f">
-  <link rel="stylesheet" href="css/jdr.css?v=2026-10-20f">
-  <link rel="stylesheet" href="css/donnees-rp.css?v=2026-10-20f">
-  <link rel="stylesheet" href="css/fiche.css?v=2026-10-20f">
+  <link rel="stylesheet" href="css/base.css?v=2026-10-21a">
+  <link rel="stylesheet" href="css/accueil.css?v=2026-10-21a">
+  <link rel="stylesheet" href="css/espace.css?v=2026-10-21a">
+  <link rel="stylesheet" href="css/jdr.css?v=2026-10-21a">
+  <link rel="stylesheet" href="css/donnees-rp.css?v=2026-10-21a">
+  <link rel="stylesheet" href="css/fiche.css?v=2026-10-21a">
 </head>
 <body>
   <main class="scene">
@@ -96,6 +96,15 @@
         </div>
         <ul id="liste-mes-persos" class="liste-jdr"></ul>
         <p id="etat-mes-persos" class="doux centre etat" hidden></p>
+
+        <!-- Fiches des autres joueurs de ses JDR (lecture seule) -->
+        <div id="zone-compagnons" hidden>
+          <div class="titre-section">
+            <h2>Compagnons d'aventure</h2>
+          </div>
+          <p class="doux note-compagnons">Les fiches des autres joueurs de tes JDR, en lecture seule.</p>
+          <ul id="liste-compagnons" class="liste-jdr"></ul>
+        </div>
       </div>
 
       <!-- Espace MJ : ses JDR -->
@@ -178,39 +187,39 @@
   </main>
 
   <!-- Réglages (les seuls fichiers à modifier pour configurer le site) -->
-  <script src="config.js?v=2026-10-20f"></script>
-  <script src="fiches.js?v=2026-10-20f"></script>
+  <script src="config.js?v=2026-10-21a"></script>
+  <script src="fiches.js?v=2026-10-21a"></script>
   <!-- État partagé et outils -->
-  <script src="js/etat.js?v=2026-10-20f"></script>
-  <script src="js/outils/dom.js?v=2026-10-20f"></script>
-  <script src="js/outils/chiffrement.js?v=2026-10-20f"></script>
-  <script src="js/outils/stockage.js?v=2026-10-20f"></script>
-  <script src="js/regles.js?v=2026-10-20f"></script>
+  <script src="js/etat.js?v=2026-10-21a"></script>
+  <script src="js/outils/dom.js?v=2026-10-21a"></script>
+  <script src="js/outils/chiffrement.js?v=2026-10-21a"></script>
+  <script src="js/outils/stockage.js?v=2026-10-21a"></script>
+  <script src="js/regles.js?v=2026-10-21a"></script>
   <!-- Serveur (Google Sheet via Apps Script, ou mode démo) -->
-  <script src="js/serveur/api.js?v=2026-10-20f"></script>
-  <script src="js/serveur/demo.js?v=2026-10-20f"></script>
+  <script src="js/serveur/api.js?v=2026-10-21a"></script>
+  <script src="js/serveur/demo.js?v=2026-10-21a"></script>
   <!-- Données du RP -->
-  <script src="js/donnees-rp/modele.js?v=2026-10-20f"></script>
-  <script src="js/donnees-rp/onglets.js?v=2026-10-20f"></script>
+  <script src="js/donnees-rp/modele.js?v=2026-10-21a"></script>
+  <script src="js/donnees-rp/onglets.js?v=2026-10-21a"></script>
   <!-- Vues -->
-  <script src="js/navigation.js?v=2026-10-20f"></script>
-  <script src="js/vues/accueil.js?v=2026-10-20f"></script>
-  <script src="js/vues/espace.js?v=2026-10-20f"></script>
-  <script src="js/vues/espace-joueur.js?v=2026-10-20f"></script>
-  <script src="js/vues/espace-mj.js?v=2026-10-20f"></script>
+  <script src="js/navigation.js?v=2026-10-21a"></script>
+  <script src="js/vues/accueil.js?v=2026-10-21a"></script>
+  <script src="js/vues/espace.js?v=2026-10-21a"></script>
+  <script src="js/vues/espace-joueur.js?v=2026-10-21a"></script>
+  <script src="js/vues/espace-mj.js?v=2026-10-21a"></script>
   <!-- Page d'un JDR -->
-  <script src="js/vues/jdr/page.js?v=2026-10-20f"></script>
-  <script src="js/vues/jdr/panneaux.js?v=2026-10-20f"></script>
-  <script src="js/vues/jdr/panneau-type.js?v=2026-10-20f"></script>
-  <script src="js/vues/jdr/panneau-donnees-rp.js?v=2026-10-20f"></script>
-  <script src="js/vues/jdr/panneau-persos.js?v=2026-10-20f"></script>
-  <script src="js/vues/jdr/panneau-ajout.js?v=2026-10-20f"></script>
+  <script src="js/vues/jdr/page.js?v=2026-10-21a"></script>
+  <script src="js/vues/jdr/panneaux.js?v=2026-10-21a"></script>
+  <script src="js/vues/jdr/panneau-type.js?v=2026-10-21a"></script>
+  <script src="js/vues/jdr/panneau-donnees-rp.js?v=2026-10-21a"></script>
+  <script src="js/vues/jdr/panneau-persos.js?v=2026-10-21a"></script>
+  <script src="js/vues/jdr/panneau-ajout.js?v=2026-10-21a"></script>
   <!-- Fiche d'un personnage -->
-  <script src="js/vues/fiche/ouverture.js?v=2026-10-20f"></script>
-  <script src="js/vues/fiche/reussite.js?v=2026-10-20f"></script>
-  <script src="js/vues/fiche/sauvegarde.js?v=2026-10-20f"></script>
-  <script src="js/vues/fiche/echanges.js?v=2026-10-20f"></script>
+  <script src="js/vues/fiche/ouverture.js?v=2026-10-21a"></script>
+  <script src="js/vues/fiche/reussite.js?v=2026-10-21a"></script>
+  <script src="js/vues/fiche/sauvegarde.js?v=2026-10-21a"></script>
+  <script src="js/vues/fiche/echanges.js?v=2026-10-21a"></script>
   <!-- Démarrage : toujours en dernier -->
-  <script src="js/demarrage.js?v=2026-10-20f"></script>
+  <script src="js/demarrage.js?v=2026-10-21a"></script>
 </body>
 </html>
