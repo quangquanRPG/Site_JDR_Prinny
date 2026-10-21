@@ -64,22 +64,33 @@ async function demo(action, d) {
   if (!moi) return { ok: false, session: false, erreur: "Session expirée, reconnecte-toi." };
   if (action === "moi") return { ok: true, pseudo: moi.pseudo, role: moi.role };
 
-  // Fiches : MJ du JDR ou joueur du personnage
+  // Fiches : MJ du JDR ou joueur du personnage ; les autres joueurs du même JDR en lecture seule
   const avecFiche = (p) => ({ ...p, fiche: undefined, aFiche: !!p.fiche });
-  const accesPerso = () => {
+  const aUnPersoDansLeJdr = (jdrId) => persos.some((x) => x.jdr === jdrId && x.type === "PJ" && cle(x.joueur) === cle(moi.pseudo));
+  const sansObjetsCaches = (fiche) => {
+    if (!fiche) return fiche;
+    for (const k of ["inventaire", "inventaireNonImportant"]) {
+      if (fiche[k] && Array.isArray(fiche[k].objets)) fiche[k].objets = fiche[k].objets.filter((o) => !(o && o.cache));
+    }
+    return fiche;
+  };
+  const accesPerso = (lecture = false) => {
     const p = persos.find((x) => x.id === d.id);
     if (!p) return { refus: { ok: false, erreur: "Personnage introuvable." } };
     const j = tousJdr.find((x) => x.id === p.jdr);
     if (!j) return { refus: { ok: false, erreur: "JDR introuvable." } };
     const acces = moi.role === "MJ" && cle(j.mj) === cle(moi.pseudo) ? "mj"
-      : p.type === "PJ" && cle(p.joueur) === cle(moi.pseudo) ? "joueur" : null;
+      : p.type === "PJ" && cle(p.joueur) === cle(moi.pseudo) ? "joueur"
+      : lecture && p.type === "PJ" && aUnPersoDansLeJdr(j.id) ? "lecture" : null;
     if (!acces) return { refus: { ok: false, erreur: "Tu n'as pas accès à cette fiche." } };
     return { p, j, acces };
   };
   if (action === "fiche") {
-    const a = accesPerso();
+    const a = accesPerso(true);
     if (a.refus) return a.refus;
-    return { ok: true, acces: a.acces, perso: avecFiche(a.p), jdr: a.j, fiche: a.p.fiche ? JSON.parse(a.p.fiche) : null };
+    let fiche = a.p.fiche ? JSON.parse(a.p.fiche) : null;
+    if (a.acces === "lecture") fiche = sansObjetsCaches(fiche);
+    return { ok: true, acces: a.acces, perso: avecFiche(a.p), jdr: a.j, fiche };
   }
   if (action === "enregistrerFiche") {
     const a = accesPerso();
@@ -92,12 +103,11 @@ async function demo(action, d) {
     return { ok: true, nom: a.p.nom };
   }
   if (action === "mesPersos") {
-    return {
-      ok: true,
-      persos: persos
-        .filter((p) => p.type === "PJ" && cle(p.joueur) === cle(moi.pseudo))
-        .map((p) => ({ ...avecFiche(p), jdrNom: tousJdr.find((j) => j.id === p.jdr)?.nom || "JDR supprimé" })),
-    };
+    const avecJdr = (p) => ({ ...avecFiche(p), jdrNom: tousJdr.find((j) => j.id === p.jdr)?.nom || "JDR supprimé" });
+    const miens = persos.filter((p) => p.type === "PJ" && cle(p.joueur) === cle(moi.pseudo));
+    const mesJdr = new Set(miens.map((p) => p.jdr));
+    const compagnons = persos.filter((p) => p.type === "PJ" && mesJdr.has(p.jdr) && cle(p.joueur) !== cle(moi.pseudo));
+    return { ok: true, persos: miens.map(avecJdr), compagnons: compagnons.map(avecJdr) };
   }
 
   // Actions MJ

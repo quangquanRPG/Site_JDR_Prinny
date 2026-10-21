@@ -76,7 +76,8 @@ function supprimerPerso(req) {
   }
 }
 
-// Personnages joués par le compte connecté (tous JDR confondus)
+// Personnages joués par le compte connecté (tous JDR confondus),
+// et « compagnons » : les personnages des autres joueurs de ces mêmes JDR (fiches en lecture seule)
 function mesPersos(req) {
   const c = compteConnecte(req);
   if (!c) return SESSION_EXPIREE;
@@ -85,10 +86,15 @@ function mesPersos(req) {
   const fj = feuilleJdr();
   const n = fj.getLastRow() - 1;
   if (n > 0) fj.getRange(2, 1, n, 2).getValues().forEach(function (l) { nomsJdr[String(l[0])] = String(l[1]); });
-  const persos = lignesPersos()
-    .filter(function (p) { return p.type === 'PJ' && p.joueur.toLowerCase() === moi; })
-    .map(function (p) { const o = persoPublic(p); o.jdrNom = nomsJdr[p.jdr] || 'JDR supprimé'; return o; });
-  return { ok: true, persos: persos };
+  const lignes = lignesPersos();
+  const avecJdr = function (p) { const o = persoPublic(p); o.jdrNom = nomsJdr[p.jdr] || 'JDR supprimé'; return o; };
+  const miens = lignes.filter(function (p) { return p.type === 'PJ' && p.joueur.toLowerCase() === moi; });
+  const mesJdr = {};
+  miens.forEach(function (p) { mesJdr[p.jdr] = true; });
+  const compagnons = lignes.filter(function (p) {
+    return p.type === 'PJ' && mesJdr[p.jdr] && p.joueur.toLowerCase() !== moi;
+  });
+  return { ok: true, persos: miens.map(avecJdr), compagnons: compagnons.map(avecJdr) };
 }
 
 function lirePersos(jdrId) {

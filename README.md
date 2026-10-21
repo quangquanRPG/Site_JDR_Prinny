@@ -61,7 +61,7 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Mettre à jour la version (cache des navigateurs)
 
-Chaque `<link>` et `<script>` finit par `?v=2026-10-20f`. Après une mise à jour du site,
+Chaque `<link>` et `<script>` finit par `?v=2026-10-21a`. Après une mise à jour du site,
 change ce numéro **partout** dans `index.html` et `fiches/nardin/index.html`
 (Ctrl+H → « Remplacer tout »), sinon certains navigateurs gardent l'ancienne version.
 Le site en déduit tout seul la version à donner à la fiche.
@@ -143,7 +143,11 @@ Un joueur retrouve ses personnages dans **Mes personnages** sur son espace.
 La fiche s'ouvre avec le type choisi pour le JDR. Chaque modification est enregistrée
 automatiquement dans la colonne *Fiche* de l'onglet Personnages (« Enregistré ✓ » en haut à droite).
 
-- Qui peut l'ouvrir : le MJ du JDR et le joueur du personnage. Les autres joueurs n'y ont pas accès.
+- Qui peut la modifier : le MJ du JDR et le joueur du personnage.
+- Qui peut la voir en **lecture seule** : les autres joueurs qui ont un personnage dans le même JDR
+  (section **Compagnons d'aventure** de leur espace). Les objets cachés sont retirés par le serveur
+  avant l'envoi, et rien n'est enregistré. Les fiches des PNJ restent réservées au MJ.
+  Les joueurs sans personnage dans le JDR n'y ont pas accès.
 - Ce que chacun peut modifier suit les règles de la fiche (ex. Nardin : le joueur change PV/Mana actuels,
   bourse, inventaire, armes en main… ; le MJ règle en plus les maximums, les dons, et dans **Réglages du MJ**
   le nom, les compétences de base et les armes / armures possédées).
