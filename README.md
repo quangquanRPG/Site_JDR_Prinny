@@ -25,7 +25,8 @@ site-jdr/
 │   └── vues/               un fichier par écran
 │       ├── accueil.js · espace.js · espace-joueur.js · espace-mj.js
 │       ├── jdr/            page.js, panneaux.js et un fichier par panneau du menu
-│       └── fiche/          ouverture.js, echanges.js (messages avec la fiche), sauvegarde.js, reussite.js
+│       └── fiche/          ouverture.js, echanges.js (messages avec la fiche), sauvegarde.js, reussite.js,
+│                           actualisation.js (relit la fiche toutes les 30 s)
 ├── fiches/
 │   └── nardin/             fiche « Nardin », autonome (s'ouvre aussi seule pour tester)
 │       ├── index.html      structure de la fiche
@@ -59,12 +60,18 @@ Les fichiers JavaScript se partagent leurs fonctions : l'ordre des balises `<scr
 un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `index.html`
 (au-dessus de `demarrage.js`).
 
-### Mettre à jour la version (cache des navigateurs)
+### Numéro de version (et cache des navigateurs)
 
-Chaque `<link>` et `<script>` finit par `?v=2026-10-21a`. Après une mise à jour du site,
-change ce numéro **partout** dans `index.html` et `fiches/nardin/index.html`
-(Ctrl+H → « Remplacer tout »), sinon certains navigateurs gardent l'ancienne version.
-Le site en déduit tout seul la version à donner à la fiche.
+Le site en est à la **version 0.2** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.2` : c'est à la fois le numéro de version
+affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
+À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
+`fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
+
+| Version | Contenu |
+|---|---|
+| 0.1 | Comptes MJ / joueurs, JDR, personnages, Données du RP, fiche Nardin (efforts, fatigue, réussite, armure divine) |
+| 0.2 | Fiches des compagnons en lecture seule · mise à jour automatique des fiches toutes les 30 s |
 
 ## Tester tout de suite (mode démo)
 
@@ -151,6 +158,11 @@ automatiquement dans la colonne *Fiche* de l'onglet Personnages (« Enregistré 
 - Ce que chacun peut modifier suit les règles de la fiche (ex. Nardin : le joueur change PV/Mana actuels,
   bourse, inventaire, armes en main… ; le MJ règle en plus les maximums, les dons, et dans **Réglages du MJ**
   le nom, les compétences de base et les armes / armures possédées).
+- **Mise à jour automatique** : une fiche ouverte relit le Google Sheet toutes les 30 secondes et affiche
+  les changements faits par quelqu'un d'autre (« Mis à jour ↻ » en haut à droite). Pour ne pas écraser
+  ce qu'on est en train de faire, elle attend tant qu'un champ est en cours de saisie, qu'une modification
+  n'est pas encore enregistrée, ou moins de 3 s après une action. Pause quand l'onglet est caché.
+  Réglage : `INTERVALLE_ACTUALISATION` dans `js/vues/fiche/actualisation.js`.
 - Si le MJ et le joueur modifient la même fiche au même moment, la dernière modification enregistrée gagne.
 
 Une page de fiche (`fiches/xxx/index.html`) fonctionne aussi seule pour la tester (barre « Démo » en haut).

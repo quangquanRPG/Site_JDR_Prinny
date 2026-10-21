@@ -30,6 +30,7 @@ function brancherEvenements() {
 async function demarrer() {
   $("#titre-site").textContent = CFG.NOM_SITE || "Le Grimoire";
   $("#note-demo").hidden = !DEMO;
+  $("#version-site").textContent = VERSION ? "Version " + VERSION : "";
   brancherEvenements();
 
   const infos = await infosServeur();

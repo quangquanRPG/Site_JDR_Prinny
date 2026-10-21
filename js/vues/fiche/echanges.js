@@ -1,9 +1,21 @@
 // ─────────────────────────────────────────────────────────────
 //  Fiche : messages échangés avec la page de la fiche (dans son cadre)
-//    fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur
-//    site → fiche : jdr:charger
+//    fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur, jdr:saisie
+//    site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique, voir actualisation.js)
 // ─────────────────────────────────────────────────────────────
 "use strict";
+
+// Envoie le personnage à la fiche : à l'ouverture (jdr:charger) et à chaque mise à jour (jdr:maj)
+function envoyerFicheAuCadre(f, type) {
+  f.cadre.contentWindow.postMessage({
+    type,
+    donnees: f.donnees,
+    donneesRp: normaliserDonneesRp(f.jdr.donneesRp),   // listes du MJ (ou exemples de départ)
+    nom: f.perso.nom,
+    proprietaire: f.perso.type === "PJ" ? f.perso.joueur.toLowerCase() : null,
+    utilisateur: { id: moiInfo.pseudo.toLowerCase(), role: f.acces === "mj" ? "mj" : "joueur" },
+  }, "*");
+}
 
 function surMessageDeLaFiche(e) {
   const f = ficheOuverte;
@@ -11,21 +23,23 @@ function surMessageDeLaFiche(e) {
   const m = e.data;
 
   if (m.type === "jdr:pret") {
-    f.cadre.contentWindow.postMessage({
-      type: "jdr:charger",
-      donnees: f.donnees,
-      donneesRp: normaliserDonneesRp(f.jdr.donneesRp),   // listes du MJ (ou exemples de départ)
-      nom: f.perso.nom,
-      proprietaire: f.perso.type === "PJ" ? f.perso.joueur.toLowerCase() : null,
-      utilisateur: { id: moiInfo.pseudo.toLowerCase(), role: f.acces === "mj" ? "mj" : "joueur" },
-    }, "*");
+    envoyerFicheAuCadre(f, "jdr:charger");
+  } else if (m.type === "jdr:saisie") {
+    f.saisieEnCours = !!m.active;          // un champ de la fiche a le focus : pas de mise à jour automatique
+    if (m.active) f.derniereActionLocale = Date.now();
   } else if (m.type === "jdr:reussite") {
     afficherReussiteFiche(m);
   } else if (m.type === "jdr:hauteur") {
     f.cadre.style.height = Math.max(400, Number(m.hauteur) || 0) + "px";
   } else if (m.type === "jdr:modif") {
-    if (f.acces === "lecture") return;   // fiche d'un autre joueur : rien n'est enregistré
     const texte = JSON.stringify(m.donnees);
+    if (f.ignorerProchaineModif) {        // la fiche renvoie la version reçue par la mise à jour automatique
+      f.ignorerProchaineModif = false;
+      f.recu = true;
+      f.dernier = texte;
+      return;
+    }
+    if (f.acces === "lecture") { f.recu = true; return; }   // fiche d'un autre joueur : rien n'est enregistré
     if (!f.recu) {
       f.recu = true;
       // Fiche déjà enregistrée : cette première version est l'état de départ.
@@ -33,6 +47,7 @@ function surMessageDeLaFiche(e) {
       if (f.donnees) { f.dernier = texte; return; }
     }
     if (texte === (f.texteAEnvoyer ?? f.dernier)) return;
+    f.derniereActionLocale = Date.now();
     f.aEnvoyer = m.donnees;
     f.texteAEnvoyer = texte;
     etatSauvegarde("Modifications en attente…");

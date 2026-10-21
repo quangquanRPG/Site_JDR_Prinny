@@ -31,6 +31,8 @@ async function ouvrirFiche(id) {
     if (sessionPerdue(rep)) return;
     if (!rep.ok) return messageFiche(rep.erreur || "Fiche introuvable.");
     Object.assign(f, { perso: rep.perso, jdr: rep.jdr, acces: rep.acces, donnees: rep.fiche });
+    f.texteServeur = JSON.stringify(rep.fiche);               // pour repérer les changements faits ailleurs
+    f.texteRp = JSON.stringify(rep.jdr.donneesRp ?? null);
 
     const mj = rep.acces === "mj";
     $("#retour-fiche").href = mj ? "#jdr/" + rep.jdr.id : "#";
@@ -50,6 +52,7 @@ async function ouvrirFiche(id) {
     messageFiche("");
     f.cadre = el("iframe", { src: type.page + (type.page.includes("?") ? "&" : "?") + "integre=1&v=" + VERSION, title: "Fiche de " + rep.perso.nom });
     $("#cadre-fiche").replaceChildren(f.cadre);
+    demarrerActualisation(f);                                  // relit la fiche toutes les 30 s
   } catch (e) {
     if (ficheOuverte === f) messageFiche(e.message);
   }
