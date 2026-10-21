@@ -3,8 +3,9 @@
    Ouverte depuis le Grimoire (fiches/nardin/index.html?integre=1 dans un cadre),
    la page reçoit le personnage et l'utilisateur, puis renvoie la fiche
    après chaque modification ; le site l'enregistre dans le Google Sheet.
-     site → fiche : jdr:charger
-     fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur
+     site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique toutes les 10 s)
+     fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur,
+                    jdr:saisie (un champ a le focus : le site attend avant de mettre à jour)
    ================================================================ */
 "use strict";
 
@@ -19,7 +20,8 @@ function prevenirLeSite() {
 }
 
 function surMessageDuSite(e) {
-  if (e.source !== window.parent || !e.data || e.data.type !== "jdr:charger") return;
+  if (e.source !== window.parent || !e.data) return;
+  if (e.data.type !== "jdr:charger" && e.data.type !== "jdr:maj") return;
   const m = e.data;
   utilisateurIntegre = m.utilisateur;                       // { id, role: "mj" | "joueur" }
   if (m.donneesRp) appliquerDonneesRp(m.donneesRp);       // listes du MJ pour ce JDR
@@ -31,6 +33,12 @@ function brancherAuSite() {
   document.body.classList.add("integre");
   document.documentElement.dataset.theme = "dark";
   window.addEventListener("message", surMessageDuSite);
+  // Prévient le site quand on tape dans un champ, pour qu'il n'écrase pas la saisie en cours
+  const estChamp = el => el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+  document.addEventListener("focusin", ev => { if (estChamp(ev.target)) envoyerAuSite({ type: "jdr:saisie", active: true }); });
+  document.addEventListener("focusout", () => setTimeout(() => {
+    if (!estChamp(document.activeElement)) envoyerAuSite({ type: "jdr:saisie", active: false });
+  }, 0));
   // Le site ajuste la hauteur du cadre à celle de la fiche
   new ResizeObserver(() => envoyerAuSite({ type: "jdr:hauteur", hauteur: Math.ceil(document.body.getBoundingClientRect().height) }))
     .observe(document.body);

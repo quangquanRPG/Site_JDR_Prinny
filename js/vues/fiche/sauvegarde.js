@@ -10,6 +10,7 @@ function fermerFiche() {
   const f = ficheOuverte;
   if (!f) return;
   ficheOuverte = null;
+  arreterActualisation(f);
   if (f.aEnvoyer) sauverFiche(f);
   $("#cadre-fiche").replaceChildren();
 }
@@ -32,6 +33,7 @@ async function sauverFiche(f) {
       return;
     }
     f.dernier = texte;
+    f.texteServeur = texte;                 // le Sheet contient maintenant notre version
     if (rep.nom && f.perso && rep.nom !== f.perso.nom) {
       f.perso.nom = rep.nom;
       if (ficheOuverte === f) document.title = rep.nom + " · " + (CFG.NOM_SITE || "Grimoire");

@@ -83,3 +83,6 @@ fieldset.champ legend {
   border-top: 1px dashed var(--bord);
   padding-top: 14px;
 }
+
+/* Numéro de version, discret sous la carte d'accueil */
+.version-site { margin: 14px 0 0; text-align: center; font-size: .75rem; color: var(--doux); opacity: .7; letter-spacing: .05em; }
