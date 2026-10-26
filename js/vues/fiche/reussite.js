@@ -14,6 +14,7 @@ function afficherReussiteFiche(r) {
     el("div", { class: "sous" + (mieux || pire ? "" : " neutre"), text: mieux || pire ? "au lieu de " + r.base + "+" : "sur chaque d6" }),
     el("div", { class: "faces" }, ...[1, 2, 3, 4, 5, 6].map((f) => el("span", { class: "face" + (f >= r.reussite ? " ok" : ""), text: String(f) }))),
     chance ? el("div", { class: "chance" }, el("b", { text: chance }), " par dé") : null,
+    r.dons ? el("div", { class: "dons", text: "Don : " + r.dons }) : null,
     r.effort ? el("div", { class: "effet", text: "Effort : " + r.effort }) : null,
     r.fatigue ? el("div", { class: "fatigue", text: "Fatigue : " + r.fatigue }) : null,
   ].filter(Boolean));   // replaceChildren écrirait « null » pour un élément absent

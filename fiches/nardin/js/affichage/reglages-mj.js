@@ -40,7 +40,7 @@ function afficherReglagesMJ(fiche, u) {
         <div class="label">Armes possédées</div>
         <div class="reglage-coches">${CATALOGUE_ARMES.map(a => `
           <label><input type="checkbox" data-arme="${a.id}" ${fiche.armes.includes(a.id) ? "checked" : ""}>
-            ${echap(a.nom)}${a.deuxMains ? ` <small>2 mains</small>` : ""}</label>`).join("")}
+            ${echap(a.nom)}${a.deuxMains ? ` <small>2 mains</small>` : ""}${a.forme2 ? ` <small>⇄ ${echap(a.forme2.nom)}${a.forme2.deuxMains ? " (2 mains)" : ""}</small>` : ""}</label>`).join("")}
         </div>
       </div>
     </div>`;

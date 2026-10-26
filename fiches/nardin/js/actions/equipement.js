@@ -43,6 +43,14 @@ function prendreEnMain(fiche, id, u) {
   fiche.armesEnMain.push(id);
   return true;
 }
+// Passe une arme à deux formes de l'une à l'autre (refusé si elle est en main et qu'il manque une main)
+function changerFormeArme(fiche, id, u) {
+  if (!droits.changerArmes(u, fiche)) return false;
+  if (!fiche.armes.includes(id) || !changementFormePossible(fiche, id)) return false;
+  if (formeActuelle(fiche, id) === 2) delete fiche.formesArmes[id];
+  else fiche.formesArmes[id] = 2;
+  return true;
+}
 function lacherArme(fiche, id, u) {        // reste portée, mais plus en main
   if (!droits.changerArmes(u, fiche)) return false;
   fiche.armesEnMain = fiche.armesEnMain.filter(a => a !== id);

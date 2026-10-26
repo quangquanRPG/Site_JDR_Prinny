@@ -86,7 +86,7 @@ function afficherInventaire(fiche, u, cle) {
   };
   if (def.equipement) {
     armuresRangees(fiche).forEach(id => carteEquipement(trouverArmure(id)?.nom ?? id, "Armure", EMPLACEMENTS_ARMURE));
-    armesRangees(fiche).forEach(id => carteEquipement(trouverArme(id)?.nom ?? id, "Arme", EMPLACEMENTS_ARME));
+    armesRangees(fiche).forEach(id => carteEquipement(armeEffective(fiche, id)?.nom ?? id, "Arme", EMPLACEMENTS_ARME));
   }
 
   for (const o of objetsVisibles) {

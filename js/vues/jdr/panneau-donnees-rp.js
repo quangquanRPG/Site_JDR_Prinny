@@ -25,6 +25,23 @@ function panneauDonneesRp() {
   const marquer = () => { if (!b.sale) { b.sale = true; majEtat(); } };
 
   function champ(c, it, change) {
+    if (c.type === "forme") {   // case « deux formes » + champs de la 2e forme (it[c.k] = objet ou null)
+      const coche = el("input", { type: "checkbox" });
+      coche.checked = !!it[c.k];
+      const sous = el("div", { class: "champs-rp sous-forme" });
+      const dessinerSous = () => {
+        sous.replaceChildren(...(it[c.k] ? c.champs.map((sc) => champ(sc, it[c.k], change)) : []));
+        sous.hidden = !it[c.k];
+      };
+      coche.addEventListener("change", () => {
+        it[c.k] = coche.checked ? { nom: "", degats: "", deuxMains: false, description: "" } : null;
+        change();
+        dessinerSous();
+        if (coche.checked) sous.querySelector("input")?.focus();
+      });
+      dessinerSous();
+      return el("div", { class: "forme-rp" }, el("label", { class: "case-rp" }, coche, el("span", { text: c.label })), sous);
+    }
     if (c.type === "pieces") {
       return el("div", { class: "pieces-rp" },
         el("span", { class: "label-rp", text: "Pièces du set" }),
@@ -125,6 +142,14 @@ function panneauDonneesRp() {
           b.onglet = o.cle;
           dessiner();
           return ecrireMessage(msg, "Chaque élément de « " + o.titre + " » doit avoir un nom.");
+        }
+        if (it.forme2) {
+          it.forme2.nom = String(it.forme2.nom || "").trim();
+          if (!it.forme2.nom) {
+            b.onglet = o.cle;
+            dessiner();
+            return ecrireMessage(msg, "La 2e forme de « " + it.nom + " » doit avoir un nom.");
+          }
         }
       }
     }

@@ -16,11 +16,10 @@ const ONGLETS_RP = [
   },
   {
     cle: "raretes", titre: "Raretés", prefixe: "rar",
-    nouveau: () => ({ nom: "Nouvelle rareté", multArmure: 1, bonusDegats: 0 }),
+    nouveau: () => ({ nom: "Nouvelle rareté", multArmure: 1 }),
     champs: [
       { k: "nom", label: "Nom" },
       { k: "multArmure", label: "Multiplicateur armure (×)", type: "nombre", pas: "any" },
-      { k: "bonusDegats", label: "Bonus dégâts", type: "nombre" },
     ],
   },
   {
@@ -33,14 +32,20 @@ const ONGLETS_RP = [
   },
   {
     cle: "armes", titre: "Armes", prefixe: "arme",
-    nouveau: () => ({ nom: "Nouvelle arme", degats: "", deuxMains: false, materiau: "", rarete: "", description: "" }),
+    // Règle du MJ : une arme = un nom, un roll (décidé librement par le MJ) et une description (effets).
+    // forme2 : deuxième forme facultative (ex. Épée et bouclier ⇄ Hache de guerre), null sinon
+    nouveau: () => ({ nom: "Nouvelle arme", degats: "", deuxMains: false, description: "", forme2: null }),
     champs: [
       { k: "nom", label: "Nom" },
-      { k: "degats", label: "Dégâts", placeholder: "ex. 1d6+2" },
-      { k: "materiau", label: "Métal", type: "liste", source: "materiaux" },
-      { k: "rarete", label: "Rareté", type: "liste", source: "raretes" },
+      { k: "degats", label: "Roll", placeholder: "ex. 2d6" },
       { k: "deuxMains", label: "À deux mains", type: "case" },
-      { k: "description", label: "Description", type: "zone" },
+      { k: "description", label: "Description / effet", type: "zone" },
+      { k: "forme2", label: "Arme à deux formes (le joueur peut passer de l'une à l'autre)", type: "forme", champs: [
+        { k: "nom", label: "Nom de la 2e forme" },
+        { k: "degats", label: "Roll", placeholder: "ex. 2d6" },
+        { k: "deuxMains", label: "À deux mains", type: "case" },
+        { k: "description", label: "Description / effet", type: "zone" },
+      ] },
     ],
   },
   {

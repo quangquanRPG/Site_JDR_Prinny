@@ -12,8 +12,8 @@ const DONNEES_RP_DEFAUT = {
     { id: "fer", nom: "Fer", valeur: 4, valeurMagie: 0 },
   ],
   raretes: [
-    { id: "commun", nom: "Commun", multArmure: 1, bonusDegats: 0 },
-    { id: "rare", nom: "Rare", multArmure: 2, bonusDegats: 1 },
+    { id: "commun", nom: "Commun", multArmure: 1 },
+    { id: "rare", nom: "Rare", multArmure: 2 },
   ],
   typesArmure: [
     { id: "bras", nom: "Bras", armure: 2 },
@@ -22,12 +22,14 @@ const DONNEES_RP_DEFAUT = {
     { id: "casque", nom: "Casque", armure: 2 },
   ],
   armes: [
-    { id: "epee", nom: "Épée courte", degats: "", deuxMains: false, materiau: "fer", rarete: "commun", description: "" },
-    { id: "dague", nom: "Dague", degats: "", deuxMains: false, materiau: "fer", rarete: "commun", description: "" },
-    { id: "arc", nom: "Arc court", degats: "", deuxMains: true, materiau: "", rarete: "commun", description: "" },
-    { id: "bouclier", nom: "Bouclier rond", degats: "", deuxMains: false, materiau: "fer", rarete: "commun", description: "" },
-    { id: "hache", nom: "Hache", degats: "", deuxMains: false, materiau: "fer", rarete: "commun", description: "" },
-    { id: "espadon", nom: "Espadon", degats: "", deuxMains: true, materiau: "fer", rarete: "commun", description: "" },
+    { id: "epee", nom: "Épée courte", degats: "", deuxMains: false, description: "" },
+    { id: "dague", nom: "Dague", degats: "", deuxMains: false, description: "" },
+    { id: "arc", nom: "Arc court", degats: "", deuxMains: true, description: "" },
+    { id: "bouclier", nom: "Bouclier rond", degats: "", deuxMains: false, description: "" },
+    { id: "hache", nom: "Hache", degats: "", deuxMains: false, description: "" },
+    { id: "espadon", nom: "Espadon", degats: "", deuxMains: true, description: "" },
+    { id: "epee-bouclier", nom: "Épée et bouclier", degats: "", deuxMains: false, description: "",
+      forme2: { nom: "Hache de guerre", degats: "", deuxMains: true, description: "" } },
   ],
   setsArmure: [
     { id: "vetements", nom: "Vêtements", materiau: "tissu", rarete: "commun", pieces: ["plastron"], description: "" },
@@ -46,13 +48,17 @@ function normaliserDonneesRp(d) {
   return {
     materiaux: liste("materiaux").map((x) => ({ id: t(x.id), nom: t(x.nom), valeur: n(x.valeur), valeurMagie: n(x.valeurMagie) })),
     raretes: liste("raretes").map((x) => ({
-      id: t(x.id), nom: t(x.nom), bonusDegats: n(x.bonusDegats),
+      id: t(x.id), nom: t(x.nom),
       multArmure: x.multArmure == null || x.multArmure === "" ? 1 : n(x.multArmure),   // multiplicateur d'armure (1 par défaut)
     })),
     typesArmure: liste("typesArmure").map((x) => ({ id: t(x.id), nom: t(x.nom), armure: n(x.armure) })),
+    // Arme : nom, roll (champ « degats », texte libre du MJ), à deux mains, description / effet
     armes: liste("armes").map((x) => ({
-      id: t(x.id), nom: t(x.nom), degats: t(x.degats), deuxMains: !!x.deuxMains,
-      materiau: t(x.materiau), rarete: t(x.rarete), description: t(x.description),
+      id: t(x.id), nom: t(x.nom), degats: t(x.degats), deuxMains: !!x.deuxMains, description: t(x.description),
+      // deuxième forme facultative (null = l'arme n'a qu'une forme)
+      forme2: x.forme2 && typeof x.forme2 === "object"
+        ? { nom: t(x.forme2.nom), degats: t(x.forme2.degats), deuxMains: !!x.forme2.deuxMains, description: t(x.forme2.description) }
+        : null,
     })),
     setsArmure: liste("setsArmure").map((x) => ({
       id: t(x.id), nom: t(x.nom), materiau: t(x.materiau), rarete: t(x.rarete), description: t(x.description),

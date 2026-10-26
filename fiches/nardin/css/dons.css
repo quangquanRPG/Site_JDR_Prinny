@@ -17,4 +17,4 @@
 .effet.p { color: var(--bonus); }
 .effet.m { color: var(--malus); }
 .effet.regle { color: var(--accent); }
-.partie-des[hidden], .partie-regle[hidden] { display: none; }
+.partie-des[hidden], .partie-reussite[hidden], .partie-regle[hidden] { display: none; }

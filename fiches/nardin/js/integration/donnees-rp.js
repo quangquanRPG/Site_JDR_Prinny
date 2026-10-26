@@ -4,7 +4,8 @@
    Set d'armure : protection = somme de l'armure de ses pièces (type d'armure)
                   × valeur du métal × multiplicateur de la rareté,
                   valeur = valeur du métal.
-   Arme : dégâts (texte) + bonus dégâts de la rareté.
+   Arme : nom, roll (texte libre du MJ), à deux mains, description / effet,
+          et une 2e forme facultative avec les mêmes champs.
    ================================================================ */
 "use strict";
 
@@ -26,13 +27,14 @@ function appliquerDonneesRp(d) {
     };
   }));
 
-  CATALOGUE_ARMES.splice(0, CATALOGUE_ARMES.length, ...(d.armes || []).map(a => {
-    const m = metal(a.materiau), r = rarete(a.rarete);
-    const bonus = nombre(r?.bonusDegats);
-    const degats = a.degats ? "Dégâts " + a.degats + (bonus ? " +" + bonus : "") : bonus ? "Dégâts +" + bonus : "";
-    return {
-      id: a.id, nom: a.nom, deuxMains: !!a.deuxMains,
-      detail: [degats, m?.nom, r?.nom].filter(Boolean).join(" · "),
-    };
-  }));
+  CATALOGUE_ARMES.splice(0, CATALOGUE_ARMES.length, ...(d.armes || []).map(a => ({
+    id: a.id, nom: a.nom, deuxMains: !!a.deuxMains,
+    detail: a.degats ? "Roll " + a.degats : "",
+    description: a.description || "",
+    forme2: a.forme2 ? {
+      nom: a.forme2.nom, deuxMains: !!a.forme2.deuxMains,
+      detail: a.forme2.degats ? "Roll " + a.forme2.degats : "",
+      description: a.forme2.description || "",
+    } : null,
+  })));
 }
