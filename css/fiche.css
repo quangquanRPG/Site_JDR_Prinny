@@ -58,6 +58,16 @@
 .reussite-fiche .face.ok { background: var(--ok); border-color: var(--ok); color: #1d1814; }
 .reussite-fiche .chance { font-size: .9rem; color: var(--doux); }
 .reussite-fiche .chance b { color: var(--texte); font-size: 1.05rem; }
+/* Jet du sort en préparation (gestionnaire de mana de la fiche) */
+.reussite-fiche .sort { margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--bord); }
+.reussite-fiche .sort .titre { font-size: .62rem; }
+.reussite-fiche .sort .jet { font-size: 1.2rem; font-weight: 700; color: #7fb0ee; line-height: 1.2; overflow-wrap: anywhere; }
+.reussite-fiche .sort .mult { font-size: .7rem; font-weight: 600; color: var(--doux); }
+.reussite-fiche .sort .stats { display: flex; justify-content: space-between; gap: 4px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.reussite-fiche .sort .stats span { display: flex; flex-direction: column; min-width: 0; }
+.reussite-fiche .sort .stats small { font-size: .6rem; color: var(--doux); text-transform: uppercase; letter-spacing: .04em; }
+.reussite-fiche .sort .stats b { font-size: .82rem; overflow-wrap: anywhere; }
+.reussite-fiche .sort .stats .moy b { color: #7fb0ee; }
 
 @media (max-width: 1159px) {
   .barre-fiche { flex-wrap: wrap; row-gap: 6px; background: var(--fond); box-shadow: 0 8px 14px -10px rgba(0,0,0,.8); }
@@ -70,6 +80,10 @@
   .reussite-fiche .valeur { font-size: 1.5rem; }
   .reussite-fiche .sous.neutre, .reussite-fiche .faces { display: none; }
   .reussite-fiche .effet, .reussite-fiche .fatigue, .reussite-fiche .dons { margin-top: 0; }
+  .reussite-fiche .sort { flex-basis: 100%; margin-top: 2px; padding-top: 4px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; column-gap: 10px; }
+  .reussite-fiche .sort .jet { font-size: 1.05rem; }
+  .reussite-fiche .sort .stats { margin-top: 0; gap: 10px; }
+  .reussite-fiche .sort .stats span { flex-direction: row; gap: 4px; align-items: baseline; }
 }
 
 /* Fiche d'un autre joueur (lecture seule) */

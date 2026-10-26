@@ -3,7 +3,7 @@
    ───────────────────────────────────────────────────────────── */
 
 .degats {
-  margin-top: 12px; background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  height: 100%; align-content: flex-start; background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
   padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
 }
 .champ-degat { display: flex; flex-direction: column; gap: 4px; }

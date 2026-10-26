@@ -1,18 +1,21 @@
 /* ─────────────────────────────────────────────────────────────
-   Gestionnaire de mana (sorts) : réglages à gauche, jet à droite
+   Dégâts et Sort côte à côte (deux blocs compacts), et jet du sort sous la Réussite
    ───────────────────────────────────────────────────────────── */
 
+.actions-etat { margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
+.actions-etat:not(:has(.degats, .mana-sort)) { display: none; }
+@media (max-width: 620px) { .actions-etat { grid-template-columns: 1fr; } }
+.actions-etat > div:empty { display: none; }
+.titre-bloc { font-weight: 600; font-size: .95rem; flex-basis: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.titre-bloc small { font-weight: 400; font-size: .8rem; color: var(--doux); }
+
+/* Bloc Sort */
 .mana-sort {
   --mana: #3f7fd1;
-  margin-top: 12px; background: var(--carte); border: 1px solid var(--bord); border-left: 3px solid var(--mana);
+  height: 100%; background: var(--carte); border: 1px solid var(--bord); border-top: 3px solid var(--mana);
   border-radius: 10px; padding: 12px 14px;
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; align-items: start;
+  display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
 }
-@media (max-width: 620px) { .mana-sort { grid-template-columns: 1fr; } }
-
-.mana-gauche { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-.mana-titre { font-weight: 600; font-size: .95rem; }
-.mana-titre small { font-weight: 400; color: var(--doux); }
 .mana-cases { display: flex; flex-wrap: wrap; gap: 6px; }
 .case-sort {
   display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: .85rem;
@@ -24,20 +27,29 @@
 .case-sort.malus:has(input:checked) { border-color: var(--malus); color: var(--malus); font-weight: 600; }
 .mana-action { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .mana-action .erreur { font-size: .8rem; }
-.mana-confirmer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .88rem;
+.mana-confirmer { display: flex; flex-direction: column; gap: 6px; font-size: .88rem;
   border: 1px dashed var(--mana); border-radius: 8px; padding: 6px 10px; }
+.mana-confirmer .boutons { display: flex; gap: 6px; }
 .mana-sort .btn.principal { padding: 6px 14px; }
-.mana-sort .recap { flex-basis: auto; }
 
-.mana-droite { background: var(--bg); border-radius: 8px; padding: 12px; min-height: 100%; display: flex; flex-direction: column; gap: 12px; }
-.mana-vide { color: var(--doux); font-style: italic; font-size: .88rem; margin: auto 0; }
-.mana-jet { display: flex; flex-direction: column; gap: 2px; }
-.mana-jet .valeur { font-size: 1.7rem; font-weight: 700; color: var(--mana); line-height: 1.15; overflow-wrap: anywhere; }
-.mana-jet .mult { font-size: .8rem; font-weight: 600; color: var(--doux); }
-.mana-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.mana-stats > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.mana-stats b { font-size: 1.15rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.mana-stats .moy b { color: var(--mana); }
+/* Jet du sort sous la Réussite (panneau de la fiche ouverte seule) */
+.sort-reussite { --mana: #3f7fd1; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--bord); }
+.sort-reussite[hidden] { display: none; }
+.sort-reussite .label small { text-transform: none; letter-spacing: 0; }
+.sort-reussite .jet { font-size: 1.35rem; font-weight: 700; color: var(--mana); line-height: 1.2; overflow-wrap: anywhere; }
+.sort-reussite .mult { font-size: .75rem; font-weight: 600; color: var(--doux); }
+.sort-reussite .stats { display: flex; justify-content: space-between; gap: 6px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.sort-reussite .stats span { display: flex; flex-direction: column; min-width: 0; }
+.sort-reussite .stats small { font-size: .68rem; color: var(--doux); text-transform: uppercase; letter-spacing: .04em; }
+.sort-reussite .stats b { font-size: .9rem; overflow-wrap: anywhere; }
+.sort-reussite .stats .moy b { color: var(--mana); }
+@media (max-width: 1219px) {   /* bandeau du haut : sur une seule ligne */
+  body:has(#reussite .sort-reussite:not([hidden])) { padding-top: 104px; }   /* le bandeau est plus haut */
+  .sort-reussite { flex-basis: 100%; margin-top: 2px; padding-top: 4px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; column-gap: 10px; }
+  .sort-reussite .jet { font-size: 1.05rem; }
+  .sort-reussite .stats { margin-top: 0; gap: 10px; }
+  .sort-reussite .stats span { flex-direction: row; gap: 4px; align-items: baseline; }
+}
 
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mana-sort { --mana: #6ea4ea; } }
-:root[data-theme="dark"] .mana-sort { --mana: #6ea4ea; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) :is(.mana-sort, .sort-reussite) { --mana: #6ea4ea; } }
+:root[data-theme="dark"] :is(.mana-sort, .sort-reussite) { --mana: #6ea4ea; }

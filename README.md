@@ -181,9 +181,10 @@ Ouverte par le site (`?integre=1`), elle échange avec lui par messages : `jdr:p
 
 ## Gestionnaire de mana (fiche Nardin)
 
-Sous « Encaisser des dégâts », le bloc **Sort** (propriétaire de la fiche et MJ) :
-à gauche le mana à dépenser et les cases Bonus / Malus, à droite le jet à faire et les dégâts
-minimum, moyens et maximum. M = mana dépensé, D = M ÷ 10 (arrondi en dessous), U = unité de M :
+À côté de « Encaisser des dégâts », le bloc **Sort** (propriétaire de la fiche et MJ) : mana à
+dépenser et cases Bonus / Malus. Le jet à faire et les dégâts minimum, moyens et maximum s'affichent
+sous la **Réussite** (cadre de droite, ou bandeau du haut sur téléphone).
+M = mana dépensé, D = M ÷ 10 (arrondi en dessous), U = unité de M :
 
 | Mana dépensé | Jet | Exemple |
 |---|---|---|
