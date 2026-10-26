@@ -7,6 +7,7 @@
 // Quitter la fiche : ce qui était en attente est enregistré tout de suite
 function fermerFiche() {
   $("#reussite-fiche").hidden = true;
+  viderPortrait();
   const f = ficheOuverte;
   if (!f) return;
   ficheOuverte = null;

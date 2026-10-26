@@ -31,10 +31,15 @@ const COL_JDR = { ID: 1, NOM: 2, DESCRIPTION: 3, MJ: 4, CREE: 5, TYPE_FICHE: 6, 
 // Données RP : JSON des listes du MJ (métaux, raretés, types d'armure, armes, sets d'armure)
 
 const ONGLET_PERSOS = 'Personnages';
-const ENTETES_PERSOS = ['ID', 'JDR', 'Nom', 'Type', 'Joueur', 'Notes', 'Créé le', 'Fiche'];
-const COL_PERSO = { ID: 1, JDR: 2, NOM: 3, TYPE: 4, JOUEUR: 5, NOTES: 6, CREE: 7, FICHE: 8 };
+const ENTETES_PERSOS = ['ID', 'JDR', 'Nom', 'Type', 'Joueur', 'Notes', 'Créé le', 'Fiche', 'Image'];
+const COL_PERSO = { ID: 1, JDR: 2, NOM: 3, TYPE: 4, JOUEUR: 5, NOTES: 6, CREE: 7, FICHE: 8, IMAGE: 9 };
+// Image : identifiant du fichier dans le dossier Drive des images (voir Images.gs), vide si aucune
 const TAILLE_MAX_FICHE = 45000; // une cellule Google Sheets contient au plus 50 000 caractères
 // Inventaires d'une fiche dont les objets cachés sont retirés pour les autres joueurs
 const INVENTAIRES_FICHE = ['inventaire', 'inventaireNonImportant'];
 // Type : PJ (personnage joueur) ou PNJ. Fiche : contenu JSON de la fiche perso.
+// Images de personnage (Images.gs) : fichiers privés dans un dossier de ton Google Drive
+const DOSSIER_IMAGES = 'Grimoire des Aventuriers — Images';
+const TYPES_IMAGE = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+const TAILLE_MAX_IMAGE = 8 * 1024 * 1024;   // 8 Mo par image
 const SESSION_EXPIREE = { ok: false, session: false, erreur: 'Session expirée, reconnecte-toi.' };

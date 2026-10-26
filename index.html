@@ -9,12 +9,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <!-- VERSION (?v=…) : à changer partout dans ce fichier à chaque mise à jour
        (Ctrl+H « Remplacer tout ») pour forcer les navigateurs à recharger. -->
-  <link rel="stylesheet" href="css/base.css?v=0.3.1">
-  <link rel="stylesheet" href="css/accueil.css?v=0.3.1">
-  <link rel="stylesheet" href="css/espace.css?v=0.3.1">
-  <link rel="stylesheet" href="css/jdr.css?v=0.3.1">
-  <link rel="stylesheet" href="css/donnees-rp.css?v=0.3.1">
-  <link rel="stylesheet" href="css/fiche.css?v=0.3.1">
+  <link rel="stylesheet" href="css/base.css?v=0.3.2">
+  <link rel="stylesheet" href="css/accueil.css?v=0.3.2">
+  <link rel="stylesheet" href="css/espace.css?v=0.3.2">
+  <link rel="stylesheet" href="css/jdr.css?v=0.3.2">
+  <link rel="stylesheet" href="css/donnees-rp.css?v=0.3.2">
+  <link rel="stylesheet" href="css/fiche.css?v=0.3.2">
+  <link rel="stylesheet" href="css/portrait.css?v=0.3.2">
 </head>
 <body>
   <main class="scene">
@@ -177,51 +178,55 @@
     <section id="vue-fiche" class="vue-fiche" hidden>
       <div class="barre-fiche">
         <a href="#" class="retour" id="retour-fiche">← Retour</a>
+        <aside id="portrait-fiche" class="portrait-fiche" aria-label="Image du personnage" hidden></aside>
         <span id="etat-sauvegarde" class="etat-sauvegarde" aria-live="polite"></span>
         <aside id="reussite-fiche" class="reussite-fiche" aria-live="polite" hidden></aside>
       </div>
       <p id="infos-fiche" class="doux infos-fiche"></p>
       <p id="message-fiche" class="doux centre etat" hidden></p>
       <div id="cadre-fiche"></div>
+      <input type="file" id="choix-image" accept="image/*" hidden>
+      <div id="visionneuse" class="visionneuse" role="dialog" aria-label="Image en grand" hidden></div>
     </section>
 
   </main>
 
   <!-- Réglages (les seuls fichiers à modifier pour configurer le site) -->
-  <script src="config.js?v=0.3.1"></script>
-  <script src="fiches.js?v=0.3.1"></script>
+  <script src="config.js?v=0.3.2"></script>
+  <script src="fiches.js?v=0.3.2"></script>
   <!-- État partagé et outils -->
-  <script src="js/etat.js?v=0.3.1"></script>
-  <script src="js/outils/dom.js?v=0.3.1"></script>
-  <script src="js/outils/chiffrement.js?v=0.3.1"></script>
-  <script src="js/outils/stockage.js?v=0.3.1"></script>
-  <script src="js/regles.js?v=0.3.1"></script>
+  <script src="js/etat.js?v=0.3.2"></script>
+  <script src="js/outils/dom.js?v=0.3.2"></script>
+  <script src="js/outils/chiffrement.js?v=0.3.2"></script>
+  <script src="js/outils/stockage.js?v=0.3.2"></script>
+  <script src="js/regles.js?v=0.3.2"></script>
   <!-- Serveur (Google Sheet via Apps Script, ou mode démo) -->
-  <script src="js/serveur/api.js?v=0.3.1"></script>
-  <script src="js/serveur/demo.js?v=0.3.1"></script>
+  <script src="js/serveur/api.js?v=0.3.2"></script>
+  <script src="js/serveur/demo.js?v=0.3.2"></script>
   <!-- Données du RP -->
-  <script src="js/donnees-rp/modele.js?v=0.3.1"></script>
-  <script src="js/donnees-rp/onglets.js?v=0.3.1"></script>
+  <script src="js/donnees-rp/modele.js?v=0.3.2"></script>
+  <script src="js/donnees-rp/onglets.js?v=0.3.2"></script>
   <!-- Vues -->
-  <script src="js/navigation.js?v=0.3.1"></script>
-  <script src="js/vues/accueil.js?v=0.3.1"></script>
-  <script src="js/vues/espace.js?v=0.3.1"></script>
-  <script src="js/vues/espace-joueur.js?v=0.3.1"></script>
-  <script src="js/vues/espace-mj.js?v=0.3.1"></script>
+  <script src="js/navigation.js?v=0.3.2"></script>
+  <script src="js/vues/accueil.js?v=0.3.2"></script>
+  <script src="js/vues/espace.js?v=0.3.2"></script>
+  <script src="js/vues/espace-joueur.js?v=0.3.2"></script>
+  <script src="js/vues/espace-mj.js?v=0.3.2"></script>
   <!-- Page d'un JDR -->
-  <script src="js/vues/jdr/page.js?v=0.3.1"></script>
-  <script src="js/vues/jdr/panneaux.js?v=0.3.1"></script>
-  <script src="js/vues/jdr/panneau-type.js?v=0.3.1"></script>
-  <script src="js/vues/jdr/panneau-donnees-rp.js?v=0.3.1"></script>
-  <script src="js/vues/jdr/panneau-persos.js?v=0.3.1"></script>
-  <script src="js/vues/jdr/panneau-ajout.js?v=0.3.1"></script>
+  <script src="js/vues/jdr/page.js?v=0.3.2"></script>
+  <script src="js/vues/jdr/panneaux.js?v=0.3.2"></script>
+  <script src="js/vues/jdr/panneau-type.js?v=0.3.2"></script>
+  <script src="js/vues/jdr/panneau-donnees-rp.js?v=0.3.2"></script>
+  <script src="js/vues/jdr/panneau-persos.js?v=0.3.2"></script>
+  <script src="js/vues/jdr/panneau-ajout.js?v=0.3.2"></script>
   <!-- Fiche d'un personnage -->
-  <script src="js/vues/fiche/ouverture.js?v=0.3.1"></script>
-  <script src="js/vues/fiche/reussite.js?v=0.3.1"></script>
-  <script src="js/vues/fiche/sauvegarde.js?v=0.3.1"></script>
-  <script src="js/vues/fiche/echanges.js?v=0.3.1"></script>
-  <script src="js/vues/fiche/actualisation.js?v=0.3.1"></script>
+  <script src="js/vues/fiche/ouverture.js?v=0.3.2"></script>
+  <script src="js/vues/fiche/reussite.js?v=0.3.2"></script>
+  <script src="js/vues/fiche/sauvegarde.js?v=0.3.2"></script>
+  <script src="js/vues/fiche/echanges.js?v=0.3.2"></script>
+  <script src="js/vues/fiche/actualisation.js?v=0.3.2"></script>
+  <script src="js/vues/fiche/portrait.js?v=0.3.2"></script>
   <!-- Démarrage : toujours en dernier -->
-  <script src="js/demarrage.js?v=0.3.1"></script>
+  <script src="js/demarrage.js?v=0.3.2"></script>
 </body>
 </html>

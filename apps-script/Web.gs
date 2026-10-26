@@ -31,6 +31,9 @@ function doPost(e) {
       case 'enregistrerFiche': return json(enregistrerFiche(req));
       case 'mesPersos':        return json(mesPersos(req));
       case 'enregistrerDonneesRp': return json(enregistrerDonneesRp(req));
+      case 'image':          return json(voirImage(req));
+      case 'envoyerImage':   return json(envoyerImage(req));
+      case 'retirerImage':   return json(retirerImage(req));
       default:            return json({ ok: false, erreur: 'Action inconnue.' });
     }
   } catch (err) {

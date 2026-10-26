@@ -1,0 +1,80 @@
+/* Image du personnage — en face du cadre Réussite, sans jamais décaler la fiche.
+   PC : fixée dans la marge libre à gauche de la fiche.
+   Écran étroit : petite vignette ronde dans la barre du haut (un clic l'ouvre en grand). */
+.portrait-fiche {
+  position: fixed; z-index: 6;
+  top: 64px;
+  right: calc(50% + 410px + 20px);
+  width: min(260px, calc(50% - 438px));
+  max-height: calc(100vh - 80px); overflow-y: auto;
+  background: linear-gradient(180deg, var(--fond-2), var(--carte));
+  border: 1px solid var(--or);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 14px 30px -12px rgba(0,0,0,.7);
+  text-align: center;
+}
+.portrait-fiche[hidden] { display: none; }
+
+.portrait-image { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.portrait-image img {
+  display: block; width: 100%; height: auto; max-height: calc(100vh - 170px);
+  object-fit: contain; border-radius: 8px;
+}
+.portrait-ajout {
+  width: 100%; aspect-ratio: 3 / 4;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  background: rgba(201,164,92,.05); color: var(--doux); cursor: pointer;
+  border: 1px dashed var(--or); border-radius: 8px;
+  font: inherit; font-size: .85rem;
+}
+.portrait-ajout .plus { font-family: "Cinzel", serif; font-size: 2rem; line-height: 1; color: var(--or-clair); }
+.portrait-ajout:hover { background: rgba(201,164,92,.12); color: var(--texte); }
+.portrait-attente {
+  width: 100%; aspect-ratio: 3 / 4; display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; background: rgba(255,255,255,.03); color: var(--doux); font-size: .8rem; font-style: italic;
+}
+.portrait-etat { margin: 6px 0 0; font-size: .75rem; color: var(--doux); }
+.portrait-etat.erreur { color: var(--erreur); }
+.portrait-boutons { display: flex; justify-content: center; gap: 12px; margin-top: 6px; }
+.lien-image {
+  background: none; border: 0; padding: 2px 0; cursor: pointer; font: inherit; font-size: .78rem;
+  color: var(--doux); text-decoration: underline; text-underline-offset: 2px;
+}
+.lien-image:hover { color: var(--or-clair); }
+.lien-image.danger:hover, .lien-image.danger[data-confirmer] { color: var(--erreur); }
+
+/* Écran étroit : vignette dans la barre (même hauteur que le lien « Retour ») */
+@media (max-width: 1159px) {
+  .portrait-fiche {
+    position: static; order: 1; margin-right: auto; width: auto; max-height: none; overflow: visible;
+    padding: 0; border: 0; background: none; box-shadow: none;
+    display: flex; align-items: center; gap: 8px;
+    margin-block: -12px;   /* la vignette déborde un peu : la barre garde sa hauteur, la fiche ne bouge pas */
+  }
+  .portrait-image, .portrait-ajout, .portrait-attente {
+    width: 34px; height: 34px; aspect-ratio: auto; border-radius: 50%; overflow: hidden; flex: none;
+  }
+  .portrait-image img { width: 34px; height: 34px; max-height: none; object-fit: cover; border-radius: 50%; border: 1px solid var(--or); }
+  .portrait-ajout .texte, .portrait-attente, .portrait-boutons { display: none; }
+  .portrait-attente { display: block; background: rgba(201,164,92,.15); animation: portrait-pulse 1.2s ease-in-out infinite; }
+  .portrait-ajout .plus { font-size: 1.2rem; }
+  .portrait-etat { margin: 0; white-space: nowrap; }
+  .barre-fiche > .retour { order: 0; }
+  .barre-fiche > .etat-sauvegarde { order: 2; }
+}
+@keyframes portrait-pulse { 50% { opacity: .4; } }
+
+/* Visionneuse : l'image en grand par-dessus tout */
+.visionneuse {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(8,6,4,.86);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  padding: 16px;
+}
+.visionneuse[hidden] { display: none; }
+.visionneuse img { max-width: min(92vw, 1100px); max-height: 80vh; object-fit: contain; border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,.6); }
+.visionneuse-bas { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px; }
+.visionneuse-bas .nom { font-family: "Cinzel", serif; color: var(--or-clair); }
+.visionneuse-bas .portrait-boutons { display: flex; margin: 0; }
+.visionneuse .lien-image { font-size: .9rem; }

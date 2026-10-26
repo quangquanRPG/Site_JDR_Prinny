@@ -44,9 +44,14 @@ function feuillePersos() {
     f.getRange(1, 1, 1, ENTETES_PERSOS.length).setValues([ENTETES_PERSOS]).setFontWeight('bold').setBackground('#efe3c6');
     f.setFrozenRows(1);
     f.getRange('A:F').setNumberFormat('@');
-    f.getRange('H:H').setNumberFormat('@');
+    f.getRange('H:I').setNumberFormat('@');
     f.setColumnWidth(3, 180);
     f.setColumnWidth(6, 260);
+  }
+  if (f.getRange(1, COL_PERSO.IMAGE).getValue() === '') {
+    // onglet créé par une version précédente : ajoute l'en-tête « Image »
+    f.getRange(1, 1, 1, ENTETES_PERSOS.length).setValues([ENTETES_PERSOS]).setFontWeight('bold').setBackground('#efe3c6');
+    f.getRange('I:I').setNumberFormat('@');
   }
   return f;
 }
@@ -75,5 +80,6 @@ function installer() {
   feuille();
   feuilleJdr();
   feuillePersos();
+  dossierImages();
   SpreadsheetApp.getActiveSpreadsheet().toast('Onglets « Comptes », « JDR » et « Personnages » prêts. Tu peux déployer l\'application web.');
 }

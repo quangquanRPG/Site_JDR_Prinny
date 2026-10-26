@@ -40,13 +40,18 @@ async function actualiserFiche(f) {
     if (!rep.ok) return;                    // on réessaiera au prochain tour
     if (utilisateurOccupe(f)) return;       // l'utilisateur a agi pendant la requête : sa version gagne
 
+    if ((rep.perso.image || "") !== (f.perso.image || "") && !f.imageEnvoi) {   // image changée par quelqu'un d'autre
+      f.perso.image = rep.perso.image || "";
+      chargerPortrait(f);
+    }
+
     const texteFiche = JSON.stringify(rep.fiche);
     const texteRp = JSON.stringify(rep.jdr.donneesRp ?? null);
     if (texteFiche === f.texteServeur && texteRp === f.texteRp && rep.perso.nom === f.perso.nom) return;
 
     f.texteServeur = texteFiche;
     f.texteRp = texteRp;
-    Object.assign(f, { perso: rep.perso, jdr: rep.jdr, donnees: rep.fiche });
+    Object.assign(f, { perso: { ...rep.perso, image: f.perso.image }, jdr: rep.jdr, donnees: rep.fiche });
     document.title = rep.perso.nom + " · " + (CFG.NOM_SITE || "Grimoire");
     f.ignorerProchaineModif = true;         // la fiche va renvoyer cette version : ce n'est pas un changement local
     envoyerFicheAuCadre(f, "jdr:maj");

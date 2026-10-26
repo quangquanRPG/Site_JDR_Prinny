@@ -102,6 +102,32 @@ async function demo(action, d) {
     stock.ecrire("jdr_demo_persos", persos);
     return { ok: true, nom: a.p.nom };
   }
+  // Images de personnage (dans le vrai site : fichiers privés du Google Drive, voir Images.gs)
+  if (action === "image" || action === "envoyerImage" || action === "retirerImage") {
+    const a = accesPerso(action === "image");
+    if (a.refus) return a.refus;
+    const images = stock.lire("jdr_demo_images", {});
+    if (action === "image") {
+      const img = a.p.image && images[a.p.image];
+      return img ? { ok: true, image: a.p.image, type: img.type, donnees: img.donnees } : { ok: true, image: null };
+    }
+    if (action === "envoyerImage") {
+      if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(d.type)) return { ok: false, erreur: "Format d'image non pris en charge (JPEG, PNG, WebP ou GIF)." };
+      if (typeof d.donnees !== "string" || !d.donnees) return { ok: false, erreur: "Image vide." };
+      const id = "img" + aleatoire().slice(0, 10);
+      images[id] = { type: d.type, donnees: d.donnees };
+      if (a.p.image) delete images[a.p.image];
+      a.p.image = id;
+      stock.ecrire("jdr_demo_images", images);
+      stock.ecrire("jdr_demo_persos", persos);
+      return { ok: true, image: id };
+    }
+    if (a.p.image) delete images[a.p.image];
+    a.p.image = "";
+    stock.ecrire("jdr_demo_images", images);
+    stock.ecrire("jdr_demo_persos", persos);
+    return { ok: true, image: null };
+  }
   if (action === "mesPersos") {
     const avecJdr = (p) => ({ ...avecFiche(p), jdrNom: tousJdr.find((j) => j.id === p.jdr)?.nom || "JDR supprimé" });
     const miens = persos.filter((p) => p.type === "PJ" && cle(p.joueur) === cle(moi.pseudo));
@@ -184,6 +210,11 @@ async function demo(action, d) {
     case "supprimerPerso": {
       const i = persos.findIndex((p) => p.id === d.id && monJdr(p.jdr));
       if (i < 0) return { ok: false, erreur: "Personnage introuvable." };
+      if (persos[i].image) {
+        const images = stock.lire("jdr_demo_images", {});
+        delete images[persos[i].image];
+        stock.ecrire("jdr_demo_images", images);
+      }
       persos.splice(i, 1);
       stock.ecrire("jdr_demo_persos", persos);
       return { ok: true };
