@@ -62,8 +62,8 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Numéro de version (et cache des navigateurs)
 
-Le site en est à la **version 0.3** (la 0.1 est la première mise en ligne).
-Chaque `<link>` et `<script>` finit par `?v=0.3` : c'est à la fois le numéro de version
+Le site en est à la **version 0.3.1** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.3.1` : c'est à la fois le numéro de version
 affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
 À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
 `fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
@@ -73,6 +73,7 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 | 0.1 | Comptes MJ / joueurs, JDR, personnages, Données du RP, fiche Nardin (efforts, fatigue, réussite, armure divine) |
 | 0.2 | Fiches des compagnons en lecture seule · mise à jour automatique des fiches toutes les 30 s |
 | 0.3 | Dons qui changent la réussite · armes refondues (roll libre, description, armes à deux formes) · gestionnaire de mana (sorts) |
+| 0.3.1 | Le cadre Réussite et le jet du sort flottent par-dessus la page : ils ne décalent plus jamais la fiche |
 
 ## Tester tout de suite (mode démo)
 
@@ -183,7 +184,8 @@ Ouverte par le site (`?integre=1`), elle échange avec lui par messages : `jdr:p
 
 À côté de « Encaisser des dégâts », le bloc **Sort** (propriétaire de la fiche et MJ) : mana à
 dépenser et cases Bonus / Malus. Le jet à faire et les dégâts minimum, moyens et maximum s'affichent
-sous la **Réussite** (cadre de droite, ou bandeau du haut sur téléphone).
+sous la **Réussite** (cadre de droite, ou juste sous le bandeau du haut sur téléphone).
+Ce cadre flotte par-dessus la page : il ne pousse ni ne rétrécit jamais la fiche.
 M = mana dépensé, D = M ÷ 10 (arrondi en dessous), U = unité de M :
 
 | Mana dépensé | Jet | Exemple |

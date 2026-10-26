@@ -43,9 +43,15 @@
 .sort-reussite .stats small { font-size: .68rem; color: var(--doux); text-transform: uppercase; letter-spacing: .04em; }
 .sort-reussite .stats b { font-size: .9rem; overflow-wrap: anywhere; }
 .sort-reussite .stats .moy b { color: var(--mana); }
-@media (max-width: 1219px) {   /* bandeau du haut : sur une seule ligne */
-  body:has(#reussite .sort-reussite:not([hidden])) { padding-top: 104px; }   /* le bandeau est plus haut */
-  .sort-reussite { flex-basis: 100%; margin-top: 2px; padding-top: 4px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; column-gap: 10px; }
+/* Écran étroit : le jet flotte juste sous le bandeau Réussite, par-dessus la fiche
+   (le bandeau garde toujours la même hauteur : la fiche ne bouge pas quand le jet apparaît) */
+@media (max-width: 1219px) {
+  .sort-reussite {
+    position: absolute; top: 100%; left: 0; right: 0; margin: 0; padding: 6px 16px;
+    background: var(--carte); border-top: 1px dashed var(--bord); border-bottom: 2px solid var(--mana);
+    box-shadow: 0 8px 18px rgba(0,0,0,.18);
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; column-gap: 10px;
+  }
   .sort-reussite .jet { font-size: 1.05rem; }
   .sort-reussite .stats { margin-top: 0; gap: 10px; }
   .sort-reussite .stats span { flex-direction: row; gap: 4px; align-items: baseline; }
