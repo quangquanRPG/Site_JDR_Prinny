@@ -12,6 +12,7 @@ function afficherReussite(fiche, u) {
   const r = etatReussite(fiche);
   const mieux = r.reussite < r.base, pire = r.reussite > r.base;
   const edition = reussiteEnEdition && peut;
+  const sort = jetSortEnCours(fiche, u);   // jet du sort en préparation (affichage/mana.js)
   zone.innerHTML = `
     <div class="label">Réussite
       ${peut && !edition ? `<button class="btn-icone crayon" title="Changer le seuil de base (MJ)">✎</button>` : ""}</div>
@@ -22,8 +23,10 @@ function afficherReussite(fiche, u) {
          ${mieux || pire ? `<div class="seuil-base">au lieu de ${r.base}+</div>` : ""}`}
     <div class="faces">${[1, 2, 3, 4, 5, 6].map(f => `<span class="face ${f >= r.reussite ? "ok" : ""}">${f}</span>`).join("")}</div>
     <div class="chance"><b>${pourcent(r.chance)}</b> par dé</div>
+    ${r.dons ? `<div class="dons-reussite">Don : ${echap(r.dons)}</div>` : ""}
     ${r.effort ? `<div class="effet-reussite">Effort : ${echap(r.effort)}</div>` : ""}
-    ${r.fatigue ? `<div class="fatigue-reussite">Fatigue : ${r.fatigue}</div>` : ""}`;
+    ${r.fatigue ? `<div class="fatigue-reussite">Fatigue : ${r.fatigue}</div>` : ""}
+    <div class="sort-reussite" ${sort ? "" : "hidden"}>${htmlJetSort(sort)}</div>`;
 
   const fermer = () => { reussiteEnEdition = false; rafraichir(); };
   const valider = () => { modifierReussite(fiche, zone.querySelector("input").value, u); fermer(); };

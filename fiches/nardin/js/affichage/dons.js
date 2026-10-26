@@ -25,6 +25,8 @@ function afficherDons(fiche, u) {
         ${don.description ? `<div class="don-desc">${echap(don.description)}</div>` : ""}
         <div class="effets">${don.effets.map(e => e.type === "regle"
           ? `<span class="effet regle">${REGLES_SPECIALES[e.regle] ?? e.regle}</span>`
+          : e.type === "reussite"
+          ? `<span class="effet ${e.valeur < 0 ? "p" : "m"}" title="${e.valeur < 0 ? "Réussite plus facile" : "Réussite plus dure"}">Réussite ${signe(e.valeur)}</span>`
           : `<span class="effet ${e.valeur > 0 ? "p" : "m"}">${signe(e.valeur)} d6 ${nomCompetence(e.competence)}</span>`).join("")}</div>
       </div>
       ${peutGerer ? `<button class="btn suppr" title="Supprimer">✕</button>` : "<span></span>"}`;

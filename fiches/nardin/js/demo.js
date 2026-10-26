@@ -9,8 +9,8 @@ const FICHE_EXEMPLE = {
   proprietaire: "joueur_1",
   armures: ["cuir", "maille", "robe"],
   armureEquipee: "maille",
-  armes: ["epee", "dague", "arc", "bouclier"],
-  armesPortees: ["epee", "bouclier", "arc"],
+  armes: ["epee", "dague", "arc", "bouclier", "epee-bouclier"],
+  armesPortees: ["epee", "bouclier", "epee-bouclier"],
   armesEnMain: ["epee", "bouclier"],
   blessuresGraves: 1,
   bourse: { cuivre: 145, argent: 32, or: 3, platine: 0 },
@@ -52,6 +52,8 @@ const FICHE_EXEMPLE = {
       effets: [{ competence: "intelligence", valeur: 1 }] },
     { nom: "Poigne de géant", type: "don", actif: false, description: "Manie une arme à deux mains d'une seule main.",
       effets: [{ type: "regle", regle: "deuxMainsAUneMain" }] },
+    { nom: "Nécromancienne", type: "don", actif: false, description: "Exemple (comme Henrika) : réussite plus facile.",
+      effets: [{ type: "reussite", valeur: -1 }] },
   ],
 };
 

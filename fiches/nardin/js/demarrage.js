@@ -17,6 +17,7 @@ function rafraichir() {
   document.getElementById("nom-perso").textContent = fiche.nom;
   afficherRessources(fiche, u);
   afficherDegats(fiche, u);
+  afficherMana(fiche, u);
   afficherBlessures(fiche, u);
   afficherArmures(fiche, u);
   afficherArmes(fiche, u);

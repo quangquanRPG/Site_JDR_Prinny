@@ -26,11 +26,13 @@
 .chance { font-size: .9rem; color: var(--doux); }
 .chance b { color: var(--texte); font-size: 1.05rem; }
 .effet-reussite { margin-top: 6px; font-size: .8rem; font-weight: 600; color: #d9a227; }
+.dons-reussite { margin-top: 6px; font-size: .8rem; font-weight: 600; color: var(--bonus); }
 .panneau-reussite:hover .btn-icone.crayon { opacity: 1; }
 
 /* PC : dans la marge droite, suit le défilement */
 @media (min-width: 1220px) {
-  .panneau-reussite { top: 24px; left: calc(50% + 380px + 20px); width: 190px; padding: 14px 16px; }
+  .panneau-reussite { top: 24px; left: min(calc(50% + 380px + 20px), calc(100% - 190px - 12px)); width: 190px; padding: 14px 16px;
+    max-height: calc(100vh - 48px); overflow-y: auto; }
 }
 
 /* Écran plus étroit (téléphone) : bandeau toujours visible en haut */
@@ -43,5 +45,5 @@
   .panneau-reussite .faces { display: none; }
   .panneau-reussite .seuil { font-size: 1.6rem; }
   .panneau-reussite .label { gap: 6px; }
-  .panneau-reussite .effet-reussite, .panneau-reussite .fatigue-reussite { margin-top: 0; }
+  .panneau-reussite .effet-reussite, .panneau-reussite .fatigue-reussite, .panneau-reussite .dons-reussite { margin-top: 0; }
 }

@@ -1,0 +1,61 @@
+/* ─────────────────────────────────────────────────────────────
+   Dégâts et Sort côte à côte (deux blocs compacts), et jet du sort sous la Réussite
+   ───────────────────────────────────────────────────────────── */
+
+.actions-etat { margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
+.actions-etat:not(:has(.degats, .mana-sort)) { display: none; }
+@media (max-width: 620px) { .actions-etat { grid-template-columns: 1fr; } }
+.actions-etat > div:empty { display: none; }
+.titre-bloc { font-weight: 600; font-size: .95rem; flex-basis: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.titre-bloc small { font-weight: 400; font-size: .8rem; color: var(--doux); }
+
+/* Bloc Sort */
+.mana-sort {
+  --mana: #3f7fd1;
+  height: 100%; background: var(--carte); border: 1px solid var(--bord); border-top: 3px solid var(--mana);
+  border-radius: 10px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+}
+.mana-cases { display: flex; flex-wrap: wrap; gap: 6px; }
+.case-sort {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: .85rem;
+  border: 1px solid var(--bord); border-radius: 7px; padding: 4px 9px; background: var(--bg);
+}
+.case-sort small { color: var(--doux); }
+.case-sort input { margin: 0; accent-color: var(--mana); }
+.case-sort.bonus:has(input:checked) { border-color: var(--bonus); color: var(--bonus); font-weight: 600; }
+.case-sort.malus:has(input:checked) { border-color: var(--malus); color: var(--malus); font-weight: 600; }
+.mana-action { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.mana-action .erreur { font-size: .8rem; }
+.mana-confirmer { display: flex; flex-direction: column; gap: 6px; font-size: .88rem;
+  border: 1px dashed var(--mana); border-radius: 8px; padding: 6px 10px; }
+.mana-confirmer .boutons { display: flex; gap: 6px; }
+.mana-sort .btn.principal { padding: 6px 14px; }
+
+/* Jet du sort sous la Réussite (panneau de la fiche ouverte seule) */
+.sort-reussite { --mana: #3f7fd1; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--bord); }
+.sort-reussite[hidden] { display: none; }
+.sort-reussite .label small { text-transform: none; letter-spacing: 0; }
+.sort-reussite .jet { font-size: 1.35rem; font-weight: 700; color: var(--mana); line-height: 1.2; overflow-wrap: anywhere; }
+.sort-reussite .mult { font-size: .75rem; font-weight: 600; color: var(--doux); }
+.sort-reussite .stats { display: flex; justify-content: space-between; gap: 6px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.sort-reussite .stats span { display: flex; flex-direction: column; min-width: 0; }
+.sort-reussite .stats small { font-size: .68rem; color: var(--doux); text-transform: uppercase; letter-spacing: .04em; }
+.sort-reussite .stats b { font-size: .9rem; overflow-wrap: anywhere; }
+.sort-reussite .stats .moy b { color: var(--mana); }
+/* Écran étroit : le jet flotte juste sous le bandeau Réussite, par-dessus la fiche
+   (le bandeau garde toujours la même hauteur : la fiche ne bouge pas quand le jet apparaît) */
+@media (max-width: 1219px) {
+  .sort-reussite {
+    position: absolute; top: 100%; left: 0; right: 0; margin: 0; padding: 6px 16px;
+    background: var(--carte); border-top: 1px dashed var(--bord); border-bottom: 2px solid var(--mana);
+    box-shadow: 0 8px 18px rgba(0,0,0,.18);
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; column-gap: 10px;
+  }
+  .sort-reussite .jet { font-size: 1.05rem; }
+  .sort-reussite .stats { margin-top: 0; gap: 10px; }
+  .sort-reussite .stats span { flex-direction: row; gap: 4px; align-items: baseline; }
+}
+
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) :is(.mana-sort, .sort-reussite) { --mana: #6ea4ea; } }
+:root[data-theme="dark"] :is(.mana-sort, .sort-reussite) { --mana: #6ea4ea; }

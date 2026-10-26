@@ -62,12 +62,13 @@ function supprimerPerso(req) {
     const f = feuillePersos();
     const n = f.getLastRow() - 1;
     if (n < 1) return { ok: false, erreur: 'Personnage introuvable.' };
-    const lignes = f.getRange(2, 1, n, 2).getValues();
+    const lignes = f.getRange(2, 1, n, ENTETES_PERSOS.length).getValues();
     for (let i = 0; i < lignes.length; i++) {
       if (String(lignes[i][0]) !== id) continue;
       // Le MJ ne peut supprimer que les personnages de ses propres JDR
       if (!trouverJdr(String(lignes[i][1]), m.compte.pseudo)) return { ok: false, erreur: 'Ce personnage ne fait pas partie de tes JDR.' };
       f.deleteRow(i + 2);
+      mettreImageALaCorbeille(String(lignes[i][COL_PERSO.IMAGE - 1] || ''));
       return { ok: true };
     }
     return { ok: false, erreur: 'Personnage introuvable.' };
@@ -109,7 +110,7 @@ function lignesPersos() {
     return {
       ligne: i + 2, id: String(l[0]), jdr: String(l[1]), nom: String(l[2]),
       type: String(l[3]) === 'PJ' ? 'PJ' : 'PNJ', joueur: String(l[4]).trim(), notes: String(l[5]),
-      cree: l[6], fiche: String(l[7] || ''),
+      cree: l[6], fiche: String(l[7] || ''), image: String(l[8] || ''),
     };
   });
 }
@@ -125,5 +126,6 @@ function persoPublic(p) {
     id: p.id, jdr: p.jdr, nom: p.nom, type: p.type, joueur: p.joueur, notes: p.notes,
     cree: p.cree instanceof Date ? p.cree.toISOString() : String(p.cree),
     aFiche: !!p.fiche,
+    image: p.image || '',   // identifiant du fichier image (lu avec l'action « image »)
   };
 }

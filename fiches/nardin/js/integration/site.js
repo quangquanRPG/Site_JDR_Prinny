@@ -15,7 +15,7 @@ const envoyerAuSite = msg => window.parent.postMessage(msg, "*");
 
 // Après chaque affichage : le site met à jour son cadre « Réussite » et enregistre la fiche
 function prevenirLeSite() {
-  envoyerAuSite({ type: "jdr:reussite", ...etatReussite(fiche) });
+  envoyerAuSite({ type: "jdr:reussite", ...etatReussite(fiche), sort: jetSortEnCours(fiche, utilisateurCourant()) });
   envoyerAuSite({ type: "jdr:modif", donnees: JSON.parse(JSON.stringify(fiche)) });
 }
 

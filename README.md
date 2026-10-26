@@ -26,7 +26,7 @@ site-jdr/
 │       ├── accueil.js · espace.js · espace-joueur.js · espace-mj.js
 │       ├── jdr/            page.js, panneaux.js et un fichier par panneau du menu
 │       └── fiche/          ouverture.js, echanges.js (messages avec la fiche), sauvegarde.js, reussite.js,
-│                           actualisation.js (relit la fiche toutes les 30 s)
+│                           actualisation.js (relit la fiche toutes les 30 s), portrait.js (image du personnage)
 ├── fiches/
 │   └── nardin/             fiche « Nardin », autonome (s'ouvre aussi seule pour tester)
 │       ├── index.html      structure de la fiche
@@ -42,6 +42,7 @@ site-jdr/
     ├── Reglages.gs         constantes (inscriptions ouvertes, colonnes…)
     ├── Web.gs              doGet / doPost : aiguille chaque action
     ├── Comptes.gs · Sessions.gs · Jdr.gs · Personnages.gs · Fiches.gs
+    ├── Images.gs           images des personnages (Google Drive, fichiers privés)
     └── Feuilles.gs (onglets du Sheet, installer) · Outils.gs
 ```
 
@@ -62,8 +63,8 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Numéro de version (et cache des navigateurs)
 
-Le site en est à la **version 0.2** (la 0.1 est la première mise en ligne).
-Chaque `<link>` et `<script>` finit par `?v=0.2` : c'est à la fois le numéro de version
+Le site en est à la **version 0.3.2** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.3.2` : c'est à la fois le numéro de version
 affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
 À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
 `fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
@@ -72,6 +73,9 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 |---|---|
 | 0.1 | Comptes MJ / joueurs, JDR, personnages, Données du RP, fiche Nardin (efforts, fatigue, réussite, armure divine) |
 | 0.2 | Fiches des compagnons en lecture seule · mise à jour automatique des fiches toutes les 30 s |
+| 0.3 | Dons qui changent la réussite · armes refondues (roll libre, description, armes à deux formes) · gestionnaire de mana (sorts) |
+| 0.3.1 | Le cadre Réussite et le jet du sort flottent par-dessus la page : ils ne décalent plus jamais la fiche |
+| 0.3.2 | Image du personnage dans la marge gauche, rangée dans le Google Drive (à faire côté Apps Script : voir « Images des personnages ») |
 
 ## Tester tout de suite (mode démo)
 
@@ -86,12 +90,13 @@ dans la colonne *Rôle* du Sheet et reste modifiable à la main.
 1. Crée un nouveau **Google Sheet** (pas un Google Doc : il faut un tableau), par ex. « JDR – Base ».
 2. Menu **Extensions → Apps Script**.
 3. Recrée chaque fichier du dossier `apps-script/` : bouton **+** → **Script**, même nom
-   (`Reglages`, `Web`, `Comptes`, `Sessions`, `Jdr`, `Personnages`, `Fiches`, `Feuilles`, `Outils`),
+   (`Reglages`, `Web`, `Comptes`, `Sessions`, `Jdr`, `Personnages`, `Fiches`, `Images`, `Feuilles`, `Outils`),
    puis colle son contenu. Supprime l'ancien `Code.gs` (sinon les fonctions seraient en double).
    L'ordre des fichiers n'a pas d'importance. Enregistre (💾).
 4. En haut, choisis la fonction **`installer`** puis **▶ Exécuter**. Google demande l'autorisation :
    « Paramètres avancés → Accéder au projet (non sécurisé) » — c'est normal, c'est ton propre script.
-   Un onglet **Comptes** apparaît dans le Sheet.
+   Un onglet **Comptes** apparaît dans le Sheet, et un dossier « Grimoire des Aventuriers — Images »
+   dans ton Google Drive (pour les images des personnages).
 
 ## 2. Publier le script
 
@@ -134,9 +139,9 @@ Tuile **Données du RP** dans le menu d'un JDR. Cinq listes modifiables, puis bo
 | Liste | Champs | Rôle dans la fiche |
 |---|---|---|
 | Métaux | nom, valeur, valeur magie | multiplie l'armure des sets ; sert aussi de valeur (diviseur des dégâts) |
-| Raretés | nom, multiplicateur armure, bonus dégâts | multiplie l'armure des sets ; bonus ajouté aux dégâts des armes |
+| Raretés | nom, multiplicateur armure | multiplie l'armure des sets |
 | Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | les pièces possibles d'un set et leur armure |
-| Armes | nom, dégâts, métal, rareté, à deux mains, description | armes que le MJ donne aux personnages |
+| Armes | nom, roll (texte libre, décidé par le MJ), à deux mains, description / effet, 2e forme facultative (mêmes champs) | armes que le MJ donne aux personnages ; une arme à deux formes se change dans la fiche (bouton ⇄) |
 | Sets d'armure | nom, métal, rareté, pièces cochées, description | armure = (somme des pièces) × valeur du métal × rareté, arrondie |
 
 Tant que rien n'est enregistré, le JDR utilise des exemples de départ. Le tout est stocké en JSON
@@ -169,13 +174,51 @@ Une page de fiche (`fiches/xxx/index.html`) fonctionne aussi seule pour la teste
 Ouverte par le site (`?integre=1`), elle échange avec lui par messages : `jdr:pret` → `jdr:charger`
 (fiche, nom, propriétaire, utilisateur) → `jdr:modif` à chaque changement, et `jdr:hauteur`.
 
+## Images des personnages
+
+Dans une fiche, la marge de gauche (en face du cadre Réussite) affiche l'image du personnage.
+Le **MJ** du JDR et le **joueur** du personnage peuvent l'ajouter (« + Ajouter une image »), la changer
+ou la retirer ; les compagnons la voient seulement. Un clic l'ouvre en grand. Sur écran étroit,
+c'est une petite vignette ronde dans la barre du haut (un clic l'ouvre en grand, avec Changer / Retirer).
+
+- Les images vont dans le dossier **« Grimoire des Aventuriers — Images »** de ton Google Drive.
+  Elles restent **privées** : le site les lit à travers le script, avec les mêmes droits que la fiche.
+- L'onglet *Personnages* a une colonne **Image** (identifiant du fichier Drive), ajoutée toute seule.
+- Une image plus grande que 2000 px ou plus lourde que 3 Mo est réduite avant l'envoi (8 Mo au plus).
+  Une image changée, retirée, ou celle d'un personnage supprimé va dans la **corbeille** du Drive (30 jours).
+
+**Mise en place (une fois)** — dans Apps Script :
+1. Ajoute le fichier **`Images`** (bouton **+** → **Script**) et colles-y `apps-script/Images.gs`.
+2. Remplace aussi le contenu de `Reglages`, `Web`, `Feuilles` et `Personnages` par les nouvelles versions.
+3. Choisis la fonction **`autoriserDrive`** puis **▶ Exécuter** : Google demande l'accès à ton Drive
+   (« Paramètres avancés → Accéder au projet »). Le dossier d'images est créé.
+4. **Déployer → Gérer les déploiements → ✏️ → Version : Nouvelle version**.
+
 ## Efforts et réussite (fiche Nardin)
 
 - Sous la jauge d'Énergie, des boutons d'effort : −5 → +1 dé, −10 → +2 dés, −20 → +3 dés,
   −40 → réussite −1, −80 → réussite −2. L'énergie est dépensée au clic ; le bonus reste actif
   (sur toutes les compétences) jusqu'au clic sur « Terminer l'effort ». Un seul effort à la fois.
 - La réussite des d6 (4+ par défaut, réglable par le MJ dans « Réglages du MJ ») reste affichée
-  à droite de la fiche pendant le défilement (en bas à droite sur téléphone).
+  à droite de la fiche pendant le défilement (en haut sur téléphone). Un effort, un don (effet
+  « Réussite des dés », −1 = plus facile) ou la fatigue la font varier ; la cause est indiquée dessous.
+
+## Gestionnaire de mana (fiche Nardin)
+
+À côté de « Encaisser des dégâts », le bloc **Sort** (propriétaire de la fiche et MJ) : mana à
+dépenser et cases Bonus / Malus. Le jet à faire et les dégâts minimum, moyens et maximum s'affichent
+sous la **Réussite** (cadre de droite, ou juste sous le bandeau du haut sur téléphone).
+Ce cadre flotte par-dessus la page : il ne pousse ni ne rétrécit jamais la fiche.
+M = mana dépensé, D = M ÷ 10 (arrondi en dessous), U = unité de M :
+
+| Mana dépensé | Jet | Exemple |
+|---|---|---|
+| jusqu'à 60 | D d6 + U | 45 → 4d6 + 5 |
+| plus de 60 | D dD + U × 2 | 123 → 12d12 + 6 · 750 → 75d75 |
+
+Bonus : dégâts × 1,5. Malus : dégâts × 0,75 (les deux cochés : × 1,125). Valeurs arrondies.
+« Consommer le mana » demande une confirmation, puis retire le mana de la jauge ; le récap permet
+d'annuler. Impossible de dépenser plus que le mana restant. Réglages : `fiches/nardin/js/regles/mana.js`.
 
 ## Comment marchent les comptes
 

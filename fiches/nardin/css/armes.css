@@ -22,3 +22,7 @@
 }
 
 .slot-nom .badge { margin-left: 4px; vertical-align: 2px; }
+
+/* Arme à deux formes */
+.btn-forme { display: inline-block; margin-top: 6px; font-size: .78rem; font-weight: 600; padding: 2px 8px; }
+.forme-objet { font-style: italic; }

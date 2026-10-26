@@ -14,6 +14,7 @@ function afficherDegats(fiche, u) {
   const form = document.createElement("div");
   form.className = "degats";
   form.innerHTML = `
+    <div class="titre-bloc">Encaisser des dégâts</div>
     <label class="champ-degat"><span class="label">Dégâts</span>
       <input name="degats" type="number" min="0" step="1" placeholder="0"></label>
     <label class="champ-degat"><span class="label">Dégâts bruts</span>

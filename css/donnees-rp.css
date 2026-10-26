@@ -50,6 +50,10 @@
   margin-top: 3px;
 }
 .grille-pieces label { display: grid; gap: 2px; font-size: .88rem; }
+.forme-rp { grid-column: 1 / -1; border-top: 1px dashed var(--bord); padding-top: 8px; }
+.forme-rp > .case-rp { padding-bottom: 0; }
+.sous-forme { margin-top: 8px; padding-left: 12px; border-left: 2px solid var(--bord); }
+.sous-forme[hidden] { display: none; }
 .resume-rp { margin: 10px 0 0; font-size: .9rem; color: var(--or-clair); }
 .retirer-rp {
   position: absolute; top: 8px; right: 8px;

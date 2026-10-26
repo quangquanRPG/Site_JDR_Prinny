@@ -15,6 +15,7 @@ function creerFiche(donnees = {}) {
     armes:         donnees.armes ?? [],                // ids des armes possédées
     armesPortees:  (donnees.armesPortees ?? []).slice(0, MAX_ARMES_PORTEES),   // max 3
     armesEnMain:   donnees.armesEnMain ?? [],                                   // parmi les portées, dans la limite des mains
+    formesArmes:   Object.fromEntries(Object.entries(donnees.formesArmes ?? {}).filter(([, v]) => v === 2)),   // { idArme: 2 } = 2e forme
     bourse: Object.fromEntries(MONNAIES.map(m =>
       [m.id, Math.max(0, Math.floor(donnees.bourse?.[m.id] ?? 0))])),   // { cuivre, argent, or, platine }
     blessuresGraves: Math.max(0, Math.min(MAX_BLESSURES, donnees.blessuresGraves ?? 0)),   // 0 à 3
@@ -54,4 +55,7 @@ function oublierObjetsDisparus(fiche) {
   fiche.armes = fiche.armes.filter(id => trouverArme(id));
   fiche.armesPortees = fiche.armesPortees.filter(id => fiche.armes.includes(id));
   fiche.armesEnMain = fiche.armesEnMain.filter(id => fiche.armesPortees.includes(id));
+  for (const id of Object.keys(fiche.formesArmes)) {           // arme perdue ou sans 2e forme : on oublie la forme
+    if (!fiche.armes.includes(id) || !trouverArme(id)?.forme2) delete fiche.formesArmes[id];
+  }
 }

@@ -33,7 +33,8 @@
 .reussite-fiche {
   position: fixed; z-index: 6;
   top: 64px;
-  left: calc(50% + 410px + 20px);
+  left: min(calc(50% + 410px + 20px), calc(100% - 150px - 8px));   /* jamais par-dessus la fiche */
+  max-height: calc(100vh - 80px); overflow-y: auto;
   width: 150px;
   text-align: center;
   background: linear-gradient(180deg, var(--fond-2), var(--carte));
@@ -49,6 +50,7 @@
 .reussite-fiche .fatigue { margin-top: 4px; font-size: .78rem; font-weight: 600; color: var(--erreur); }
 .reussite-fiche .sous { font-size: .78rem; color: var(--doux); }
 .reussite-fiche .effet { margin-top: 6px; font-size: .78rem; font-weight: 600; color: #e0b24a; }
+.reussite-fiche .dons { margin-top: 6px; font-size: .78rem; font-weight: 600; color: var(--ok); }
 .reussite-fiche .faces { display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; margin: 8px 0 6px; }
 .reussite-fiche .face {
   aspect-ratio: 1; display: flex; align-items: center; justify-content: center; min-width: 0;
@@ -57,6 +59,16 @@
 .reussite-fiche .face.ok { background: var(--ok); border-color: var(--ok); color: #1d1814; }
 .reussite-fiche .chance { font-size: .9rem; color: var(--doux); }
 .reussite-fiche .chance b { color: var(--texte); font-size: 1.05rem; }
+/* Jet du sort en préparation (gestionnaire de mana de la fiche) */
+.reussite-fiche .sort { margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--bord); }
+.reussite-fiche .sort .titre { font-size: .62rem; }
+.reussite-fiche .sort .jet { font-size: 1.2rem; font-weight: 700; color: #7fb0ee; line-height: 1.2; overflow-wrap: anywhere; }
+.reussite-fiche .sort .mult { font-size: .7rem; font-weight: 600; color: var(--doux); }
+.reussite-fiche .sort .stats { display: flex; justify-content: space-between; gap: 4px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.reussite-fiche .sort .stats span { display: flex; flex-direction: column; min-width: 0; }
+.reussite-fiche .sort .stats small { font-size: .6rem; color: var(--doux); text-transform: uppercase; letter-spacing: .04em; }
+.reussite-fiche .sort .stats b { font-size: .82rem; overflow-wrap: anywhere; }
+.reussite-fiche .sort .stats .moy b { color: #7fb0ee; }
 
 @media (max-width: 1159px) {
   .barre-fiche { flex-wrap: wrap; row-gap: 6px; background: var(--fond); box-shadow: 0 8px 14px -10px rgba(0,0,0,.8); }
@@ -68,7 +80,18 @@
   }
   .reussite-fiche .valeur { font-size: 1.5rem; }
   .reussite-fiche .sous.neutre, .reussite-fiche .faces { display: none; }
-  .reussite-fiche .effet, .reussite-fiche .fatigue { margin-top: 0; }
+  .reussite-fiche .effet, .reussite-fiche .fatigue, .reussite-fiche .dons { margin-top: 0; }
+  .reussite-fiche { position: relative; top: auto; left: auto; z-index: 6; max-height: none; overflow: visible; }
+  /* Le jet du sort flotte sous la barre, par-dessus la fiche : la barre garde sa hauteur, la fiche ne bouge pas */
+  .reussite-fiche .sort {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0; margin: 0; padding: 6px 12px;
+    background: linear-gradient(180deg, var(--fond-2), var(--carte)); border: 1px solid #7fb0ee; border-radius: 10px;
+    box-shadow: 0 14px 30px -12px rgba(0,0,0,.8);
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; column-gap: 10px;
+  }
+  .reussite-fiche .sort .jet { font-size: 1.05rem; }
+  .reussite-fiche .sort .stats { margin-top: 0; gap: 10px; }
+  .reussite-fiche .sort .stats span { flex-direction: row; gap: 4px; align-items: baseline; }
 }
 
 /* Fiche d'un autre joueur (lecture seule) */
