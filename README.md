@@ -62,8 +62,8 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Numéro de version (et cache des navigateurs)
 
-Le site en est à la **version 0.2** (la 0.1 est la première mise en ligne).
-Chaque `<link>` et `<script>` finit par `?v=0.2` : c'est à la fois le numéro de version
+Le site en est à la **version 0.3** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.3` : c'est à la fois le numéro de version
 affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
 À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
 `fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
@@ -72,6 +72,7 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 |---|---|
 | 0.1 | Comptes MJ / joueurs, JDR, personnages, Données du RP, fiche Nardin (efforts, fatigue, réussite, armure divine) |
 | 0.2 | Fiches des compagnons en lecture seule · mise à jour automatique des fiches toutes les 30 s |
+| 0.3 | Dons qui changent la réussite · armes refondues (roll libre, description, armes à deux formes) · gestionnaire de mana (sorts) |
 
 ## Tester tout de suite (mode démo)
 
@@ -134,9 +135,9 @@ Tuile **Données du RP** dans le menu d'un JDR. Cinq listes modifiables, puis bo
 | Liste | Champs | Rôle dans la fiche |
 |---|---|---|
 | Métaux | nom, valeur, valeur magie | multiplie l'armure des sets ; sert aussi de valeur (diviseur des dégâts) |
-| Raretés | nom, multiplicateur armure, bonus dégâts | multiplie l'armure des sets ; bonus ajouté aux dégâts des armes |
+| Raretés | nom, multiplicateur armure | multiplie l'armure des sets |
 | Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | les pièces possibles d'un set et leur armure |
-| Armes | nom, dégâts, métal, rareté, à deux mains, description | armes que le MJ donne aux personnages |
+| Armes | nom, roll (texte libre, décidé par le MJ), à deux mains, description / effet, 2e forme facultative (mêmes champs) | armes que le MJ donne aux personnages ; une arme à deux formes se change dans la fiche (bouton ⇄) |
 | Sets d'armure | nom, métal, rareté, pièces cochées, description | armure = (somme des pièces) × valeur du métal × rareté, arrondie |
 
 Tant que rien n'est enregistré, le JDR utilise des exemples de départ. Le tout est stocké en JSON
@@ -175,7 +176,23 @@ Ouverte par le site (`?integre=1`), elle échange avec lui par messages : `jdr:p
   −40 → réussite −1, −80 → réussite −2. L'énergie est dépensée au clic ; le bonus reste actif
   (sur toutes les compétences) jusqu'au clic sur « Terminer l'effort ». Un seul effort à la fois.
 - La réussite des d6 (4+ par défaut, réglable par le MJ dans « Réglages du MJ ») reste affichée
-  à droite de la fiche pendant le défilement (en bas à droite sur téléphone).
+  à droite de la fiche pendant le défilement (en haut sur téléphone). Un effort, un don (effet
+  « Réussite des dés », −1 = plus facile) ou la fatigue la font varier ; la cause est indiquée dessous.
+
+## Gestionnaire de mana (fiche Nardin)
+
+Sous « Encaisser des dégâts », le bloc **Sort** (propriétaire de la fiche et MJ) :
+à gauche le mana à dépenser et les cases Bonus / Malus, à droite le jet à faire et les dégâts
+minimum, moyens et maximum. M = mana dépensé, D = M ÷ 10 (arrondi en dessous), U = unité de M :
+
+| Mana dépensé | Jet | Exemple |
+|---|---|---|
+| jusqu'à 60 | D d6 + U | 45 → 4d6 + 5 |
+| plus de 60 | D dD + U × 2 | 123 → 12d12 + 6 · 750 → 75d75 |
+
+Bonus : dégâts × 1,5. Malus : dégâts × 0,75 (les deux cochés : × 1,125). Valeurs arrondies.
+« Consommer le mana » demande une confirmation, puis retire le mana de la jauge ; le récap permet
+d'annuler. Impossible de dépenser plus que le mana restant. Réglages : `fiches/nardin/js/regles/mana.js`.
 
 ## Comment marchent les comptes
 
