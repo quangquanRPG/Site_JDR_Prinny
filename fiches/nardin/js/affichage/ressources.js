@@ -5,12 +5,14 @@
 
 let ressourceEnEdition = null;   // id de la ressource en cours de modification
 
+// Une ressource va dans sa propre case (#res-pv, #res-mana, #res-energie : colonne de gauche)
+// si elle existe, sinon dans la section de son groupe (#ressources-defense)
+const zoneRessource = r => document.getElementById("res-" + r.id) || document.getElementById("ressources-" + r.groupe);
+
 function afficherRessources(fiche, u) {
-  for (const g of new Set(RESSOURCES.map(r => r.groupe))) {
-    document.getElementById("ressources-" + g).innerHTML = "";
-  }
+  for (const r of RESSOURCES) zoneRessource(r).innerHTML = "";
   for (const r of RESSOURCES) {
-    const zone = document.getElementById("ressources-" + r.groupe);
+    const zone = zoneRessource(r);
     const { actuel, base } = fiche.ressources[r.id];
     const pct = base > 0 ? Math.max(0, Math.min(100, (actuel / base) * 100)) : 0;
     const peutActuel = !r.seulMax && droits.modifierActuelRessource(u, fiche);

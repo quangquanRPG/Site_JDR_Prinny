@@ -1,11 +1,7 @@
 /* ─────────────────────────────────────────────────────────────
-   Dégâts et Sort côte à côte (deux blocs compacts), et jet du sort sous la Réussite
+   Bloc Sort (sous la jauge de Mana) et jet du sort sous la Réussite
    ───────────────────────────────────────────────────────────── */
 
-.actions-etat { margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
-.actions-etat:not(:has(.degats, .mana-sort)) { display: none; }
-@media (max-width: 620px) { .actions-etat { grid-template-columns: 1fr; } }
-.actions-etat > div:empty { display: none; }
 .titre-bloc { font-weight: 600; font-size: .95rem; flex-basis: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .titre-bloc small { font-weight: 400; font-size: .8rem; color: var(--doux); }
 
@@ -45,7 +41,7 @@
 .sort-reussite .stats .moy b { color: var(--mana); }
 /* Écran étroit : le jet flotte juste sous le bandeau Réussite, par-dessus la fiche
    (le bandeau garde toujours la même hauteur : la fiche ne bouge pas quand le jet apparaît) */
-@media (max-width: 1219px) {
+@media (max-width: 1299px) {
   .sort-reussite {
     position: absolute; top: 100%; left: 0; right: 0; margin: 0; padding: 6px 16px;
     background: var(--carte); border-top: 1px dashed var(--bord); border-bottom: 2px solid var(--mana);

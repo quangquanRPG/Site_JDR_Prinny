@@ -1,7 +1,9 @@
 // ─────────────────────────────────────────────────────────────
 //  Fiche : messages échangés avec la page de la fiche (dans son cadre)
-//    fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur, jdr:saisie
-//    site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique, voir actualisation.js)
+//    fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur, jdr:saisie,
+//                   jdr:image-voir, jdr:image-fichier, jdr:image-retirer (image du personnage, voir portrait.js)
+//    site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique, voir actualisation.js),
+//                   jdr:image (image à afficher dans la colonne de gauche)
 // ─────────────────────────────────────────────────────────────
 "use strict";
 
@@ -24,6 +26,14 @@ function surMessageDeLaFiche(e) {
 
   if (m.type === "jdr:pret") {
     envoyerFicheAuCadre(f, "jdr:charger");
+    f.cadrePret = true;
+    envoyerPortraitAuCadre(f);
+  } else if (m.type === "jdr:image-voir") {
+    ouvrirVisionneuse(f);
+  } else if (m.type === "jdr:image-fichier") {
+    if (peutChangerImage(f) && m.fichier instanceof Blob) envoyerImagePerso(f, m.fichier);
+  } else if (m.type === "jdr:image-retirer") {
+    if (peutChangerImage(f)) retirerImagePerso(f);
   } else if (m.type === "jdr:saisie") {
     f.saisieEnCours = !!m.active;          // un champ de la fiche a le focus : pas de mise à jour automatique
     if (m.active) f.derniereActionLocale = Date.now();

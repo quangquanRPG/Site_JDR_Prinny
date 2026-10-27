@@ -3,9 +3,11 @@
    Ouverte depuis le Grimoire (fiches/nardin/index.html?integre=1 dans un cadre),
    la page reçoit le personnage et l'utilisateur, puis renvoie la fiche
    après chaque modification ; le site l'enregistre dans le Google Sheet.
-     site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique toutes les 30 s)
+     site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique toutes les 30 s),
+                    jdr:image (image du personnage à afficher)
      fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur,
-                    jdr:saisie (un champ a le focus : le site attend avant de mettre à jour)
+                    jdr:saisie (un champ a le focus : le site attend avant de mettre à jour),
+                    jdr:image-voir, jdr:image-fichier, jdr:image-retirer
    ================================================================ */
 "use strict";
 
@@ -21,6 +23,7 @@ function prevenirLeSite() {
 
 function surMessageDuSite(e) {
   if (e.source !== window.parent || !e.data) return;
+  if (e.data.type === "jdr:image") return afficherPortraitPerso(e.data);   // image du personnage (affichage/portrait.js)
   if (e.data.type !== "jdr:charger" && e.data.type !== "jdr:maj") return;
   const m = e.data;
   utilisateurIntegre = m.utilisateur;                       // { id, role: "mj" | "joueur" }
