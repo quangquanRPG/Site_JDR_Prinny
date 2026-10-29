@@ -14,6 +14,7 @@ const utilisateurCourant = () => utilisateurIntegre ?? UTILISATEURS_DEMO[choixRo
 function rafraichir() {
   if (INTEGRE && !utilisateurIntegre) return;   // en attente du personnage envoyé par le site
   const u = utilisateurCourant();
+  synchroniserArmureEquipee(fiche);   // l'armure équipée garde l'usure de la jauge Protection
   document.getElementById("nom-perso").textContent = fiche.nom;
   afficherRessources(fiche, u);
   afficherDegats(fiche, u);

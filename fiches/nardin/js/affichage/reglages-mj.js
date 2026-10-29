@@ -30,11 +30,9 @@ function afficherReglagesMJ(fiche, u) {
         </div>
       </div>
       <div>
-        <div class="label">Sets d'armure possédés</div>
-        <div class="reglage-coches">${CATALOGUE_ARMURES.map(a => `
-          <label><input type="checkbox" data-armure="${a.id}" ${fiche.armures.includes(a.id) ? "checked" : ""}>
-            ${echap(a.nom)} <small>Prot. ${a.protection} · Val. ${a.valeur ?? 0}</small></label>`).join("")}
-        </div>
+        <div class="label">Armures</div>
+        <p class="reglage-note">Les armures sont des objets uniques (chacune garde son usure) :
+          crée-les et donne-les dans la page du JDR, tuile « Objets uniques ».</p>
       </div>
       <div>
         <div class="label">Armes possédées</div>
@@ -56,16 +54,6 @@ function afficherReglagesMJ(fiche, u) {
   });
   zone.querySelectorAll("[data-comp]").forEach(champ => champ.addEventListener("change", () => {
     fiche.competences[champ.dataset.comp].base = Math.max(0, Math.min(20, Math.round(Number(champ.value) || 0)));
-    rafraichir();
-  }));
-  zone.querySelectorAll("[data-armure]").forEach(coche => coche.addEventListener("change", () => {
-    const id = coche.dataset.armure;
-    if (coche.checked) {
-      if (!fiche.armures.includes(id)) fiche.armures.push(id);
-    } else {
-      if (fiche.armureEquipee === id) equiperArmure(fiche, null, u);
-      fiche.armures = fiche.armures.filter(x => x !== id);
-    }
     rafraichir();
   }));
   zone.querySelectorAll("[data-arme]").forEach(coche => coche.addEventListener("change", () => {

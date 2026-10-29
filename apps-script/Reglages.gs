@@ -38,6 +38,12 @@ const TAILLE_MAX_FICHE = 45000; // une cellule Google Sheets contient au plus 50
 // Inventaires d'une fiche dont les objets cachés sont retirés pour les autres joueurs
 const INVENTAIRES_FICHE = ['inventaire', 'inventaireNonImportant'];
 // Type : PJ (personnage joueur) ou PNJ. Fiche : contenu JSON de la fiche perso.
+// Objets uniques d'un JDR (Objets.gs) : pour l'instant les armures, chacune avec sa propre usure
+const ONGLET_OBJETS = 'Objets';
+const ENTETES_OBJETS = ['ID', 'JDR', 'Type', 'Nom', 'Description', 'Protection max', 'Protection actuelle', 'Valeur', 'Porteur', 'Usure autorisée', 'Créé le'];
+const COL_OBJET = { ID: 1, JDR: 2, TYPE: 3, NOM: 4, DESCRIPTION: 5, PROTECTION_MAX: 6, PROTECTION_ACTUELLE: 7, VALEUR: 8, PORTEUR: 9, USURE: 10, CREE: 11 };
+// Porteur : identifiant du personnage qui porte l'objet (vide = personne)
+
 // Images de personnage (Images.gs) : fichiers privés dans un dossier de ton Google Drive
 const DOSSIER_IMAGES = 'Grimoire des Aventuriers — Images';
 const TYPES_IMAGE = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };

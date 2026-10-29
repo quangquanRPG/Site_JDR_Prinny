@@ -7,6 +7,7 @@
                     jdr:image (image du personnage à afficher)
      fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur,
                     jdr:saisie (un champ a le focus : le site attend avant de mettre à jour),
+                    jdr:objet (usure d'une armure / usure divine autorisée, à enregistrer),
                     jdr:image-voir, jdr:image-fichier, jdr:image-retirer
    ================================================================ */
 "use strict";
@@ -15,8 +16,10 @@ const INTEGRE = window.parent !== window && new URLSearchParams(location.search)
 let utilisateurIntegre = null;   // { id, role: "mj" | "joueur" } envoyé par le site
 const envoyerAuSite = msg => window.parent.postMessage(msg, "*");
 
-// Après chaque affichage : le site met à jour son cadre « Réussite » et enregistre la fiche
+// Après chaque affichage : le site met à jour son cadre « Réussite », enregistre la fiche,
+// et enregistre l'usure des armures (objets uniques) qui a changé
 function prevenirLeSite() {
+  for (const c of objetsModifies()) envoyerAuSite({ type: "jdr:objet", ...c });
   envoyerAuSite({ type: "jdr:reussite", ...etatReussite(fiche), sort: jetSortEnCours(fiche, utilisateurCourant()) });
   envoyerAuSite({ type: "jdr:modif", donnees: JSON.parse(JSON.stringify(fiche)) });
 }
@@ -28,6 +31,7 @@ function surMessageDuSite(e) {
   const m = e.data;
   utilisateurIntegre = m.utilisateur;                       // { id, role: "mj" | "joueur" }
   if (m.donneesRp) appliquerDonneesRp(m.donneesRp);       // listes du MJ pour ce JDR
+  appliquerObjets(m.objets);                               // armures = objets uniques portés (integration/objets.js)
   fiche = creerFiche({ ...(m.donnees || {}), nom: m.nom, proprietaire: m.proprietaire ?? null });
   rafraichir();
 }

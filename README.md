@@ -43,6 +43,7 @@ site-jdr/
     ├── Web.gs              doGet / doPost : aiguille chaque action
     ├── Comptes.gs · Sessions.gs · Jdr.gs · Personnages.gs · Fiches.gs
     ├── Images.gs           images des personnages (Google Drive, fichiers privés)
+    ├── Objets.gs           objets uniques du JDR (armures avec leur usure)
     └── Feuilles.gs (onglets du Sheet, installer) · Outils.gs
 ```
 
@@ -63,8 +64,8 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Numéro de version (et cache des navigateurs)
 
-Le site en est à la **version 0.3.7** (la 0.1 est la première mise en ligne).
-Chaque `<link>` et `<script>` finit par `?v=0.3.7` : c'est à la fois le numéro de version
+Le site en est à la **version 0.4** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.4` : c'est à la fois le numéro de version
 affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
 À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
 `fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
@@ -81,6 +82,7 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 | 0.3.5 | Les trois jauges PV / Mana / Énergie sur la même ligne, chaque outil en dessous (Dégâts, Sort, Efforts) |
 | 0.3.6 | La Défense (protections et sets d'armure) passe dans la colonne de gauche, juste avant les Blessures graves |
 | 0.3.7 | Centre dans l'ordre : Compétences, Armes, Armure (sets d'armure), Dons, Inventaire important, Inventaire non important, Bourse, Réglages du MJ |
+| 0.4 | **Armures = objets uniques** du JDR : chacune garde son usure (Protection actuelle), même en changeant d'armure ou de porteur (à faire côté Apps Script : voir « Objets uniques ») |
 
 ## Tester tout de suite (mode démo)
 
@@ -95,7 +97,7 @@ dans la colonne *Rôle* du Sheet et reste modifiable à la main.
 1. Crée un nouveau **Google Sheet** (pas un Google Doc : il faut un tableau), par ex. « JDR – Base ».
 2. Menu **Extensions → Apps Script**.
 3. Recrée chaque fichier du dossier `apps-script/` : bouton **+** → **Script**, même nom
-   (`Reglages`, `Web`, `Comptes`, `Sessions`, `Jdr`, `Personnages`, `Fiches`, `Images`, `Feuilles`, `Outils`),
+   (`Reglages`, `Web`, `Comptes`, `Sessions`, `Jdr`, `Personnages`, `Fiches`, `Objets`, `Images`, `Feuilles`, `Outils`),
    puis colle son contenu. Supprime l'ancien `Code.gs` (sinon les fonctions seraient en double).
    L'ordre des fichiers n'a pas d'importance. Enregistre (💾).
 4. En haut, choisis la fonction **`installer`** puis **▶ Exécuter**. Google demande l'autorisation :
@@ -143,15 +145,36 @@ Tuile **Données du RP** dans le menu d'un JDR. Cinq listes modifiables, puis bo
 
 | Liste | Champs | Rôle dans la fiche |
 |---|---|---|
-| Métaux | nom, valeur, valeur magie | multiplie l'armure des sets ; sert aussi de valeur (diviseur des dégâts) |
-| Raretés | nom, multiplicateur armure | multiplie l'armure des sets |
-| Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | les pièces possibles d'un set et leur armure |
+| Métaux | nom, valeur, valeur magie | (sets d'armure, plus utilisés par la fiche depuis la 0.4) |
+| Raretés | nom, multiplicateur armure | (idem) |
+| Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | (idem) |
 | Armes | nom, roll (texte libre, décidé par le MJ), à deux mains, description / effet, 2e forme facultative (mêmes champs) | armes que le MJ donne aux personnages ; une arme à deux formes se change dans la fiche (bouton ⇄) |
-| Sets d'armure | nom, métal, rareté, pièces cochées, description | armure = (somme des pièces) × valeur du métal × rareté, arrondie |
+| Sets d'armure | nom, métal, rareté, pièces cochées, description | **plus utilisés par la fiche** : les armures sont des objets uniques (voir plus bas) |
 
 Tant que rien n'est enregistré, le JDR utilise des exemples de départ. Le tout est stocké en JSON
 dans la colonne *Données RP* de l'onglet JDR. Supprimer un élément déjà donné à un personnage le fait
 disparaître de sa fiche.
+
+## Objets uniques (armures)
+
+Tuile **Objets uniques** dans le menu d'un JDR (MJ). Chaque armure est un **objet à part**, comme en
+programmation objet : elle a son nom, sa **Protection max**, sa **Protection actuelle** (son usure),
+sa **valeur** (10 = armure divine), une description, et son **porteur** (un personnage du JDR, ou personne).
+
+- Le MJ crée les objets à la main, les modifie, les donne à un personnage ou les reprend, les supprime.
+- Dans la fiche (section **Armure**), le personnage voit les armures qu'il porte et en équipe une d'un clic.
+  La jauge **Protection** est celle de l'armure équipée : les dégâts usent **cette** armure.
+- L'usure reste attachée à l'armure : changer d'armure, recharger la page, ou donner l'armure à un autre
+  personnage ne la remet pas à neuf. Le joueur et le MJ la réparent avec le ✎ de la jauge Protection.
+- Armure divine : seul le MJ autorise ou bloque son usure (bouton sous la jauge), et c'est gardé par l'objet.
+- Les armures rangées (portées mais pas équipées) prennent 3 emplacements de l'inventaire important.
+- Un personnage supprimé laisse ses objets dans le JDR, sans porteur.
+- Stockage : onglet **Objets** du Google Sheet (créé tout seul), une ligne par objet.
+
+**Mise en place (une fois)** — dans Apps Script : ajoute le fichier **`Objets`** (contenu de
+`apps-script/Objets.gs`), remplace `Reglages`, `Web`, `Feuilles`, `Fiches`, `Jdr` et `Personnages`,
+enregistre, puis **Déployer → Gérer les déploiements → ✏️ → Nouvelle version**.
+Les anciennes armures des fiches (sets cochés) ne sont pas reprises : le MJ recrée les armures en objets.
 
 ## Les fiches perso
 
@@ -188,7 +211,7 @@ L'image du personnage passe aussi par messages : `jdr:image` (site → fiche), `
   (de 280 à 760 px). À partir de 400 px, les trois jauges sont sur la même ligne et leurs outils
   en dessous ; à partir de 600 px, chaque outil est juste sous sa jauge (Dégâts | Sort | Efforts).
   La **Défense** (Protection, Protection magique) suit, juste avant les Blessures graves. Au centre, dans l'ordre : **Compétences**, Armes,
-  Armure (sets d'armure), Dons & connaissances, Inventaire important, Inventaire non important, Bourse,
+  Armure (armures portées = objets uniques), Dons & connaissances, Inventaire important, Inventaire non important, Bourse,
   Réglages du MJ. À droite : le cadre Réussite (et le jet du sort).
 - **Écran moyen** : l'état passe au-dessus sur deux colonnes, puis les Compétences.
 - **Téléphone** : tout l'un sous l'autre ; l'image est une vignette dans la barre du haut.

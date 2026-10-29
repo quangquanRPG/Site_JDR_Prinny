@@ -9,13 +9,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <!-- VERSION (?v=…) : à changer partout dans ce fichier à chaque mise à jour
        (Ctrl+H « Remplacer tout ») pour forcer les navigateurs à recharger. -->
-  <link rel="stylesheet" href="css/base.css?v=0.3.7">
-  <link rel="stylesheet" href="css/accueil.css?v=0.3.7">
-  <link rel="stylesheet" href="css/espace.css?v=0.3.7">
-  <link rel="stylesheet" href="css/jdr.css?v=0.3.7">
-  <link rel="stylesheet" href="css/donnees-rp.css?v=0.3.7">
-  <link rel="stylesheet" href="css/fiche.css?v=0.3.7">
-  <link rel="stylesheet" href="css/portrait.css?v=0.3.7">
+  <link rel="stylesheet" href="css/base.css?v=0.4">
+  <link rel="stylesheet" href="css/accueil.css?v=0.4">
+  <link rel="stylesheet" href="css/espace.css?v=0.4">
+  <link rel="stylesheet" href="css/jdr.css?v=0.4">
+  <link rel="stylesheet" href="css/donnees-rp.css?v=0.4">
+  <link rel="stylesheet" href="css/fiche.css?v=0.4">
+  <link rel="stylesheet" href="css/portrait.css?v=0.4">
 </head>
 <body>
   <main class="scene">
@@ -157,6 +157,9 @@
         <button type="button" class="tuile" data-panneau="rp" aria-expanded="false">
           <strong>Données du RP</strong><small id="info-rp">Métaux, raretés, armes, armures</small>
         </button>
+        <button type="button" class="tuile" data-panneau="objets" aria-expanded="false">
+          <strong>Objets uniques</strong><small id="info-objets">Armures, chacune avec son usure</small>
+        </button>
         <button type="button" class="tuile" data-panneau="persos" aria-expanded="false">
           <strong>Voir les personnages</strong><small id="info-persos">—</small>
         </button>
@@ -192,41 +195,42 @@
   </main>
 
   <!-- Réglages (les seuls fichiers à modifier pour configurer le site) -->
-  <script src="config.js?v=0.3.7"></script>
-  <script src="fiches.js?v=0.3.7"></script>
+  <script src="config.js?v=0.4"></script>
+  <script src="fiches.js?v=0.4"></script>
   <!-- État partagé et outils -->
-  <script src="js/etat.js?v=0.3.7"></script>
-  <script src="js/outils/dom.js?v=0.3.7"></script>
-  <script src="js/outils/chiffrement.js?v=0.3.7"></script>
-  <script src="js/outils/stockage.js?v=0.3.7"></script>
-  <script src="js/regles.js?v=0.3.7"></script>
+  <script src="js/etat.js?v=0.4"></script>
+  <script src="js/outils/dom.js?v=0.4"></script>
+  <script src="js/outils/chiffrement.js?v=0.4"></script>
+  <script src="js/outils/stockage.js?v=0.4"></script>
+  <script src="js/regles.js?v=0.4"></script>
   <!-- Serveur (Google Sheet via Apps Script, ou mode démo) -->
-  <script src="js/serveur/api.js?v=0.3.7"></script>
-  <script src="js/serveur/demo.js?v=0.3.7"></script>
+  <script src="js/serveur/api.js?v=0.4"></script>
+  <script src="js/serveur/demo.js?v=0.4"></script>
   <!-- Données du RP -->
-  <script src="js/donnees-rp/modele.js?v=0.3.7"></script>
-  <script src="js/donnees-rp/onglets.js?v=0.3.7"></script>
+  <script src="js/donnees-rp/modele.js?v=0.4"></script>
+  <script src="js/donnees-rp/onglets.js?v=0.4"></script>
   <!-- Vues -->
-  <script src="js/navigation.js?v=0.3.7"></script>
-  <script src="js/vues/accueil.js?v=0.3.7"></script>
-  <script src="js/vues/espace.js?v=0.3.7"></script>
-  <script src="js/vues/espace-joueur.js?v=0.3.7"></script>
-  <script src="js/vues/espace-mj.js?v=0.3.7"></script>
+  <script src="js/navigation.js?v=0.4"></script>
+  <script src="js/vues/accueil.js?v=0.4"></script>
+  <script src="js/vues/espace.js?v=0.4"></script>
+  <script src="js/vues/espace-joueur.js?v=0.4"></script>
+  <script src="js/vues/espace-mj.js?v=0.4"></script>
   <!-- Page d'un JDR -->
-  <script src="js/vues/jdr/page.js?v=0.3.7"></script>
-  <script src="js/vues/jdr/panneaux.js?v=0.3.7"></script>
-  <script src="js/vues/jdr/panneau-type.js?v=0.3.7"></script>
-  <script src="js/vues/jdr/panneau-donnees-rp.js?v=0.3.7"></script>
-  <script src="js/vues/jdr/panneau-persos.js?v=0.3.7"></script>
-  <script src="js/vues/jdr/panneau-ajout.js?v=0.3.7"></script>
+  <script src="js/vues/jdr/page.js?v=0.4"></script>
+  <script src="js/vues/jdr/panneaux.js?v=0.4"></script>
+  <script src="js/vues/jdr/panneau-type.js?v=0.4"></script>
+  <script src="js/vues/jdr/panneau-donnees-rp.js?v=0.4"></script>
+  <script src="js/vues/jdr/panneau-persos.js?v=0.4"></script>
+  <script src="js/vues/jdr/panneau-ajout.js?v=0.4"></script>
+  <script src="js/vues/jdr/panneau-objets.js?v=0.4"></script>
   <!-- Fiche d'un personnage -->
-  <script src="js/vues/fiche/ouverture.js?v=0.3.7"></script>
-  <script src="js/vues/fiche/reussite.js?v=0.3.7"></script>
-  <script src="js/vues/fiche/sauvegarde.js?v=0.3.7"></script>
-  <script src="js/vues/fiche/echanges.js?v=0.3.7"></script>
-  <script src="js/vues/fiche/actualisation.js?v=0.3.7"></script>
-  <script src="js/vues/fiche/portrait.js?v=0.3.7"></script>
+  <script src="js/vues/fiche/ouverture.js?v=0.4"></script>
+  <script src="js/vues/fiche/reussite.js?v=0.4"></script>
+  <script src="js/vues/fiche/sauvegarde.js?v=0.4"></script>
+  <script src="js/vues/fiche/echanges.js?v=0.4"></script>
+  <script src="js/vues/fiche/actualisation.js?v=0.4"></script>
+  <script src="js/vues/fiche/portrait.js?v=0.4"></script>
   <!-- Démarrage : toujours en dernier -->
-  <script src="js/demarrage.js?v=0.3.7"></script>
+  <script src="js/demarrage.js?v=0.4"></script>
 </body>
 </html>
