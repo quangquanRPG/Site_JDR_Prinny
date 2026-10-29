@@ -34,41 +34,55 @@
 .efforts-carte { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 12px 14px; height: 100%; }
 .efforts-carte .efforts, .efforts-carte .fatigue-info, .efforts-carte .effort-actif { margin-top: 10px; }
 
-/* Selon la largeur de la colonne de l'état (requête de conteneur) :
-   < 400 px (téléphone, petit PC) : tout l'un sous l'autre.
-   ≥ 400 px : les trois jauges PV / Mana / Énergie sur la même ligne, leurs outils en dessous
-              sur deux colonnes (Dégâts | Sort, Blessures | Efforts).
-   ≥ 600 px : chaque outil juste sous sa jauge : Dégâts (+ Blessures) | Sort | Efforts. */
-.colonne-etat { container-type: inline-size; }
-@container (min-width: 400px) {
+/* Défense (Protection, Protection magique, sets d'armure), juste avant les Blessures graves */
+.bloc-defense { container: defense / inline-size; }
+.titre-defense {
+  font-family: Cinzel, Georgia, serif; font-weight: 500; font-size: .9rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--doux); margin: 6px 0 8px;
+}
+.bloc-defense .sous-label { margin-top: 12px; }
+@container defense (max-width: 399px) { #ressources-defense { grid-template-columns: minmax(0, 1fr); } }
+
+/* Selon la largeur de la colonne de l'état (requête de conteneur « etat ») :
+   < 400 px (téléphone, petit PC) : tout l'un sous l'autre (PV, Dégâts, Défense, Blessures, Mana, Sort…).
+   ≥ 400 px : les trois jauges PV / Mana / Énergie sur la même ligne ; dessous Dégâts | Sort,
+              puis Défense | Efforts, puis Blessures (sous la Défense).
+   ≥ 600 px : chaque outil juste sous sa jauge (Dégâts | Sort | Efforts), puis la Défense
+              sur toute la largeur, puis les Blessures graves. */
+.colonne-etat { container: etat / inline-size; }
+@container etat (min-width: 400px) {
   .pile-etat {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-areas:
       "pv pv mana mana energie energie"
       "degats degats degats sort sort sort"
-      "blessures blessures blessures efforts efforts efforts";
+      "defense defense defense efforts efforts efforts"
+      "blessures blessures blessures . . .";
     align-items: stretch;
   }
   #res-pv { grid-area: pv; }        #res-mana { grid-area: mana; }      #res-energie { grid-area: energie; }
-  #zone-degats { grid-area: degats; } #zone-mana { grid-area: sort; }  #zone-efforts { grid-area: efforts; }
+  #zone-degats { grid-area: degats; } #zone-mana { grid-area: sort; }  #zone-efforts { grid-area: efforts; align-self: start; }
+  #bloc-defense { grid-area: defense; }
   #blessures { grid-area: blessures; }
   /* Même hauteur sur une ligne : les jauges entre elles, les outils entre eux */
   .pile-etat > .ressources.solo > .res, #zone-degats > .degats, #zone-mana > .mana-sort { height: 100%; }
   .pile-etat > #blessures { align-self: start; }
   /* Jauges plus compactes quand elles sont trois sur une ligne étroite */
-  .pile-etat .res { padding: 10px 12px; }
-  .pile-etat .res-haut { flex-direction: column; align-items: flex-start; gap: 0; }
-  .pile-etat .res-val { font-size: 1.25rem; }
+  .pile-etat > .ressources.solo .res { padding: 10px 12px; }
+  .pile-etat > .ressources.solo .res-haut { flex-direction: column; align-items: flex-start; gap: 0; }
+  .pile-etat > .ressources.solo .res-val { font-size: 1.25rem; }
 }
-@container (min-width: 600px) {
+@container etat (min-width: 600px) {
   .pile-etat {
     grid-template-areas:
       "pv pv mana mana energie energie"
       "degats degats sort sort efforts efforts"
+      "defense defense defense defense defense defense"
       "blessures blessures . . . .";
   }
-  .pile-etat .res-haut { flex-direction: row; align-items: center; gap: 10px; }
-  .pile-etat .res-val { font-size: 1.4rem; }
+  #zone-efforts { align-self: stretch; }
+  .pile-etat > .ressources.solo .res-haut { flex-direction: row; align-items: center; gap: 10px; }
+  .pile-etat > .ressources.solo .res-val { font-size: 1.4rem; }
   .pile-etat .champ-degat input { width: 74px; }
 }
 
