@@ -63,8 +63,8 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Numéro de version (et cache des navigateurs)
 
-Le site en est à la **version 0.3.3** (la 0.1 est la première mise en ligne).
-Chaque `<link>` et `<script>` finit par `?v=0.3.3` : c'est à la fois le numéro de version
+Le site en est à la **version 0.3.4** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.3.4` : c'est à la fois le numéro de version
 affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
 À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
 `fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
@@ -77,6 +77,7 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 | 0.3.1 | Le cadre Réussite et le jet du sort flottent par-dessus la page : ils ne décalent plus jamais la fiche |
 | 0.3.2 | Image du personnage dans la marge gauche, rangée dans le Google Drive (à faire côté Apps Script : voir « Images des personnages ») |
 | 0.3.3 | Fiche Nardin en deux colonnes : à gauche l'image puis PV / Mana / Énergie avec leurs outils, au centre les Compétences en premier |
+| 0.3.4 | Sur PC, la colonne de gauche prend toute la largeur libre (280 à 760 px) ; ses cartes passent sur deux colonnes quand elle est assez large |
 
 ## Tester tout de suite (mode démo)
 
@@ -180,7 +181,9 @@ L'image du personnage passe aussi par messages : `jdr:image` (site → fiche), `
 ### Disposition de la fiche Nardin
 
 - **Grand écran** : colonne de gauche avec l'image du personnage, puis **PV** (+ Encaisser des dégâts,
-  Blessures graves), **Mana** (+ Sort), **Énergie** (+ efforts). Au centre : **Compétences** en premier,
+  Blessures graves), **Mana** (+ Sort), **Énergie** (+ efforts). Elle prend toute la largeur libre
+  (de 280 à 760 px) ; à partir de 500 px, ses cartes passent sur deux colonnes (PV | Mana, Dégâts | Sort,
+  Blessures | Énergie). Au centre : **Compétences** en premier,
   puis Défense, Armes, Bourse, inventaires, Dons. À droite : le cadre Réussite (et le jet du sort).
 - **Écran moyen** : l'état passe au-dessus sur deux colonnes, puis les Compétences.
 - **Téléphone** : tout l'un sous l'autre ; l'image est une vignette dans la barre du haut.

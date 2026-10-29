@@ -1,9 +1,10 @@
 /* ─────────────────────────────────────────────────────────────
    Mise en page en colonnes
-   Large (≥ 1040 px) : à gauche l'image puis PV / Mana / Énergie avec leurs outils,
-                       au centre la fiche (Compétences en premier).
-   Moyen (620–1039 px) : l'état passe au-dessus, sur deux colonnes.
-   Étroit (< 620 px) : tout l'un sous l'autre.
+   Large (≥ 1040 px) : à gauche l'image puis PV / Mana / Énergie avec leurs outils
+                       (la colonne prend toute la largeur libre, de 280 à 760 px),
+                       au centre la fiche (Compétences en premier, 760 px).
+   Moyen : l'état passe au-dessus, sur deux colonnes.
+   Étroit (< 500 px) : tout l'un sous l'autre.
    Fiche ouverte seule sur grand écran (≥ 1300 px) : une place est gardée à droite
    pour le cadre Réussite, qui ne passe jamais par-dessus la fiche.
    ───────────────────────────────────────────────────────────── */
@@ -29,22 +30,29 @@
 .pile-etat > .ressources.solo { grid-template-columns: minmax(0, 1fr); }
 .pile-etat .blessures, .pile-etat .degats, .pile-etat .mana-sort { margin-top: 0; height: auto; }
 
-@media (min-width: 620px) and (max-width: 1039px) {
+/* Quand la colonne de l'état a de la place (≥ 500 px : écran moyen, ou très grand écran),
+   ses cartes passent sur deux colonnes : PV | Mana, Dégâts | Sort, Blessures | Énergie */
+.colonne-etat { container-type: inline-size; }
+@container (min-width: 500px) {
   .pile-etat {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas: "pv mana" "degats sort" "blessures energie";
   }
   #res-pv { grid-area: pv; }        #res-mana { grid-area: mana; }      #res-energie { grid-area: energie; }
   #zone-degats { grid-area: degats; } #zone-mana { grid-area: sort; }  #blessures { grid-area: blessures; }
+  /* Dégâts et Sort côte à côte : même hauteur, pas de trou sous le plus court */
+  #zone-degats, #zone-mana { align-self: stretch; }
+  #zone-degats > .degats, #zone-mana > .mana-sort { height: 100%; }
 }
 
+/* Large : la colonne de gauche prend toute la place disponible (280 px au moins), la fiche garde 760 px */
 @media (min-width: 1040px) {
   .page-fiche {
-    grid-template-columns: var(--largeur-etat) minmax(0, var(--largeur-centre));
+    grid-template-columns: minmax(var(--largeur-etat), 1fr) minmax(0, var(--largeur-centre));
     grid-template-areas: "etat entete" "etat corps";
     grid-template-rows: auto 1fr;
     column-gap: var(--ecart-colonnes);
-    max-width: calc(var(--largeur-etat) + var(--ecart-colonnes) + var(--largeur-centre));
+    max-width: none;
   }
   .colonne-etat { align-self: start; }
   .titre-etat { margin-top: 16px; }
@@ -53,17 +61,21 @@
   .page-fiche > .fiche > h2:first-child { margin-top: 20px; }
 }
 
-/* Fiche seule sur grand écran : le bloc se décale à gauche pour laisser la place au cadre Réussite */
+/* Fiche seule sur grand écran : même principe que le site, avec 210 px gardés à droite
+   pour le cadre Réussite (190 px) : la colonne de l'état prend tout le reste (280 à 760 px). */
 @media (min-width: 1300px) {
-  body:not(.integre) .page-fiche { margin-left: max(0px, calc(50% - 645px)); }
+  body:not(.integre) .page-fiche {
+    width: calc(clamp(280px, 100% - 994px, 760px) + 784px);
+    margin-left: max(0px, calc((100% - clamp(280px, 100% - 994px, 760px) - 994px) / 2));
+  }
 }
 
 /* ── Image du personnage (envoyée par le site : voir js/affichage/portrait.js) ── */
 .portrait-perso { margin-top: 6px; text-align: center; }
 .portrait-perso .portrait-image { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
-.portrait-perso img { display: block; width: 100%; height: auto; max-height: 420px; object-fit: contain; border-radius: 10px; border: 1px solid var(--bord); }
+.portrait-perso img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: contain; border-radius: 10px; border: 1px solid var(--bord); }
 .portrait-perso .portrait-ajout {
-  width: 100%; aspect-ratio: 4 / 3;
+  width: 100%; height: 150px;   /* emplacement vide : hauteur fixe, même dans une colonne très large */
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
   background: var(--carte); color: var(--doux); cursor: pointer;
   border: 1px dashed var(--bord); border-radius: 10px; font-size: .85rem;
@@ -71,7 +83,7 @@
 .portrait-perso .portrait-ajout .plus { font-family: Cinzel, Georgia, serif; font-size: 1.8rem; line-height: 1; color: var(--accent); }
 .portrait-perso .portrait-ajout:hover { border-color: var(--accent); color: var(--texte); }
 .portrait-perso .portrait-attente {
-  width: 100%; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 150px; display: flex; align-items: center; justify-content: center;
   border-radius: 10px; background: var(--carte); border: 1px solid var(--bord); color: var(--doux); font-size: .8rem; font-style: italic;
 }
 .portrait-perso .portrait-etat { margin: 6px 0 0; font-size: .75rem; color: var(--doux); }
