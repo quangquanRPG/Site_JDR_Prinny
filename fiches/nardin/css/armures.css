@@ -13,3 +13,12 @@
 .armure-prot { font-size: .85rem; color: var(--doux); }
 
 .armure-etat { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); font-weight: 600; }
+
+/* Objets uniques : usure de chaque armure */
+.armure-prot b { color: var(--texte); }
+.armure.abimee .armure-prot b { color: var(--malus); }
+.armure-usure { display: block; height: 5px; border-radius: 999px; background: var(--bg); overflow: hidden; margin: 3px 0 1px; }
+.armure-usure > span { display: block; height: 100%; border-radius: 999px; background: #7d8a99; }
+.armure.abimee .armure-usure > span { background: var(--malus); }
+.armure-divine { color: #b08a1e; }
+.armure-etat.abimee { color: var(--malus); }

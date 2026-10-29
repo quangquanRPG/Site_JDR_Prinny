@@ -25,7 +25,7 @@ function arreterActualisation(f) {
 
 // L'utilisateur est-il en train d'agir sur la fiche ?
 function utilisateurOccupe(f) {
-  return f.saisieEnCours || f.aEnvoyer || f.envoi
+  return f.saisieEnCours || f.aEnvoyer || f.envoi || f.objetsEnCours > 0
     || Date.now() - (f.derniereActionLocale || 0) < CALME_AVANT_ACTUALISATION;
 }
 
@@ -47,10 +47,13 @@ async function actualiserFiche(f) {
 
     const texteFiche = JSON.stringify(rep.fiche);
     const texteRp = JSON.stringify(rep.jdr.donneesRp ?? null);
-    if (texteFiche === f.texteServeur && texteRp === f.texteRp && rep.perso.nom === f.perso.nom) return;
+    const texteObjets = JSON.stringify(rep.objets || []);   // armures données, retirées ou usées ailleurs
+    if (texteFiche === f.texteServeur && texteRp === f.texteRp && texteObjets === f.texteObjets && rep.perso.nom === f.perso.nom) return;
 
     f.texteServeur = texteFiche;
     f.texteRp = texteRp;
+    f.texteObjets = texteObjets;
+    f.objets = rep.objets || [];
     Object.assign(f, { perso: { ...rep.perso, image: f.perso.image }, jdr: rep.jdr, donnees: rep.fiche });
     document.title = rep.perso.nom + " · " + (CFG.NOM_SITE || "Grimoire");
     f.ignorerProchaineModif = true;         // la fiche va renvoyer cette version : ce n'est pas un changement local

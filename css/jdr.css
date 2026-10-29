@@ -115,3 +115,26 @@
 }
 .bouton-fiche:hover { background: rgba(201,164,92,.12); }
 .perso small.vierge { font-style: italic; opacity: .8; }
+
+/* Objets uniques (panneau du MJ) */
+.objets-entete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin-bottom: 12px; }
+.objets-entete p { margin: 0; flex: 1 1 260px; font-size: .92rem; }
+.liste-objets { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.objet-ligne {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  border: 1px solid var(--bord); border-radius: 8px; padding: 10px 12px;
+}
+.objet-ligne.en-edition { border-color: var(--or); }
+.objet-txt { min-width: 0; display: grid; gap: 2px; }
+.objet-txt strong { overflow-wrap: anywhere; }
+.objet-txt small { color: var(--doux); }
+.objet-txt small b { color: var(--texte); font-weight: 600; }
+.objet-txt small b.abime { color: var(--erreur); }
+.objet-txt small.sans-porteur { font-style: italic; }
+.objet-txt p { margin: 2px 0 0; color: var(--doux); font-size: .92rem; white-space: pre-line; overflow-wrap: anywhere; }
+.objet-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; flex-shrink: 0; }
+.form-objet { border: 1px solid var(--or); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.form-objet h3 { font-family: "Cinzel", serif; font-size: .9rem; letter-spacing: .05em; color: var(--or-clair); margin: 0 0 12px; }
+.form-objet select, .form-objet input, .form-objet textarea { width: 100%; }
+.grille-objet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 12px; }
+@media (max-width: 520px) { .grille-objet { grid-template-columns: 1fr; } .objet-ligne { flex-direction: column; } .objet-actions { justify-content: flex-start; } }

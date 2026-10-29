@@ -12,7 +12,8 @@ function ouvrirFiche(req) {
     try { donnees = JSON.parse(a.perso.fiche); } catch (e) { donnees = null; }
   }
   if (a.acces === 'lecture') donnees = sansObjetsCaches(donnees);
-  return { ok: true, acces: a.acces, perso: persoPublic(a.perso), jdr: jdrPublic(a.jdr), fiche: donnees };
+  return { ok: true, acces: a.acces, perso: persoPublic(a.perso), jdr: jdrPublic(a.jdr), fiche: donnees,
+           objets: objetsPortes(a.perso.id) };   // objets uniques portés (armures), voir Objets.gs
 }
 
 function enregistrerFiche(req) {

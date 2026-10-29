@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────
-//  JDR (réservé aux MJ) : liste, création, page d'un JDR, type de fiche, Données du RP
+//  JDR (réservé aux MJ) : liste, création, page d'un JDR (avec ses objets uniques), type de fiche, Données du RP
 // ─────────────────────────────────────────────────────────────
 
 function mesJdr(req) {
@@ -60,7 +60,7 @@ function voirJdr(req) {
   if (m.refus) return m.refus;
   const j = trouverJdr(req.id, m.compte.pseudo);
   if (!j) return { ok: false, erreur: 'JDR introuvable.' };
-  return { ok: true, jdr: jdrPublic(j), personnages: lirePersos(j.id) };
+  return { ok: true, jdr: jdrPublic(j), personnages: lirePersos(j.id), objets: objetsDuJdr(j.id) };
 }
 
 function choisirFiche(req) {

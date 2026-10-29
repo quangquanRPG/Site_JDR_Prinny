@@ -33,6 +33,8 @@ async function ouvrirFiche(id) {
     Object.assign(f, { perso: rep.perso, jdr: rep.jdr, acces: rep.acces, donnees: rep.fiche });
     f.texteServeur = JSON.stringify(rep.fiche);               // pour repérer les changements faits ailleurs
     f.texteRp = JSON.stringify(rep.jdr.donneesRp ?? null);
+    f.objets = rep.objets || [];                              // objets uniques portés (armures)
+    f.texteObjets = JSON.stringify(f.objets);
     chargerPortrait(f);                                       // image du personnage, dans la marge gauche
 
     const mj = rep.acces === "mj";
