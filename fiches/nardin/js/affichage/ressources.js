@@ -11,6 +11,8 @@ const zoneRessource = r => document.getElementById("res-" + r.id) || document.ge
 
 function afficherRessources(fiche, u) {
   for (const r of RESSOURCES) zoneRessource(r).innerHTML = "";
+  const zoneEfforts = document.getElementById("zone-efforts");   // efforts sous la jauge d'Énergie (carte à part)
+  if (zoneEfforts) zoneEfforts.innerHTML = "";
   for (const r of RESSOURCES) {
     const zone = zoneRessource(r);
     const { actuel, base } = fiche.ressources[r.id];
@@ -61,7 +63,7 @@ function afficherRessources(fiche, u) {
         ${droite}
       </div>
       ${r.seulMax ? "" :`<div class="res-barre"><div style="width:${pct}%"></div></div>`}`;
-    if (r.id === "energie") afficherEfforts(el, fiche, u);
+    if (r.id === "energie") afficherEfforts(zoneEfforts || el, fiche, u);
     if (r.id === "protection") afficherUsure(el, fiche, u);
 
     const fermer = () => { ressourceEnEdition = null; rafraichir(); };

@@ -3,8 +3,8 @@
    Large (≥ 1040 px) : à gauche l'image puis PV / Mana / Énergie avec leurs outils
                        (la colonne prend toute la largeur libre, de 280 à 760 px),
                        au centre la fiche (Compétences en premier, 760 px).
-   Moyen : l'état passe au-dessus, sur deux colonnes.
-   Étroit (< 500 px) : tout l'un sous l'autre.
+   Moyen : l'état passe au-dessus (les trois jauges sur une ligne, leurs outils dessous).
+   Étroit : tout l'un sous l'autre.
    Fiche ouverte seule sur grand écran (≥ 1300 px) : une place est gardée à droite
    pour le cadre Réussite, qui ne passe jamais par-dessus la fiche.
    ───────────────────────────────────────────────────────────── */
@@ -30,19 +30,46 @@
 .pile-etat > .ressources.solo { grid-template-columns: minmax(0, 1fr); }
 .pile-etat .blessures, .pile-etat .degats, .pile-etat .mana-sort { margin-top: 0; height: auto; }
 
-/* Quand la colonne de l'état a de la place (≥ 500 px : écran moyen, ou très grand écran),
-   ses cartes passent sur deux colonnes : PV | Mana, Dégâts | Sort, Blessures | Énergie */
+/* Carte « Efforts » (sous la jauge d'Énergie), même allure que Dégâts et Sort */
+.efforts-carte { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 12px 14px; height: 100%; }
+.efforts-carte .efforts, .efforts-carte .fatigue-info, .efforts-carte .effort-actif { margin-top: 10px; }
+
+/* Selon la largeur de la colonne de l'état (requête de conteneur) :
+   < 400 px (téléphone, petit PC) : tout l'un sous l'autre.
+   ≥ 400 px : les trois jauges PV / Mana / Énergie sur la même ligne, leurs outils en dessous
+              sur deux colonnes (Dégâts | Sort, Blessures | Efforts).
+   ≥ 600 px : chaque outil juste sous sa jauge : Dégâts (+ Blessures) | Sort | Efforts. */
 .colonne-etat { container-type: inline-size; }
-@container (min-width: 500px) {
+@container (min-width: 400px) {
   .pile-etat {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas: "pv mana" "degats sort" "blessures energie";
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-areas:
+      "pv pv mana mana energie energie"
+      "degats degats degats sort sort sort"
+      "blessures blessures blessures efforts efforts efforts";
+    align-items: stretch;
   }
   #res-pv { grid-area: pv; }        #res-mana { grid-area: mana; }      #res-energie { grid-area: energie; }
-  #zone-degats { grid-area: degats; } #zone-mana { grid-area: sort; }  #blessures { grid-area: blessures; }
-  /* Dégâts et Sort côte à côte : même hauteur, pas de trou sous le plus court */
-  #zone-degats, #zone-mana { align-self: stretch; }
-  #zone-degats > .degats, #zone-mana > .mana-sort { height: 100%; }
+  #zone-degats { grid-area: degats; } #zone-mana { grid-area: sort; }  #zone-efforts { grid-area: efforts; }
+  #blessures { grid-area: blessures; }
+  /* Même hauteur sur une ligne : les jauges entre elles, les outils entre eux */
+  .pile-etat > .ressources.solo > .res, #zone-degats > .degats, #zone-mana > .mana-sort { height: 100%; }
+  .pile-etat > #blessures { align-self: start; }
+  /* Jauges plus compactes quand elles sont trois sur une ligne étroite */
+  .pile-etat .res { padding: 10px 12px; }
+  .pile-etat .res-haut { flex-direction: column; align-items: flex-start; gap: 0; }
+  .pile-etat .res-val { font-size: 1.25rem; }
+}
+@container (min-width: 600px) {
+  .pile-etat {
+    grid-template-areas:
+      "pv pv mana mana energie energie"
+      "degats degats sort sort efforts efforts"
+      "blessures blessures . . . .";
+  }
+  .pile-etat .res-haut { flex-direction: row; align-items: center; gap: 10px; }
+  .pile-etat .res-val { font-size: 1.4rem; }
+  .pile-etat .champ-degat input { width: 74px; }
 }
 
 /* Large : la colonne de gauche prend toute la place disponible (280 px au moins), la fiche garde 760 px */

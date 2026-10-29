@@ -4,6 +4,7 @@
 
 .titre-bloc { font-weight: 600; font-size: .95rem; flex-basis: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .titre-bloc small { font-weight: 400; font-size: .8rem; color: var(--doux); }
+.mana-sort > .titre-bloc { flex-basis: auto; align-self: stretch; }   /* bloc en colonne : le titre ne doit pas s'étirer en hauteur */
 
 /* Bloc Sort */
 .mana-sort {
