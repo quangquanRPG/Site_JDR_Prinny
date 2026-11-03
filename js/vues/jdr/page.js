@@ -51,13 +51,14 @@ function majMenu() {
   const nPnj = ps.length - nPj;
   $("#info-persos").textContent = ps.length ? pluriel(nPj, "joueur") + " · " + nPnj + " PNJ" : "Aucun personnage";
   const objets = jdrCourant.objets || [];
+  const nArmes = objets.filter((o) => o.type === "arme").length;
   $("#info-objets").textContent = objets.length
-    ? pluriel(objets.length, "armure") + " · " + objets.filter((o) => !o.porteur).length + " sans porteur"
-    : "Armures, chacune avec son usure";
+    ? pluriel(objets.length - nArmes, "armure") + " · " + pluriel(nArmes, "arme") + " · " + objets.filter((o) => !o.porteur).length + " sans porteur"
+    : "Armures et armes, chacune avec son état";
   const rp = normaliserDonneesRp(jdrCourant.jdr.donneesRp);
   const brouillon = brouillonRp && brouillonRp.jdrId === jdrCourant.jdr.id && brouillonRp.sale;
   $("#info-rp").textContent = brouillon
     ? "Modifications non enregistrées"
-    : pluriel(rp.armes.length, "arme") + " · " + pluriel(rp.setsArmure.length, "set") + " d'armure"
+    : pluriel(rp.materiaux.length, "métal", "métaux") + " · " + pluriel(rp.raretes.length, "rareté") + " · " + pluriel(rp.typesArmure.length, "type") + " d'armure"
       + (jdrCourant.jdr.donneesRp ? "" : " (exemples)");
 }

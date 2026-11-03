@@ -1,7 +1,8 @@
 /* ================================================================
    RÈGLES — armes : possédées → portées (max 3) → en main (2 mains)
-   Catalogue d'exemple : dans le site, il est remplacé par les Données du RP du MJ
-   (voir integration/donnees-rp.js).
+   Chaque arme est un objet unique du JDR : dans le site, la liste vient du serveur
+   (armes portées par le personnage, voir integration/objets.js) ; la fiche ouverte seule
+   utilise les exemples ci-dessous.
    ================================================================ */
 "use strict";
 
@@ -12,16 +13,17 @@ const CATALOGUE_ARMES = [
   { id: "bouclier", nom: "Bouclier rond" },
   { id: "hache",    nom: "Hache" },
   { id: "espadon",  nom: "Espadon",       deuxMains: true },
-  { id: "epee-bouclier", nom: "Épée et bouclier", forme2: { nom: "Hache de guerre", deuxMains: true } },
+  { id: "epee-bouclier", nom: "Épée et bouclier", forme2: { nom: "Hache de guerre", deuxMains: true }, forme: 1 },
 ];
 const trouverArme = id => CATALOGUE_ARMES.find(a => a.id === id) ?? null;
 const MAX_ARMES_PORTEES = 3;   // sur soi
 const NB_MAINS = 2;            // une arme à 1 main prend 1 main, une arme à 2 mains en prend 2
 
 /* ARMES À DEUX FORMES — une arme peut avoir une forme2 (ex. Épée et bouclier ⇄ Hache de guerre).
-   fiche.formesArmes = { idArme: 2 } quand l'arme est dans sa 2e forme ; absente = 1re forme.
-   La forme en cours donne le nom, le roll, la description et le nombre de mains. */
-const formeActuelle = (fiche, id) => (fiche.formesArmes?.[id] === 2 && trouverArme(id)?.forme2) ? 2 : 1;
+   La forme en cours (arme.forme, 1 ou 2) est un état de l'objet, comme l'usure d'une armure :
+   elle est gardée quand l'arme change de porteur. Elle donne le nom, le roll, la description
+   et le nombre de mains. */
+const formeActuelle = (fiche, id) => (trouverArme(id)?.forme2 && trouverArme(id).forme === 2) ? 2 : 1;
 
 // L'arme telle qu'elle est en ce moment pour ce personnage (null si inconnue)
 function armeEffective(fiche, id) {

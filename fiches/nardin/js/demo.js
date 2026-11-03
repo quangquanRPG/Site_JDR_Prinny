@@ -7,8 +7,7 @@
 const FICHE_EXEMPLE = {
   nom: "Personnage exemple",
   proprietaire: "joueur_1",
-  armureEquipee: "maille",   // armures portées : objets d'exemple de regles/armures.js
-  armes: ["epee", "dague", "arc", "bouclier", "epee-bouclier"],
+  armureEquipee: "maille",   // armures et armes portées : objets d'exemple de regles/armures.js et regles/armes.js
   armesPortees: ["epee", "bouclier", "epee-bouclier"],
   armesEnMain: ["epee", "bouclier"],
   blessuresGraves: 1,

@@ -48,8 +48,7 @@ function prendreEnMain(fiche, id, u) {
 function changerFormeArme(fiche, id, u) {
   if (!droits.changerArmes(u, fiche)) return false;
   if (!fiche.armes.includes(id) || !changementFormePossible(fiche, id)) return false;
-  if (formeActuelle(fiche, id) === 2) delete fiche.formesArmes[id];
-  else fiche.formesArmes[id] = 2;
+  trouverArme(id).forme = formeActuelle(fiche, id) === 2 ? 1 : 2;   // état de l'objet, enregistré par le site (jdr:objet)
   return true;
 }
 function lacherArme(fiche, id, u) {        // reste portée, mais plus en main

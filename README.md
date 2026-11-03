@@ -21,7 +21,7 @@ site-jdr/
 │   ├── demarrage.js        branche les boutons et lance le site (toujours chargé en dernier)
 │   ├── outils/             dom.js (créer des éléments), chiffrement.js, stockage.js
 │   ├── serveur/            api.js (appels à l'Apps Script) · demo.js (faux serveur du mode démo)
-│   ├── donnees-rp/         modele.js (exemples, calcul des sets) · onglets.js (les 5 listes)
+│   ├── donnees-rp/         modele.js (exemples, calcul de l'armure) · onglets.js (les 3 listes)
 │   └── vues/               un fichier par écran
 │       ├── accueil.js · espace.js · espace-joueur.js · espace-mj.js
 │       ├── jdr/            page.js, panneaux.js et un fichier par panneau du menu
@@ -43,7 +43,7 @@ site-jdr/
     ├── Web.gs              doGet / doPost : aiguille chaque action
     ├── Comptes.gs · Sessions.gs · Jdr.gs · Personnages.gs · Fiches.gs
     ├── Images.gs           images des personnages (Google Drive, fichiers privés)
-    ├── Objets.gs           objets uniques du JDR (armures avec leur usure)
+    ├── Objets.gs           objets uniques du JDR (armures avec leur usure, armes avec leur forme)
     └── Feuilles.gs (onglets du Sheet, installer) · Outils.gs
 ```
 
@@ -82,7 +82,7 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 | 0.3.5 | Les trois jauges PV / Mana / Énergie sur la même ligne, chaque outil en dessous (Dégâts, Sort, Efforts) |
 | 0.3.6 | La Défense (protections et sets d'armure) passe dans la colonne de gauche, juste avant les Blessures graves |
 | 0.3.7 | Centre dans l'ordre : Compétences, Armes, Armure (sets d'armure), Dons, Inventaire important, Inventaire non important, Bourse, Réglages du MJ |
-| 0.4 | **Armures = objets uniques** du JDR : chacune garde son usure (Protection actuelle), même en changeant d'armure ou de porteur (à faire côté Apps Script : voir « Objets uniques ») |
+| 0.4 | **Armures et armes = objets uniques** du JDR, créés dans la tuile « Objets uniques » (plus de modèles tout faits dans les Données du RP). Une armure (métal, rareté, pièces → Protection calculée) garde son usure, une arme garde sa forme, même en changeant de porteur (à faire côté Apps Script : voir « Objets uniques ») |
 
 ## Tester tout de suite (mode démo)
 
@@ -141,40 +141,48 @@ La colonne *Fiche* recevra le contenu de la fiche quand les types de fiche seron
 
 ## Données du RP (listes du MJ, propres à chaque JDR)
 
-Tuile **Données du RP** dans le menu d'un JDR. Cinq listes modifiables, puis bouton **Enregistrer** :
+Tuile **Données du RP** dans le menu d'un JDR. Trois listes modifiables, puis bouton **Enregistrer**.
+Ce sont les **ingrédients des armures** : il n'y a plus de modèles tout faits (sets d'armure, armes),
+chaque armure et chaque arme est un objet unique (voir plus bas).
 
-| Liste | Champs | Rôle dans la fiche |
+| Liste | Champs | Rôle |
 |---|---|---|
-| Métaux | nom, valeur, valeur magie | (sets d'armure, plus utilisés par la fiche depuis la 0.4) |
-| Raretés | nom, multiplicateur armure | (idem) |
-| Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | (idem) |
-| Armes | nom, roll (texte libre, décidé par le MJ), à deux mains, description / effet, 2e forme facultative (mêmes champs) | armes que le MJ donne aux personnages ; une arme à deux formes se change dans la fiche (bouton ⇄) |
-| Sets d'armure | nom, métal, rareté, pièces cochées, description | **plus utilisés par la fiche** : les armures sont des objets uniques (voir plus bas) |
+| Métaux | nom, valeur, valeur magie | multiplie l'armure ; la valeur du métal est aussi la valeur de l'armure (diviseur des dégâts, 10 = divine) |
+| Raretés | nom, multiplicateur armure | multiplie l'armure |
+| Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | les pièces qu'on peut cocher sur une armure |
 
 Tant que rien n'est enregistré, le JDR utilise des exemples de départ. Le tout est stocké en JSON
-dans la colonne *Données RP* de l'onglet JDR. Supprimer un élément déjà donné à un personnage le fait
-disparaître de sa fiche.
+dans la colonne *Données RP* de l'onglet JDR. Après un enregistrement, les armures du JDR sont recalculées
+(un métal plus solide augmente leur Protection max ; les dégâts déjà subis sont gardés).
 
-## Objets uniques (armures)
+## Objets uniques (armures et armes)
 
-Tuile **Objets uniques** dans le menu d'un JDR (MJ). Chaque armure est un **objet à part**, comme en
-programmation objet : elle a son nom, sa **Protection max**, sa **Protection actuelle** (son usure),
-sa **valeur** (10 = armure divine), une description, et son **porteur** (un personnage du JDR, ou personne).
+Tuile **Objets uniques** dans le menu d'un JDR (MJ). Chaque armure et chaque arme est un **objet à part**,
+comme en programmation objet : il a son propre état et le garde quand il passe d'un personnage à l'autre.
 
-- Le MJ crée les objets à la main, les modifie, les donne à un personnage ou les reprend, les supprime.
-- Dans la fiche (section **Armure**), le personnage voit les armures qu'il porte et en équipe une d'un clic.
-  La jauge **Protection** est celle de l'armure équipée : les dégâts usent **cette** armure.
-- L'usure reste attachée à l'armure : changer d'armure, recharger la page, ou donner l'armure à un autre
-  personnage ne la remet pas à neuf. Le joueur et le MJ la réparent avec le ✎ de la jauge Protection.
+- **Armure** (« + Nouvelle armure ») : nom, **métal**, **rareté**, **pièces** cochées (Données du RP),
+  description, porteur. **Protection max = (somme des pièces) × valeur du métal × multiplicateur de rareté**,
+  calculée toute seule ; **valeur** = valeur du métal (10 = armure divine). Sa **Protection actuelle** est
+  son usure : elle reste attachée à l'armure (on l'enlève, on la remet, on la donne à un autre joueur :
+  les dégâts sont toujours là). Le joueur et le MJ la réparent avec le ✎ de la jauge Protection.
+- **Arme** (« + Nouvelle arme ») : nom, **roll** (texte libre), à deux mains, description / effet,
+  et une **2e forme** facultative (ex. Épée et bouclier ⇄ Hache de guerre). La **forme en cours** est
+  gardée par l'arme, même quand elle change de porteur ; le joueur la change dans sa fiche (bouton ⇄).
+- Le MJ crée les objets, les modifie, les donne à un personnage ou les reprend (« Porté par »), les supprime.
+- Dans la fiche : section **Armure** (on équipe une armure d'un clic, la jauge Protection est la sienne)
+  et section **Armes** (3 portées au plus, 2 mains).
+- Armes et armures rangées (portées mais pas sur soi) prennent de la place dans l'inventaire important
+  (armure 3 emplacements, arme 2).
 - Armure divine : seul le MJ autorise ou bloque son usure (bouton sous la jauge), et c'est gardé par l'objet.
-- Les armures rangées (portées mais pas équipées) prennent 3 emplacements de l'inventaire important.
 - Un personnage supprimé laisse ses objets dans le JDR, sans porteur.
-- Stockage : onglet **Objets** du Google Sheet (créé tout seul), une ligne par objet.
+- Stockage : onglet **Objets** du Google Sheet (créé tout seul), une ligne par objet ; la colonne *Détails*
+  contient le métal, la rareté et les pièces d'une armure, ou le roll et les formes d'une arme.
 
 **Mise en place (une fois)** — dans Apps Script : ajoute le fichier **`Objets`** (contenu de
 `apps-script/Objets.gs`), remplace `Reglages`, `Web`, `Feuilles`, `Fiches`, `Jdr` et `Personnages`,
 enregistre, puis **Déployer → Gérer les déploiements → ✏️ → Nouvelle version**.
-Les anciennes armures des fiches (sets cochés) ne sont pas reprises : le MJ recrée les armures en objets.
+Les anciennes armes des Données du RP et les anciens sets d'armure ne sont pas repris : le MJ les recrée
+en objets uniques.
 
 ## Les fiches perso
 
@@ -190,7 +198,7 @@ automatiquement dans la colonne *Fiche* de l'onglet Personnages (« Enregistré 
   Les joueurs sans personnage dans le JDR n'y ont pas accès.
 - Ce que chacun peut modifier suit les règles de la fiche (ex. Nardin : le joueur change PV/Mana actuels,
   bourse, inventaire, armes en main… ; le MJ règle en plus les maximums, les dons, et dans **Réglages du MJ**
-  le nom, les compétences de base et les armes / armures possédées).
+  le nom et les compétences de base ; il donne les armures et les armes dans « Objets uniques »).
 - **Mise à jour automatique** : une fiche ouverte relit le Google Sheet toutes les 30 secondes et affiche
   les changements faits par quelqu'un d'autre (« Mis à jour ↻ » en haut à droite). Pour ne pas écraser
   ce qu'on est en train de faire, elle attend tant qu'un champ est en cours de saisie, qu'une modification

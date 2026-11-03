@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 //  Fiche : messages échangés avec la page de la fiche (dans son cadre)
 //    fiche → site : jdr:pret, jdr:modif, jdr:reussite, jdr:hauteur, jdr:saisie,
-//                   jdr:objet (usure d'une armure = objet unique, enregistrée dans l'onglet « Objets »),
+//                   jdr:objet (usure d'une armure / forme d'une arme = objets uniques, enregistrées dans l'onglet « Objets »),
 //                   jdr:image-voir, jdr:image-fichier, jdr:image-retirer (image du personnage, voir portrait.js)
 //    site → fiche : jdr:charger (ouverture), jdr:maj (mise à jour automatique, voir actualisation.js),
 //                   jdr:image (image à afficher dans la colonne de gauche)
@@ -79,7 +79,7 @@ function avantFermeture(e) {
   }
 }
 
-// Usure d'une armure (objet unique) changée dans la fiche : enregistrée tout de suite,
+// Usure d'une armure ou forme d'une arme (objets uniques) changée dans la fiche : enregistrée tout de suite,
 // une demande après l'autre pour garder l'ordre (dégâts puis réparation, par exemple)
 function enregistrerObjetFiche(f, m) {
   if (f.acces === "lecture" || !m.objet) return;
@@ -88,6 +88,7 @@ function enregistrerObjetFiche(f, m) {
   const changement = {};
   if (m.protectionActuelle !== undefined) changement.protectionActuelle = o.protectionActuelle = m.protectionActuelle;
   if (m.usureAutorisee !== undefined) changement.usureAutorisee = o.usureAutorisee = m.usureAutorisee;
+  if (m.forme !== undefined) changement.forme = o.forme = m.forme;
   f.texteObjets = JSON.stringify(f.objets);   // pas de « mise à jour » de la fiche pour notre propre changement
   f.derniereActionLocale = Date.now();
   f.objetsEnCours = (f.objetsEnCours || 0) + 1;
@@ -97,10 +98,10 @@ function enregistrerObjetFiche(f, m) {
       const rep = await appel("modifierObjet", { jeton: f.jeton, id: f.id, objet: m.objet, ...changement });
       if (sessionPerdue(rep)) return;
       if (ficheOuverte !== f) return;
-      if (!rep.ok) etatSauvegarde(rep.erreur || "Usure de l'armure non enregistrée", "erreur");
+      if (!rep.ok) etatSauvegarde(rep.erreur || "Objet non enregistré", "erreur");
       else if (!f.aEnvoyer && !f.envoi) etatSauvegarde("Enregistré ✓", "ok");
     } catch (e) {
-      if (ficheOuverte === f) etatSauvegarde("Usure de l'armure non enregistrée : " + e.message, "erreur");
+      if (ficheOuverte === f) etatSauvegarde("Objet non enregistré : " + e.message, "erreur");
     } finally {
       f.objetsEnCours--;
     }
