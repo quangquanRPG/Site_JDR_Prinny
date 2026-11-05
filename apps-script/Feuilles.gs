@@ -80,6 +80,7 @@ function installer() {
   feuille();
   feuilleJdr();
   feuillePersos();
+  feuilleObjets();
   dossierImages();
   SpreadsheetApp.getActiveSpreadsheet().toast('Onglets « Comptes », « JDR » et « Personnages » prêts. Tu peux déployer l\'application web.');
 }

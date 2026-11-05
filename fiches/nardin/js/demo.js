@@ -7,9 +7,7 @@
 const FICHE_EXEMPLE = {
   nom: "Personnage exemple",
   proprietaire: "joueur_1",
-  armures: ["cuir", "maille", "robe"],
-  armureEquipee: "maille",
-  armes: ["epee", "dague", "arc", "bouclier", "epee-bouclier"],
+  armureEquipee: "maille",   // armures et armes portées : objets d'exemple de regles/armures.js et regles/armes.js
   armesPortees: ["epee", "bouclier", "epee-bouclier"],
   armesEnMain: ["epee", "bouclier"],
   blessuresGraves: 1,
@@ -35,7 +33,6 @@ const FICHE_EXEMPLE = {
     pv:      { actuel: 28, base: 35 },
     mana:    { actuel: 12, base: 12 },
     energie: { actuel: 60 },          // base toujours 100
-    protection:  { actuel: 32 },      // max = armure équipée
     protMagique: { base: 2 },         // seulement un max
   },
   competences: {

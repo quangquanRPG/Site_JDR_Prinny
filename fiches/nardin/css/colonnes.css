@@ -1,0 +1,140 @@
+/* ─────────────────────────────────────────────────────────────
+   Mise en page en colonnes
+   Large (≥ 1040 px) : à gauche l'image puis PV / Mana / Énergie avec leurs outils
+                       (la colonne prend toute la largeur libre, de 280 à 760 px),
+                       au centre la fiche (Compétences en premier, 760 px).
+   Moyen : l'état passe au-dessus (les trois jauges sur une ligne, leurs outils dessous).
+   Étroit : tout l'un sous l'autre.
+   Fiche ouverte seule sur grand écran (≥ 1300 px) : une place est gardée à droite
+   pour le cadre Réussite, qui ne passe jamais par-dessus la fiche.
+   ───────────────────────────────────────────────────────────── */
+
+.page-fiche {
+  --largeur-etat: 280px;
+  --largeur-centre: 760px;
+  --ecart-colonnes: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "entete" "etat" "corps";
+  max-width: var(--largeur-centre);
+  margin: 0 auto;
+}
+.entete-fiche { grid-area: entete; }
+.colonne-etat { grid-area: etat; min-width: 0; }
+.page-fiche > .fiche { grid-area: corps; min-width: 0; max-width: none; margin: 0; }
+.page-fiche > .fiche > h2:first-child { margin-top: 32px; }
+
+/* La pile de l'état : chaque jauge suivie de son outil */
+.pile-etat { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+.pile-etat > :empty { display: none; }
+.pile-etat > .ressources.solo { grid-template-columns: minmax(0, 1fr); }
+.pile-etat .blessures, .pile-etat .degats, .pile-etat .mana-sort { margin-top: 0; height: auto; }
+
+/* Carte « Efforts » (sous la jauge d'Énergie), même allure que Dégâts et Sort */
+.efforts-carte { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 12px 14px; height: 100%; }
+.efforts-carte .efforts, .efforts-carte .fatigue-info, .efforts-carte .effort-actif { margin-top: 10px; }
+
+/* Défense (Protection, Protection magique, sets d'armure), juste avant les Blessures graves */
+.bloc-defense { container: defense / inline-size; }
+.titre-defense {
+  font-family: Cinzel, Georgia, serif; font-weight: 500; font-size: .9rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--doux); margin: 6px 0 8px;
+}
+.bloc-defense .sous-label { margin-top: 12px; }
+@container defense (max-width: 399px) { #ressources-defense { grid-template-columns: minmax(0, 1fr); } }
+
+/* Selon la largeur de la colonne de l'état (requête de conteneur « etat ») :
+   < 400 px (téléphone, petit PC) : tout l'un sous l'autre (PV, Dégâts, Défense, Blessures, Mana, Sort…).
+   ≥ 400 px : les trois jauges PV / Mana / Énergie sur la même ligne ; dessous Dégâts | Sort,
+              puis Défense | Efforts, puis Blessures (sous la Défense).
+   ≥ 600 px : chaque outil juste sous sa jauge (Dégâts | Sort | Efforts), puis la Défense
+              sur toute la largeur, puis les Blessures graves. */
+.colonne-etat { container: etat / inline-size; }
+@container etat (min-width: 400px) {
+  .pile-etat {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-areas:
+      "pv pv mana mana energie energie"
+      "degats degats degats sort sort sort"
+      "defense defense defense efforts efforts efforts"
+      "blessures blessures blessures . . .";
+    align-items: stretch;
+  }
+  #res-pv { grid-area: pv; }        #res-mana { grid-area: mana; }      #res-energie { grid-area: energie; }
+  #zone-degats { grid-area: degats; } #zone-mana { grid-area: sort; }  #zone-efforts { grid-area: efforts; align-self: start; }
+  #bloc-defense { grid-area: defense; }
+  #blessures { grid-area: blessures; }
+  /* Même hauteur sur une ligne : les jauges entre elles, les outils entre eux */
+  .pile-etat > .ressources.solo > .res, #zone-degats > .degats, #zone-mana > .mana-sort { height: 100%; }
+  .pile-etat > #blessures { align-self: start; }
+  /* Jauges plus compactes quand elles sont trois sur une ligne étroite */
+  .pile-etat > .ressources.solo .res { padding: 10px 12px; }
+  .pile-etat > .ressources.solo .res-haut { flex-direction: column; align-items: flex-start; gap: 0; }
+  .pile-etat > .ressources.solo .res-val { font-size: 1.25rem; }
+}
+@container etat (min-width: 600px) {
+  .pile-etat {
+    grid-template-areas:
+      "pv pv mana mana energie energie"
+      "degats degats sort sort efforts efforts"
+      "defense defense defense defense defense defense"
+      "blessures blessures . . . .";
+  }
+  #zone-efforts { align-self: stretch; }
+  .pile-etat > .ressources.solo .res-haut { flex-direction: row; align-items: center; gap: 10px; }
+  .pile-etat > .ressources.solo .res-val { font-size: 1.4rem; }
+  .pile-etat .champ-degat input { width: 74px; }
+}
+
+/* Large : la colonne de gauche prend toute la place disponible (280 px au moins), la fiche garde 760 px */
+@media (min-width: 1040px) {
+  .page-fiche {
+    grid-template-columns: minmax(var(--largeur-etat), 1fr) minmax(0, var(--largeur-centre));
+    grid-template-areas: "etat entete" "etat corps";
+    grid-template-rows: auto 1fr;
+    column-gap: var(--ecart-colonnes);
+    max-width: none;
+  }
+  .colonne-etat { align-self: start; }
+  .titre-etat { margin-top: 16px; }
+  .portrait-perso:not([hidden]) + .titre-etat { margin-top: 18px; }
+  .colonne-etat > .titre-etat:first-child { margin-top: 6px; }
+  .page-fiche > .fiche > h2:first-child { margin-top: 20px; }
+}
+
+/* Fiche seule sur grand écran : même principe que le site, avec 210 px gardés à droite
+   pour le cadre Réussite (190 px) : la colonne de l'état prend tout le reste (280 à 760 px). */
+@media (min-width: 1300px) {
+  body:not(.integre) .page-fiche {
+    width: calc(clamp(280px, 100% - 994px, 760px) + 784px);
+    margin-left: max(0px, calc((100% - clamp(280px, 100% - 994px, 760px) - 994px) / 2));
+  }
+}
+
+/* ── Image du personnage (envoyée par le site : voir js/affichage/portrait.js) ── */
+.portrait-perso { margin-top: 6px; text-align: center; }
+.portrait-perso .portrait-image { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.portrait-perso img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: contain; border-radius: 10px; border: 1px solid var(--bord); }
+.portrait-perso .portrait-ajout {
+  width: 100%; height: 150px;   /* emplacement vide : hauteur fixe, même dans une colonne très large */
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  background: var(--carte); color: var(--doux); cursor: pointer;
+  border: 1px dashed var(--bord); border-radius: 10px; font-size: .85rem;
+}
+.portrait-perso .portrait-ajout .plus { font-family: Cinzel, Georgia, serif; font-size: 1.8rem; line-height: 1; color: var(--accent); }
+.portrait-perso .portrait-ajout:hover { border-color: var(--accent); color: var(--texte); }
+.portrait-perso .portrait-attente {
+  width: 100%; height: 150px; display: flex; align-items: center; justify-content: center;
+  border-radius: 10px; background: var(--carte); border: 1px solid var(--bord); color: var(--doux); font-size: .8rem; font-style: italic;
+}
+.portrait-perso .portrait-etat { margin: 6px 0 0; font-size: .75rem; color: var(--doux); }
+.portrait-perso .portrait-etat.erreur { color: var(--malus); }
+.portrait-perso .portrait-boutons { display: flex; justify-content: center; gap: 14px; margin-top: 6px; }
+.portrait-perso .lien-image {
+  background: none; border: 0; padding: 2px 0; cursor: pointer; font-size: .78rem;
+  color: var(--doux); text-decoration: underline; text-underline-offset: 2px;
+}
+.portrait-perso .lien-image:hover { color: var(--accent); }
+.portrait-perso .lien-image.danger:hover, .portrait-perso .lien-image.danger[data-confirmer] { color: var(--malus); }
+/* Sur écran plus étroit, le site montre l'image en vignette dans sa barre du haut */
+@media (max-width: 1039px) { .portrait-perso { display: none; } }

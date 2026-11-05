@@ -1,8 +1,11 @@
 // ─────────────────────────────────────────────────────────────
-//  Fiche : image du personnage, dans la marge gauche (en face du cadre Réussite)
+//  Fiche : image du personnage
 //  Rangée dans le Google Drive par le serveur (apps-script/Images.gs), lue avec l'action « image ».
 //  Le MJ du JDR et le joueur du personnage peuvent l'ajouter, la changer ou la retirer ;
-//  les compagnons la voient seulement. Sur écran étroit : petite vignette dans la barre du haut.
+//  les compagnons la voient seulement.
+//  Grand écran : la fiche l'affiche en haut de sa colonne de gauche (message jdr:image ;
+//  elle renvoie jdr:image-voir / jdr:image-fichier / jdr:image-retirer, voir echanges.js).
+//  Écran plus étroit : petite vignette dans la barre du haut du site.
 //  Un clic sur l'image l'ouvre en grand (visionneuse).
 // ─────────────────────────────────────────────────────────────
 "use strict";
@@ -37,7 +40,18 @@ async function chargerPortrait(f) {
   if (ficheOuverte === f) dessinerPortrait(f);
 }
 
+// Envoie l'état de l'image à la fiche (colonne de gauche sur grand écran)
+function envoyerPortraitAuCadre(f) {
+  if (!f.cadre?.contentWindow || !f.cadrePret) return;
+  f.cadre.contentWindow.postMessage({
+    type: "jdr:image",
+    present: !!(f.perso?.image), src: f.imageSrc || null, peut: peutChangerImage(f),
+    etat: f.imageEtat || "", envoi: f.imageEnvoi || "", erreur: f.imageErreur || "", nom: f.perso?.nom || "",
+  }, "*");
+}
+
 function dessinerPortrait(f) {
+  envoyerPortraitAuCadre(f);
   const zone = $("#portrait-fiche");
   const peut = peutChangerImage(f);
   const id = f.perso?.image || "";
@@ -176,6 +190,8 @@ function ouvrirVisionneuse(f) {
       el("button", { type: "button", class: "lien-image", text: "Fermer", onclick: fermerVisionneuse })),
   );
   v.hidden = false;
+  v.tabIndex = -1;
+  v.focus();   // le clavier (Échap) revient au site, même si le clic venait de la fiche
 }
 
 function fermerVisionneuse() {

@@ -7,6 +7,7 @@
 const PANNEAUX = {
   type:   { titre: "Type de fiche perso", rendu: () => panneauType() },
   rp:     { titre: "Données du RP", rendu: () => panneauDonneesRp() },
+  objets: { titre: "Objets uniques", rendu: () => panneauObjets() },
   persos: { titre: "Personnages", rendu: () => listePersos(false) },
   pj:     { titre: "Ajouter un personnage joueur", rendu: () => panneauAjout("PJ") },
   pnj:    { titre: "Ajouter un PNJ", rendu: () => panneauAjout("PNJ") },

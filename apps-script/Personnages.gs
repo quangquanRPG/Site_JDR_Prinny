@@ -69,6 +69,7 @@ function supprimerPerso(req) {
       if (!trouverJdr(String(lignes[i][1]), m.compte.pseudo)) return { ok: false, erreur: 'Ce personnage ne fait pas partie de tes JDR.' };
       f.deleteRow(i + 2);
       mettreImageALaCorbeille(String(lignes[i][COL_PERSO.IMAGE - 1] || ''));
+      libererObjets(id);   // ses objets restent dans le JDR, sans porteur
       return { ok: true };
     }
     return { ok: false, erreur: 'Personnage introuvable.' };

@@ -15,7 +15,7 @@ const droits = {
   gererInventaire:      (u, fiche) => u.role === "mj" || u.id === fiche.proprietaire,  // ajouter / enlever des objets
   modifierMaxInventaire: (u)       => u.role === "mj",
   voirCaches:           (u, fiche) => u.role === "mj" || u.id === fiche.proprietaire,
-  reglerFiche:          (u)        => u.role === "mj",   // nom, compétences de base, armes et armures possédées
+  reglerFiche:          (u)        => u.role === "mj",   // nom, compétences de base, armes possédées
   modifierReussite:     (u)        => u.role === "mj",
   autoriserUsure:       (u)        => u.role === "mj",   // armure divine : autoriser / bloquer l'usure
 };

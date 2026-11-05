@@ -28,7 +28,7 @@ const COL = { PSEUDO: 1, EMPREINTE: 2, SEL: 3, ROLE: 4, CREE: 5, DERNIERE: 6 };
 const ONGLET_JDR = 'JDR';
 const ENTETES_JDR = ['ID', 'Nom', 'Description', 'MJ', 'Créé le', 'Type de fiche', 'Données RP'];
 const COL_JDR = { ID: 1, NOM: 2, DESCRIPTION: 3, MJ: 4, CREE: 5, TYPE_FICHE: 6, DONNEES_RP: 7 };
-// Données RP : JSON des listes du MJ (métaux, raretés, types d'armure, armes, sets d'armure)
+// Données RP : JSON des listes du MJ (métaux, raretés, types d'armure = ingrédients des armures uniques)
 
 const ONGLET_PERSOS = 'Personnages';
 const ENTETES_PERSOS = ['ID', 'JDR', 'Nom', 'Type', 'Joueur', 'Notes', 'Créé le', 'Fiche', 'Image'];
@@ -38,6 +38,13 @@ const TAILLE_MAX_FICHE = 45000; // une cellule Google Sheets contient au plus 50
 // Inventaires d'une fiche dont les objets cachés sont retirés pour les autres joueurs
 const INVENTAIRES_FICHE = ['inventaire', 'inventaireNonImportant'];
 // Type : PJ (personnage joueur) ou PNJ. Fiche : contenu JSON de la fiche perso.
+// Objets uniques d'un JDR (Objets.gs) : armures (chacune avec son usure) et armes (chacune avec sa forme)
+const ONGLET_OBJETS = 'Objets';
+const ENTETES_OBJETS = ['ID', 'JDR', 'Type', 'Nom', 'Description', 'Protection max', 'Protection actuelle', 'Valeur', 'Porteur', 'Usure autorisée', 'Créé le', 'Détails'];
+const COL_OBJET = { ID: 1, JDR: 2, TYPE: 3, NOM: 4, DESCRIPTION: 5, PROTECTION_MAX: 6, PROTECTION_ACTUELLE: 7, VALEUR: 8, PORTEUR: 9, USURE: 10, CREE: 11, DETAILS: 12 };
+// Type : armure ou arme. Détails : JSON (armure : métal, rareté, pièces ; arme : roll, deux mains, 2e forme, forme en cours)
+// Porteur : identifiant du personnage qui porte l'objet (vide = personne)
+
 // Images de personnage (Images.gs) : fichiers privés dans un dossier de ton Google Drive
 const DOSSIER_IMAGES = 'Grimoire des Aventuriers — Images';
 const TYPES_IMAGE = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };

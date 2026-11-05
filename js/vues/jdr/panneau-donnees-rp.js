@@ -25,23 +25,6 @@ function panneauDonneesRp() {
   const marquer = () => { if (!b.sale) { b.sale = true; majEtat(); } };
 
   function champ(c, it, change) {
-    if (c.type === "forme") {   // case « deux formes » + champs de la 2e forme (it[c.k] = objet ou null)
-      const coche = el("input", { type: "checkbox" });
-      coche.checked = !!it[c.k];
-      const sous = el("div", { class: "champs-rp sous-forme" });
-      const dessinerSous = () => {
-        sous.replaceChildren(...(it[c.k] ? c.champs.map((sc) => champ(sc, it[c.k], change)) : []));
-        sous.hidden = !it[c.k];
-      };
-      coche.addEventListener("change", () => {
-        it[c.k] = coche.checked ? { nom: "", degats: "", deuxMains: false, description: "" } : null;
-        change();
-        dessinerSous();
-        if (coche.checked) sous.querySelector("input")?.focus();
-      });
-      dessinerSous();
-      return el("div", { class: "forme-rp" }, el("label", { class: "case-rp" }, coche, el("span", { text: c.label })), sous);
-    }
     if (c.type === "pieces") {
       return el("div", { class: "pieces-rp" },
         el("span", { class: "label-rp", text: "Pièces du set" }),
@@ -87,12 +70,8 @@ function panneauDonneesRp() {
   }
 
   function carte(o, it) {
-    const resume = o.cle === "setsArmure" ? el("p", { class: "resume-rp" }) : null;
-    const majResume = () => { if (resume) resume.textContent = resumeSet(b.donnees, it); };
-    majResume();
     return el("div", { class: "carte-rp", "data-id": it.id },
-      el("div", { class: "champs-rp" }, ...o.champs.map((c) => champ(c, it, () => { marquer(); majResume(); }))),
-      resume,
+      el("div", { class: "champs-rp" }, ...o.champs.map((c) => champ(c, it, marquer))),
       el("button", {
         type: "button", class: "retirer-rp", text: "✕", title: "Supprimer", "aria-label": "Supprimer " + (it.nom || ""),
         onclick: () => { b.donnees[o.cle] = b.donnees[o.cle].filter((x) => x !== it); marquer(); dessiner(); },
@@ -143,14 +122,6 @@ function panneauDonneesRp() {
           dessiner();
           return ecrireMessage(msg, "Chaque élément de « " + o.titre + " » doit avoir un nom.");
         }
-        if (it.forme2) {
-          it.forme2.nom = String(it.forme2.nom || "").trim();
-          if (!it.forme2.nom) {
-            b.onglet = o.cle;
-            dessiner();
-            return ecrireMessage(msg, "La 2e forme de « " + it.nom + " » doit avoir un nom.");
-          }
-        }
       }
     }
     btnSauver.disabled = true;
@@ -162,7 +133,11 @@ function panneauDonneesRp() {
       jdrCourant.jdr.donneesRp = JSON.parse(JSON.stringify(b.donnees));
       b.sale = false;
       majEtat();
-      ecrireMessage(msg, "Enregistré ✓ — les fiches de ce JDR utilisent ces listes dès leur ouverture.", "ok");
+      // Les armures uniques suivent leur métal, leur rareté et leurs pièces (dégâts déjà subis gardés)
+      const n = await recalculerArmures();
+      majMenu();
+      ecrireMessage(msg, "Enregistré ✓" + (n ? " — " + pluriel(n, "armure recalculée", "armures recalculées") : "")
+        + " — les fiches de ce JDR utilisent ces listes dès leur ouverture.", "ok");
     } catch (e) {
       btnSauver.disabled = false;
       ecrireMessage(msg, e.message);

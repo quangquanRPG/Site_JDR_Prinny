@@ -32,6 +32,9 @@ function doPost(e) {
       case 'mesPersos':        return json(mesPersos(req));
       case 'enregistrerDonneesRp': return json(enregistrerDonneesRp(req));
       case 'image':          return json(voirImage(req));
+      case 'enregistrerObjet': return json(enregistrerObjet(req));
+      case 'supprimerObjet':   return json(supprimerObjet(req));
+      case 'modifierObjet':    return json(modifierObjet(req));
       case 'envoyerImage':   return json(envoyerImage(req));
       case 'retirerImage':   return json(retirerImage(req));
       default:            return json({ ok: false, erreur: 'Action inconnue.' });

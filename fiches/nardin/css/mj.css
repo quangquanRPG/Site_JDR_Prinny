@@ -34,3 +34,4 @@
 .reglage-coches label { display: flex; align-items: baseline; gap: 6px; font-size: .9rem; cursor: pointer; }
 .reglage-coches small { color: var(--doux); }
 .reglage-coches input { accent-color: var(--accent); }
+.reglage-note { margin: 6px 0 0; font-size: .85rem; color: var(--doux); }

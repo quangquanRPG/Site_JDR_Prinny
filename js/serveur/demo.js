@@ -10,6 +10,7 @@ async function demo(action, d) {
   const sessions = stock.lire("jdr_demo_sessions", {});
   const tousJdr = stock.lire("jdr_demo_jdr", []);
   const persos = stock.lire("jdr_demo_persos", []);
+  const objets = stock.lire("jdr_demo_objets", []);   // objets uniques (armures et armes), voir apps-script/Objets.gs
   const cle = (p) => String(p || "").trim().toLowerCase();
   const compte = comptes.find((c) => cle(c.pseudo) === cle(d.pseudo));
 
@@ -90,7 +91,7 @@ async function demo(action, d) {
     if (a.refus) return a.refus;
     let fiche = a.p.fiche ? JSON.parse(a.p.fiche) : null;
     if (a.acces === "lecture") fiche = sansObjetsCaches(fiche);
-    return { ok: true, acces: a.acces, perso: avecFiche(a.p), jdr: a.j, fiche };
+    return { ok: true, acces: a.acces, perso: avecFiche(a.p), jdr: a.j, fiche, objets: objets.filter((o) => o.porteur === a.p.id) };
   }
   if (action === "enregistrerFiche") {
     const a = accesPerso();
@@ -128,6 +129,24 @@ async function demo(action, d) {
     stock.ecrire("jdr_demo_persos", persos);
     return { ok: true, image: null };
   }
+  // Objets uniques : usure / réparation d'une armure, forme d'une arme depuis la fiche (MJ ou joueur du porteur), usure divine (MJ)
+  if (action === "modifierObjet") {
+    const a = accesPerso();
+    if (a.refus) return a.refus;
+    const o = objets.find((x) => x.id === d.objet && x.porteur === a.p.id);
+    if (!o) return { ok: false, erreur: "Cet objet n'est pas porté par ce personnage." };
+    if (d.protectionActuelle !== undefined && o.type !== "arme") o.protectionActuelle = Math.max(0, Math.min(o.protectionMax, Math.round(Number(d.protectionActuelle) || 0)));
+    if (d.forme !== undefined) {
+      if (o.type !== "arme" || !o.forme2) return { ok: false, erreur: "Cette arme n'a qu'une forme." };
+      o.forme = Number(d.forme) === 2 ? 2 : 1;
+    }
+    if (d.usureAutorisee !== undefined && o.type !== "arme") {
+      if (a.acces !== "mj") return { ok: false, erreur: "Seul le MJ peut autoriser l'usure d'une armure divine." };
+      o.usureAutorisee = d.usureAutorisee === true;
+    }
+    stock.ecrire("jdr_demo_objets", objets);
+    return { ok: true, objet: o };
+  }
   if (action === "mesPersos") {
     const avecJdr = (p) => ({ ...avecFiche(p), jdrNom: tousJdr.find((j) => j.id === p.jdr)?.nom || "JDR supprimé" });
     const miens = persos.filter((p) => p.type === "PJ" && cle(p.joueur) === cle(moi.pseudo));
@@ -161,7 +180,61 @@ async function demo(action, d) {
     case "jdr": {
       const j = monJdr(d.id);
       if (!j) return INTROUVABLE;
-      return { ok: true, jdr: j, personnages: persos.filter((p) => p.jdr === j.id).map(avecFiche) };
+      return { ok: true, jdr: j, personnages: persos.filter((p) => p.jdr === j.id).map(avecFiche), objets: objets.filter((o) => o.jdr === j.id) };
+    }
+
+    case "enregistrerObjet": {
+      const j = monJdr(d.jdr);
+      if (!j) return INTROUVABLE;
+      const o = d.objet || {};
+      const t = (v, n) => String(v ?? "").trim().slice(0, n);
+      const nom = String(o.nom || "").trim().replace(/\s+/g, " ");
+      if (nom.length < 1 || nom.length > 60) return { ok: false, erreur: "Le nom de l'objet doit faire entre 1 et 60 caractères." };
+      if (String(o.description || "").length > 300) return { ok: false, erreur: "La description est limitée à 300 caractères." };
+      const porteur = String(o.porteur || "");
+      if (porteur && !persos.some((p) => p.id === porteur && p.jdr === j.id)) return { ok: false, erreur: "Ce personnage ne fait pas partie du JDR." };
+      let objet = null;
+      if (o.id) {
+        objet = objets.find((x) => x.id === o.id && x.jdr === j.id);
+        if (!objet) return { ok: false, erreur: "Objet introuvable." };
+      }
+      const type = objet ? objet.type || "armure" : o.type === "arme" ? "arme" : "armure";   // le type ne change pas
+      const champs = { type, nom, description: t(o.description, 300), porteur };
+      if (type === "arme") {
+        const f2 = o.forme2 && typeof o.forme2 === "object" ? o.forme2 : null;
+        if (f2 && !t(f2.nom, 60)) return { ok: false, erreur: "La 2e forme doit avoir un nom." };
+        const forme2 = f2 ? { nom: t(f2.nom, 60), degats: t(f2.degats, 60), deuxMains: f2.deuxMains === true, description: t(f2.description, 300) } : null;
+        Object.assign(champs, { degats: t(o.degats, 60), deuxMains: o.deuxMains === true, forme2, forme: forme2 && Number(o.forme) === 2 ? 2 : 1 });
+      } else {
+        const max = Math.round(Number(o.protectionMax));
+        const valeur = Number(o.valeur);
+        if (!isFinite(max) || max < 0 || max > 100000) return { ok: false, erreur: "Protection max invalide." };
+        if (!isFinite(valeur) || valeur < 0 || valeur > 1000) return { ok: false, erreur: "Valeur invalide." };
+        const actuelle = o.protectionActuelle === undefined || o.protectionActuelle === "" ? max
+          : Math.max(0, Math.min(max, Math.round(Number(o.protectionActuelle) || 0)));
+        Object.assign(champs, {
+          materiau: t(o.materiau, 40), rarete: t(o.rarete, 40),
+          pieces: Array.isArray(o.pieces) ? o.pieces.map((p) => t(p, 40)).filter(Boolean) : [],
+          protectionMax: max, protectionActuelle: actuelle, valeur,
+        });
+      }
+      if (objet) Object.assign(objet, champs);
+      else {
+        objet = { id: aleatoire().slice(0, 8), jdr: j.id, usureAutorisee: false, ...champs };
+        objets.push(objet);
+      }
+      stock.ecrire("jdr_demo_objets", objets);
+      return { ok: true, objet, objets: objets.filter((x) => x.jdr === j.id) };
+    }
+
+    case "supprimerObjet": {
+      const j = monJdr(d.jdr);
+      if (!j) return INTROUVABLE;
+      const i = objets.findIndex((x) => x.id === d.objet && x.jdr === j.id);
+      if (i < 0) return { ok: false, erreur: "Objet introuvable." };
+      objets.splice(i, 1);
+      stock.ecrire("jdr_demo_objets", objets);
+      return { ok: true, objets: objets.filter((x) => x.jdr === j.id) };
     }
 
     case "choisirFiche": {
@@ -215,6 +288,8 @@ async function demo(action, d) {
         delete images[persos[i].image];
         stock.ecrire("jdr_demo_images", images);
       }
+      for (const o of objets) if (o.porteur === persos[i].id) o.porteur = "";   // ses objets restent, sans porteur
+      stock.ecrire("jdr_demo_objets", objets);
       persos.splice(i, 1);
       stock.ecrire("jdr_demo_persos", persos);
       return { ok: true };

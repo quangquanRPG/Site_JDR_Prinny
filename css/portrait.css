@@ -1,6 +1,8 @@
-/* Image du personnage — en face du cadre Réussite, sans jamais décaler la fiche.
-   PC : fixée dans la marge libre à gauche de la fiche.
-   Écran étroit : petite vignette ronde dans la barre du haut (un clic l'ouvre en grand). */
+/* Image du personnage, sans jamais décaler la fiche.
+   Grand écran (≥ 1280 px) : c'est la fiche qui l'affiche en haut de sa colonne de gauche
+   (fiches/nardin/js/affichage/portrait.js) ; ce cadre-ci est caché.
+   Écran plus étroit : petite vignette ronde dans la barre du haut (un clic l'ouvre en grand). */
+@media (min-width: 1280px) { .portrait-fiche { display: none !important; } }
 .portrait-fiche {
   position: fixed; z-index: 6;
   top: 64px;
@@ -45,7 +47,7 @@
 .lien-image.danger:hover, .lien-image.danger[data-confirmer] { color: var(--erreur); }
 
 /* Écran étroit : vignette dans la barre (même hauteur que le lien « Retour ») */
-@media (max-width: 1159px) {
+@media (max-width: 1279px) {
   .portrait-fiche {
     position: static; order: 1; margin-right: auto; width: auto; max-height: none; overflow: visible;
     padding: 0; border: 0; background: none; box-shadow: none;

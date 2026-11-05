@@ -21,7 +21,7 @@ site-jdr/
 │   ├── demarrage.js        branche les boutons et lance le site (toujours chargé en dernier)
 │   ├── outils/             dom.js (créer des éléments), chiffrement.js, stockage.js
 │   ├── serveur/            api.js (appels à l'Apps Script) · demo.js (faux serveur du mode démo)
-│   ├── donnees-rp/         modele.js (exemples, calcul des sets) · onglets.js (les 5 listes)
+│   ├── donnees-rp/         modele.js (exemples, calcul de l'armure) · onglets.js (les 3 listes)
 │   └── vues/               un fichier par écran
 │       ├── accueil.js · espace.js · espace-joueur.js · espace-mj.js
 │       ├── jdr/            page.js, panneaux.js et un fichier par panneau du menu
@@ -43,6 +43,7 @@ site-jdr/
     ├── Web.gs              doGet / doPost : aiguille chaque action
     ├── Comptes.gs · Sessions.gs · Jdr.gs · Personnages.gs · Fiches.gs
     ├── Images.gs           images des personnages (Google Drive, fichiers privés)
+    ├── Objets.gs           objets uniques du JDR (armures avec leur usure, armes avec leur forme)
     └── Feuilles.gs (onglets du Sheet, installer) · Outils.gs
 ```
 
@@ -63,8 +64,8 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Numéro de version (et cache des navigateurs)
 
-Le site en est à la **version 0.3.2** (la 0.1 est la première mise en ligne).
-Chaque `<link>` et `<script>` finit par `?v=0.3.2` : c'est à la fois le numéro de version
+Le site en est à la **version 0.4** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.4` : c'est à la fois le numéro de version
 affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
 À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
 `fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
@@ -76,6 +77,12 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 | 0.3 | Dons qui changent la réussite · armes refondues (roll libre, description, armes à deux formes) · gestionnaire de mana (sorts) |
 | 0.3.1 | Le cadre Réussite et le jet du sort flottent par-dessus la page : ils ne décalent plus jamais la fiche |
 | 0.3.2 | Image du personnage dans la marge gauche, rangée dans le Google Drive (à faire côté Apps Script : voir « Images des personnages ») |
+| 0.3.3 | Fiche Nardin en deux colonnes : à gauche l'image puis PV / Mana / Énergie avec leurs outils, au centre les Compétences en premier |
+| 0.3.4 | Sur PC, la colonne de gauche prend toute la largeur libre (280 à 760 px) ; ses cartes passent sur deux colonnes quand elle est assez large |
+| 0.3.5 | Les trois jauges PV / Mana / Énergie sur la même ligne, chaque outil en dessous (Dégâts, Sort, Efforts) |
+| 0.3.6 | La Défense (protections et sets d'armure) passe dans la colonne de gauche, juste avant les Blessures graves |
+| 0.3.7 | Centre dans l'ordre : Compétences, Armes, Armure (sets d'armure), Dons, Inventaire important, Inventaire non important, Bourse, Réglages du MJ |
+| 0.4 | **Armures et armes = objets uniques** du JDR, créés dans la tuile « Objets uniques » (plus de modèles tout faits dans les Données du RP). Une armure (métal, rareté, pièces → Protection calculée) garde son usure, une arme garde sa forme, même en changeant de porteur (à faire côté Apps Script : voir « Objets uniques ») |
 
 ## Tester tout de suite (mode démo)
 
@@ -90,7 +97,7 @@ dans la colonne *Rôle* du Sheet et reste modifiable à la main.
 1. Crée un nouveau **Google Sheet** (pas un Google Doc : il faut un tableau), par ex. « JDR – Base ».
 2. Menu **Extensions → Apps Script**.
 3. Recrée chaque fichier du dossier `apps-script/` : bouton **+** → **Script**, même nom
-   (`Reglages`, `Web`, `Comptes`, `Sessions`, `Jdr`, `Personnages`, `Fiches`, `Images`, `Feuilles`, `Outils`),
+   (`Reglages`, `Web`, `Comptes`, `Sessions`, `Jdr`, `Personnages`, `Fiches`, `Objets`, `Images`, `Feuilles`, `Outils`),
    puis colle son contenu. Supprime l'ancien `Code.gs` (sinon les fonctions seraient en double).
    L'ordre des fichiers n'a pas d'importance. Enregistre (💾).
 4. En haut, choisis la fonction **`installer`** puis **▶ Exécuter**. Google demande l'autorisation :
@@ -134,19 +141,48 @@ La colonne *Fiche* recevra le contenu de la fiche quand les types de fiche seron
 
 ## Données du RP (listes du MJ, propres à chaque JDR)
 
-Tuile **Données du RP** dans le menu d'un JDR. Cinq listes modifiables, puis bouton **Enregistrer** :
+Tuile **Données du RP** dans le menu d'un JDR. Trois listes modifiables, puis bouton **Enregistrer**.
+Ce sont les **ingrédients des armures** : il n'y a plus de modèles tout faits (sets d'armure, armes),
+chaque armure et chaque arme est un objet unique (voir plus bas).
 
-| Liste | Champs | Rôle dans la fiche |
+| Liste | Champs | Rôle |
 |---|---|---|
-| Métaux | nom, valeur, valeur magie | multiplie l'armure des sets ; sert aussi de valeur (diviseur des dégâts) |
-| Raretés | nom, multiplicateur armure | multiplie l'armure des sets |
-| Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | les pièces possibles d'un set et leur armure |
-| Armes | nom, roll (texte libre, décidé par le MJ), à deux mains, description / effet, 2e forme facultative (mêmes champs) | armes que le MJ donne aux personnages ; une arme à deux formes se change dans la fiche (bouton ⇄) |
-| Sets d'armure | nom, métal, rareté, pièces cochées, description | armure = (somme des pièces) × valeur du métal × rareté, arrondie |
+| Métaux | nom, valeur, valeur magie | multiplie l'armure ; la valeur du métal est aussi la valeur de l'armure (diviseur des dégâts, 10 = divine) |
+| Raretés | nom, multiplicateur armure | multiplie l'armure |
+| Types d'armure | type, armure (Bras 2, Plastron 3, Jambière 2, Casque 2) | les pièces qu'on peut cocher sur une armure |
 
 Tant que rien n'est enregistré, le JDR utilise des exemples de départ. Le tout est stocké en JSON
-dans la colonne *Données RP* de l'onglet JDR. Supprimer un élément déjà donné à un personnage le fait
-disparaître de sa fiche.
+dans la colonne *Données RP* de l'onglet JDR. Après un enregistrement, les armures du JDR sont recalculées
+(un métal plus solide augmente leur Protection max ; les dégâts déjà subis sont gardés).
+
+## Objets uniques (armures et armes)
+
+Tuile **Objets uniques** dans le menu d'un JDR (MJ). Chaque armure et chaque arme est un **objet à part**,
+comme en programmation objet : il a son propre état et le garde quand il passe d'un personnage à l'autre.
+
+- **Armure** (« + Nouvelle armure ») : nom, **métal**, **rareté**, **pièces** cochées (Données du RP),
+  description, porteur. **Protection max = (somme des pièces) × valeur du métal × multiplicateur de rareté**,
+  calculée toute seule ; **valeur** = valeur du métal (10 = armure divine). Sa **Protection actuelle** est
+  son usure : elle reste attachée à l'armure (on l'enlève, on la remet, on la donne à un autre joueur :
+  les dégâts sont toujours là). Le joueur et le MJ la réparent avec le ✎ de la jauge Protection.
+- **Arme** (« + Nouvelle arme ») : nom, **roll** (texte libre), à deux mains, description / effet,
+  et une **2e forme** facultative (ex. Épée et bouclier ⇄ Hache de guerre). La **forme en cours** est
+  gardée par l'arme, même quand elle change de porteur ; le joueur la change dans sa fiche (bouton ⇄).
+- Le MJ crée les objets, les modifie, les donne à un personnage ou les reprend (« Porté par »), les supprime.
+- Dans la fiche : section **Armure** (on équipe une armure d'un clic, la jauge Protection est la sienne)
+  et section **Armes** (3 portées au plus, 2 mains).
+- Armes et armures rangées (portées mais pas sur soi) prennent de la place dans l'inventaire important
+  (armure 3 emplacements, arme 2).
+- Armure divine : seul le MJ autorise ou bloque son usure (bouton sous la jauge), et c'est gardé par l'objet.
+- Un personnage supprimé laisse ses objets dans le JDR, sans porteur.
+- Stockage : onglet **Objets** du Google Sheet (créé tout seul), une ligne par objet ; la colonne *Détails*
+  contient le métal, la rareté et les pièces d'une armure, ou le roll et les formes d'une arme.
+
+**Mise en place (une fois)** — dans Apps Script : ajoute le fichier **`Objets`** (contenu de
+`apps-script/Objets.gs`), remplace `Reglages`, `Web`, `Feuilles`, `Fiches`, `Jdr` et `Personnages`,
+enregistre, puis **Déployer → Gérer les déploiements → ✏️ → Nouvelle version**.
+Les anciennes armes des Données du RP et les anciens sets d'armure ne sont pas repris : le MJ les recrée
+en objets uniques.
 
 ## Les fiches perso
 
@@ -162,7 +198,7 @@ automatiquement dans la colonne *Fiche* de l'onglet Personnages (« Enregistré 
   Les joueurs sans personnage dans le JDR n'y ont pas accès.
 - Ce que chacun peut modifier suit les règles de la fiche (ex. Nardin : le joueur change PV/Mana actuels,
   bourse, inventaire, armes en main… ; le MJ règle en plus les maximums, les dons, et dans **Réglages du MJ**
-  le nom, les compétences de base et les armes / armures possédées).
+  le nom et les compétences de base ; il donne les armures et les armes dans « Objets uniques »).
 - **Mise à jour automatique** : une fiche ouverte relit le Google Sheet toutes les 30 secondes et affiche
   les changements faits par quelqu'un d'autre (« Mis à jour ↻ » en haut à droite). Pour ne pas écraser
   ce qu'on est en train de faire, elle attend tant qu'un champ est en cours de saisie, qu'une modification
@@ -173,10 +209,25 @@ automatiquement dans la colonne *Fiche* de l'onglet Personnages (« Enregistré 
 Une page de fiche (`fiches/xxx/index.html`) fonctionne aussi seule pour la tester (barre « Démo » en haut).
 Ouverte par le site (`?integre=1`), elle échange avec lui par messages : `jdr:pret` → `jdr:charger`
 (fiche, nom, propriétaire, utilisateur) → `jdr:modif` à chaque changement, et `jdr:hauteur`.
+L'image du personnage passe aussi par messages : `jdr:image` (site → fiche), `jdr:image-voir`,
+`jdr:image-fichier`, `jdr:image-retirer` (fiche → site).
+
+### Disposition de la fiche Nardin
+
+- **Grand écran** : colonne de gauche avec l'image du personnage, puis **PV** (+ Encaisser des dégâts,
+  Défense, Blessures graves), **Mana** (+ Sort), **Énergie** (+ Efforts). Elle prend toute la largeur libre
+  (de 280 à 760 px). À partir de 400 px, les trois jauges sont sur la même ligne et leurs outils
+  en dessous ; à partir de 600 px, chaque outil est juste sous sa jauge (Dégâts | Sort | Efforts).
+  La **Défense** (Protection, Protection magique) suit, juste avant les Blessures graves. Au centre, dans l'ordre : **Compétences**, Armes,
+  Armure (armures portées = objets uniques), Dons & connaissances, Inventaire important, Inventaire non important, Bourse,
+  Réglages du MJ. À droite : le cadre Réussite (et le jet du sort).
+- **Écran moyen** : l'état passe au-dessus sur deux colonnes, puis les Compétences.
+- **Téléphone** : tout l'un sous l'autre ; l'image est une vignette dans la barre du haut.
+- Rien autour (Réussite, jet du sort, image) ne décale la fiche. Mise en page : `fiches/nardin/css/colonnes.css`.
 
 ## Images des personnages
 
-Dans une fiche, la marge de gauche (en face du cadre Réussite) affiche l'image du personnage.
+Dans une fiche, l'image du personnage est en haut de la colonne de gauche (au-dessus des PV).
 Le **MJ** du JDR et le **joueur** du personnage peuvent l'ajouter (« + Ajouter une image »), la changer
 ou la retirer ; les compagnons la voient seulement. Un clic l'ouvre en grand. Sur écran étroit,
 c'est une petite vignette ronde dans la barre du haut (un clic l'ouvre en grand, avec Changer / Retirer).

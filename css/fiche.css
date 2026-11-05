@@ -8,6 +8,19 @@
   align-self: start;
   animation: apparition .3s ease-out;
 }
+/* Grand écran : [colonne « état »][24 px][fiche 760 px][20 + 150 px pour Réussite].
+   La colonne de l'état prend toute la largeur qui reste (de 280 à 760 px) ;
+   au-delà, l'ensemble est centré.
+     colonne E = clamp(280px, 100% − 954px, 760px)      (954 = 24 + 760 + 170)
+     marge gauche = max(0, (100% − E − 954px) / 2) */
+@media (min-width: 1280px) {
+  .vue-fiche {
+    justify-self: start;
+    max-width: none;
+    width: calc(clamp(280px, 100% - 954px, 760px) + 784px);
+    margin-left: max(0px, calc((100% - clamp(280px, 100% - 954px, 760px) - 954px) / 2));
+  }
+}
 .barre-fiche {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   position: sticky; top: 0; z-index: 2;
@@ -33,7 +46,8 @@
 .reussite-fiche {
   position: fixed; z-index: 6;
   top: 64px;
-  left: min(calc(50% + 410px + 20px), calc(100% - 150px - 8px));   /* jamais par-dessus la fiche */
+  left: min(calc(16px + max(0px, (100% - 986px - clamp(280px, 100% - 986px, 760px)) / 2) + clamp(280px, 100% - 986px, 760px) + 804px),
+            calc(100% - 150px - 8px));   /* 20 px à droite de la fiche : jamais par-dessus */
   max-height: calc(100vh - 80px); overflow-y: auto;
   width: 150px;
   text-align: center;
@@ -70,7 +84,7 @@
 .reussite-fiche .sort .stats b { font-size: .82rem; overflow-wrap: anywhere; }
 .reussite-fiche .sort .stats .moy b { color: #7fb0ee; }
 
-@media (max-width: 1159px) {
+@media (max-width: 1279px) {
   .barre-fiche { flex-wrap: wrap; row-gap: 6px; background: var(--fond); box-shadow: 0 8px 14px -10px rgba(0,0,0,.8); }
   .reussite-fiche {
     position: static; order: 3; flex-basis: 100%;

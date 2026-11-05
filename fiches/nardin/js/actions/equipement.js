@@ -4,23 +4,24 @@
    ================================================================ */
 "use strict";
 
-// Équipe un set possédé (ou null pour tout retirer).
-// La protection max suit l'armure ; l'actuel repart au max de la nouvelle armure.
+// Équipe une armure portée (ou null pour tout retirer).
+// Chaque armure garde son usure : l'ancienne garde sa Protection actuelle,
+// la nouvelle arrive avec la sienne (pas remise à neuf).
 function equiperArmure(fiche, armureId, u) {
   if (!droits.changerArmure(u, fiche)) throw new Error("Changement d'armure non autorisé.");
   if (armureId !== null && !fiche.armures.includes(armureId)) return;
+  synchroniserArmureEquipee(fiche);                 // l'armure retirée garde son usure
   fiche.armureEquipee = armureId;
   const prot = fiche.ressources.protection;
   prot.base = protectionArmure(fiche);
-  prot.actuel = prot.base;
+  prot.actuel = protectionActuelleArmure(fiche);
 }
 
 function basculerUsure(fiche, u) {
   if (!droits.autoriserUsure(u)) throw new Error("Seul le MJ peut autoriser l'usure d'une armure divine.");
-  const id = fiche.armureEquipee;
-  if (!id || !armureDivine(fiche)) return;
-  if (fiche.usureAutorisee[id]) delete fiche.usureAutorisee[id];
-  else fiche.usureAutorisee[id] = true;
+  const a = trouverArmure(fiche.armureEquipee);
+  if (!a || !armureDivine(fiche)) return;
+  a.usureAutorisee = !a.usureAutorisee;
 }
 
 function porterArme(fiche, id, u) {
@@ -47,8 +48,7 @@ function prendreEnMain(fiche, id, u) {
 function changerFormeArme(fiche, id, u) {
   if (!droits.changerArmes(u, fiche)) return false;
   if (!fiche.armes.includes(id) || !changementFormePossible(fiche, id)) return false;
-  if (formeActuelle(fiche, id) === 2) delete fiche.formesArmes[id];
-  else fiche.formesArmes[id] = 2;
+  trouverArme(id).forme = formeActuelle(fiche, id) === 2 ? 1 : 2;   // état de l'objet, enregistré par le site (jdr:objet)
   return true;
 }
 function lacherArme(fiche, id, u) {        // reste portée, mais plus en main

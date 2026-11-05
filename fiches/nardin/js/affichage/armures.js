@@ -1,5 +1,8 @@
 /* ================================================================
-   AFFICHAGE — sets d'armure
+   AFFICHAGE — armures portées (objets uniques)
+   Chaque armure montre sa Protection actuelle / max (son usure) et sa valeur.
+   Un clic équipe l'armure ; elle arrive avec son usure (pas remise à neuf).
+   Le MJ crée et donne les armures dans la page du JDR (« Objets uniques »).
    ================================================================ */
 "use strict";
 
@@ -11,7 +14,7 @@ function afficherArmures(fiche, u) {
   const peutChanger = droits.changerArmure(u, fiche);
 
   if (!fiche.armures.length) {
-    zone.innerHTML = `<div class="vide">Aucun set d'armure.</div>`;
+    zone.innerHTML = `<div class="vide">Aucune armure. Le MJ les crée et les donne dans la page du JDR (« Objets uniques »).</div>`;
     return;
   }
   if (fiche.armureEquipee && peutChanger) {
@@ -25,14 +28,18 @@ function afficherArmures(fiche, u) {
     const a = trouverArmure(id);
     if (!a) continue;
     const equipee = fiche.armureEquipee === id;
+    const pct = a.protection > 0 ? Math.max(0, Math.min(100, (a.actuel / a.protection) * 100)) : 0;
+    const abimee = a.actuel < a.protection;
     const el = document.createElement("button");
-    el.className = "armure" + (equipee ? " equipee" : "");
+    el.className = "armure" + (equipee ? " equipee" : "") + (abimee ? " abimee" : "");
     el.disabled = !peutChanger && !equipee;
+    el.title = equipee ? "Armure équipée" : peutChanger ? "Équiper cette armure (elle garde son usure)" : "";
     el.innerHTML = `
-      <span class="armure-nom">${echap(a.nom)}</span>
-      <span class="armure-prot">Protection ${a.protection} · Valeur ${a.valeur ?? 0}</span>
+      <span class="armure-nom">${echap(a.nom)}${a.valeur === VALEUR_DIVINE ? ` <span class="armure-divine" title="Armure divine">✦</span>` : ""}</span>
+      <span class="armure-prot">Protection <b>${a.actuel}</b> / ${a.protection} · Valeur ${String(a.valeur ?? 0).replace(".", ",")}</span>
+      ${a.protection > 0 ? `<span class="armure-usure"><span style="width:${pct}%"></span></span>` : ""}
       ${a.detail ? `<span class="detail-objet">${echap(a.detail)}</span>` : ""}
-      ${equipee ? `<span class="armure-etat">Équipée</span>` : ""}`;
+      ${equipee ? `<span class="armure-etat">Équipée</span>` : abimee ? `<span class="armure-etat abimee">Abîmée</span>` : ""}`;
     if (!equipee && peutChanger) el.onclick = () => { equiperArmure(fiche, id, u); rafraichir(); };
     zone.appendChild(el);
   }

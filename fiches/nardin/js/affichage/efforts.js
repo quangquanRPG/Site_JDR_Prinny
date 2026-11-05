@@ -1,5 +1,7 @@
 /* ================================================================
-   AFFICHAGE — boutons d'effort sous la jauge d'Énergie
+   AFFICHAGE — efforts (dépenser de l'énergie) et fatigue
+   Dans la carte « Efforts » (#zone-efforts) sous la jauge d'Énergie,
+   comme « Encaisser des dégâts » sous les PV et « Sort » sous le Mana.
    ================================================================ */
 "use strict";
 
@@ -14,7 +16,14 @@ function afficherEfforts(carte, fiche, u) {
   } else if (f.des || f.reussite) {
     zone.insertAdjacentHTML("beforeend", `<div class="fatigue-info">Fatigue : ${texteFatigue(f)}</div>`);
   }
-  if (!peut && !actif) { if (zone.children.length) carte.appendChild(zone); return; }
+  if (carte.id === "zone-efforts") {   // carte à part : un titre, comme les autres outils
+    zone.className = "efforts-carte";
+    zone.insertAdjacentHTML("afterbegin", `<div class="titre-bloc">Efforts <small>Énergie ${energie} %</small></div>`);
+  }
+  if (!peut && !actif) {   // lecture seule sans effort en cours : seulement la fatigue, s'il y en a
+    if (zone.querySelector(".fatigue-info")) carte.appendChild(zone);
+    return;
+  }
   if (peut) {
     zone.insertAdjacentHTML("beforeend", `<div class="efforts">${EFFORTS.map(e => {
       const estActif = actif?.id === e.id;
