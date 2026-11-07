@@ -64,8 +64,8 @@ un fichier, crée-le dans le bon dossier puis ajoute sa balise `<script>` dans `
 
 ### Numéro de version (et cache des navigateurs)
 
-Le site en est à la **version 0.4** (la 0.1 est la première mise en ligne).
-Chaque `<link>` et `<script>` finit par `?v=0.4` : c'est à la fois le numéro de version
+Le site en est à la **version 0.4.1** (la 0.1 est la première mise en ligne).
+Chaque `<link>` et `<script>` finit par `?v=0.4.1` : c'est à la fois le numéro de version
 affiché sous la carte d'accueil et ce qui force les navigateurs à recharger les fichiers.
 À chaque nouvelle version, change ce numéro **partout** dans `index.html` et
 `fiches/nardin/index.html` (Ctrl+H → « Remplacer tout »). Le site le transmet tout seul à la fiche.
@@ -83,6 +83,7 @@ affiché sous la carte d'accueil et ce qui force les navigateurs à recharger le
 | 0.3.6 | La Défense (protections et sets d'armure) passe dans la colonne de gauche, juste avant les Blessures graves |
 | 0.3.7 | Centre dans l'ordre : Compétences, Armes, Armure (sets d'armure), Dons, Inventaire important, Inventaire non important, Bourse, Réglages du MJ |
 | 0.4 | **Armures et armes = objets uniques** du JDR, créés dans la tuile « Objets uniques » (plus de modèles tout faits dans les Données du RP). Une armure (métal, rareté, pièces → Protection calculée) garde son usure, une arme garde sa forme, même en changeant de porteur (à faire côté Apps Script : voir « Objets uniques ») |
+| 0.4.1 | Sort : interrupteur **Cercle de complexité** (on / off) qui coûte 100 de mana en plus |
 
 ## Tester tout de suite (mode démo)
 
@@ -256,8 +257,8 @@ c'est une petite vignette ronde dans la barre du haut (un clic l'ouvre en grand,
 
 ## Gestionnaire de mana (fiche Nardin)
 
-À côté de « Encaisser des dégâts », le bloc **Sort** (propriétaire de la fiche et MJ) : mana à
-dépenser et cases Bonus / Malus. Le jet à faire et les dégâts minimum, moyens et maximum s'affichent
+Sous la jauge de Mana, le bloc **Sort** (propriétaire de la fiche et MJ) : mana à dépenser,
+cases Bonus / Malus, et interrupteur **Cercle de complexité** (on / off). Le jet à faire et les dégâts minimum, moyens et maximum s'affichent
 sous la **Réussite** (cadre de droite, ou juste sous le bandeau du haut sur téléphone).
 Ce cadre flotte par-dessus la page : il ne pousse ni ne rétrécit jamais la fiche.
 M = mana dépensé, D = M ÷ 10 (arrondi en dessous), U = unité de M :
@@ -268,7 +269,8 @@ M = mana dépensé, D = M ÷ 10 (arrondi en dessous), U = unité de M :
 | plus de 60 | D dD + U × 2 | 123 → 12d12 + 6 · 750 → 75d75 |
 
 Bonus : dégâts × 1,5. Malus : dégâts × 0,75 (les deux cochés : × 1,125). Valeurs arrondies.
-« Consommer le mana » demande une confirmation, puis retire le mana de la jauge ; le récap permet
+**Cercle de complexité** sur on : le sort coûte **100 de mana en plus** (750 + cercle → 850 retirés),
+sans changer les dégâts. « Consommer » demande une confirmation, puis retire le mana de la jauge ; le récap permet
 d'annuler. Impossible de dépenser plus que le mana restant. Réglages : `fiches/nardin/js/regles/mana.js`.
 
 ## Comment marchent les comptes

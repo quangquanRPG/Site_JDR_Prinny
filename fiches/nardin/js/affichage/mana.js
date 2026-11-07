@@ -1,14 +1,15 @@
 /* ================================================================
    AFFICHAGE — gestionnaire de mana (sorts)
-   Bloc « Sort » à côté de « Encaisser des dégâts » : mana à dépenser,
-   cases Bonus / Malus, bouton Consommer (avec confirmation, puis récap annulable).
+   Bloc « Sort » sous la jauge de Mana : mana à dépenser, cases Bonus / Malus,
+   interrupteur « Cercle de complexité » (−100 mana en plus),
+   bouton Consommer (avec confirmation, puis récap annulable).
    Le jet à faire (dés, minimum, moyenne, maximum) s'affiche sous la Réussite
    (panneau de la fiche, ou cadre Réussite du site quand la fiche est dans le site).
    ================================================================ */
 "use strict";
 
 // Réglages du sort en cours (gardés quand la fiche se redessine)
-const sortMana = { montant: "", bonus: false, malus: false, confirmation: false };
+const sortMana = { montant: "", bonus: false, malus: false, cercle: false, confirmation: false };
 let dernierSort = null;   // { montant, avant, apres } pour le récap et l'annulation
 
 const nombreFr = v => v.toLocaleString("fr-FR");
@@ -18,14 +19,15 @@ function jetSortEnCours(fiche, u) {
   if (!droits.modifierActuelRessource(u, fiche)) return null;
   const j = jetMana(sortMana.montant, sortMana.bonus, sortMana.malus);
   if (!j.mana) return null;
-  return { ...j, mods: [sortMana.bonus ? "bonus" : "", sortMana.malus ? "malus" : ""].filter(Boolean).join(" + ") };
+  return { ...j, mods: [sortMana.bonus ? "bonus" : "", sortMana.malus ? "malus" : ""].filter(Boolean).join(" + "),
+    cercle: sortMana.cercle, cout: coutSort(j.mana, sortMana.cercle) };
 }
 
 // Bloc « Sort » sous la Réussite (panneau de la fiche ouverte seule)
 function htmlJetSort(j) {
   if (!j) return "";
   return `
-    <div class="label">Jet du sort <small>${nombreFr(j.mana)} mana</small></div>
+    <div class="label">Jet du sort <small>${nombreFr(j.mana)} mana${j.cercle ? ` + cercle ${COUT_CERCLE}` : ""}</small></div>
     <div class="jet">${j.texte}</div>
     ${j.mult !== 1 ? `<div class="mult">dégâts × ${nombreFr(j.mult)} (${j.mods})</div>` : ""}
     <div class="stats">
@@ -58,6 +60,10 @@ function afficherMana(fiche, u) {
       <label class="case-sort bonus"><input type="checkbox" name="bonus" ${sortMana.bonus ? "checked" : ""}> Bonus <small>× ${nombreFr(MULT_BONUS_SORT)}</small></label>
       <label class="case-sort malus"><input type="checkbox" name="malus" ${sortMana.malus ? "checked" : ""}> Malus <small>× ${nombreFr(MULT_MALUS_SORT)}</small></label>
     </div>
+    <label class="toggle-cercle ${sortMana.cercle ? "on" : ""}" title="Le cercle de complexité coûte ${COUT_CERCLE} de mana en plus">
+      <span class="switch cercle"><input type="checkbox" name="cercle" ${sortMana.cercle ? "checked" : ""}><span></span></span>
+      <span>Cercle de complexité <small>−${COUT_CERCLE} mana</small></span>
+    </label>
     <div class="mana-action"></div>
     ${dernierSort ? `<div class="recap">
       <span>Sort lancé : <span class="m">−${nombreFr(dernierSort.montant)}</span> mana (${nombreFr(dernierSort.avant)} → ${nombreFr(dernierSort.apres)})</span>
@@ -70,18 +76,19 @@ function afficherMana(fiche, u) {
   // Bouton (ou confirmation) + jet sous la Réussite, mis à jour à chaque frappe
   const majCalcul = () => {
     const j = jetMana(sortMana.montant, sortMana.bonus, sortMana.malus);
+    const cout = coutSort(j.mana, sortMana.cercle);   // + 100 avec le cercle de complexité
     const dispo = fiche.ressources.mana.actuel;
-    if (sortMana.confirmation && j.mana && j.mana <= dispo) {
+    if (sortMana.confirmation && j.mana && cout <= dispo) {
       action.innerHTML = `
         <div class="mana-confirmer">
-          <span>Consommer <b>${nombreFr(j.mana)}</b> mana ? Il restera ${nombreFr(dispo - j.mana)}.</span>
+          <span>Consommer <b>${nombreFr(cout)}</b> mana${sortMana.cercle ? ` (${nombreFr(j.mana)} + ${COUT_CERCLE} de cercle)` : ""} ? Il restera ${nombreFr(dispo - cout)}.</span>
           <span class="boutons">
             <button type="button" class="btn principal confirmer">Confirmer</button>
             <button type="button" class="btn annuler">Annuler</button>
           </span>
         </div>`;
       action.querySelector(".confirmer").addEventListener("click", () => {
-        const r = consommerMana(fiche, j.mana, u);
+        const r = consommerMana(fiche, cout, u);
         sortMana.confirmation = false;
         if (r) dernierSort = r;   // le montant reste affiché : le jet reste visible sous la Réussite
         rafraichir();
@@ -89,9 +96,9 @@ function afficherMana(fiche, u) {
       action.querySelector(".annuler").addEventListener("click", () => { sortMana.confirmation = false; majCalcul(); });
     } else {
       sortMana.confirmation = false;
-      const manque = j.mana > dispo;
-      action.innerHTML = `<button type="button" class="btn principal consommer" ${!j.mana || manque ? "disabled" : ""}>Consommer le mana</button>
-        ${manque ? `<span class="erreur">Pas assez de mana (${nombreFr(dispo)} restant).</span>` : ""}`;
+      const manque = cout > dispo;
+      action.innerHTML = `<button type="button" class="btn principal consommer" ${!j.mana || manque ? "disabled" : ""}>Consommer ${j.mana ? nombreFr(cout) + " mana" : "le mana"}</button>
+        ${manque ? `<span class="erreur">Pas assez de mana (${nombreFr(dispo)} restant${sortMana.cercle ? `, il en faut ${nombreFr(cout)} avec le cercle` : ""}).</span>` : ""}`;
       action.querySelector(".consommer").addEventListener("click", () => { sortMana.confirmation = true; majCalcul(); });
     }
   };
@@ -102,9 +109,14 @@ function afficherMana(fiche, u) {
     if (ev.key === "Enter") action.querySelector(".consommer:not(:disabled), .confirmer")?.click();
     if (ev.key === "Escape" && sortMana.confirmation) { sortMana.confirmation = false; majCalcul(); }
   });
-  for (const nom of ["bonus", "malus"]) {
+  for (const nom of ["bonus", "malus", "cercle"]) {
     const c = carte.querySelector(`[name=${nom}]`);
-    c.addEventListener("change", () => { sortMana[nom] = c.checked; changer(); });
+    c.addEventListener("change", () => {
+      sortMana[nom] = c.checked;
+      sortMana.confirmation = false;
+      if (nom === "cercle") carte.querySelector(".toggle-cercle").classList.toggle("on", c.checked);
+      changer();
+    });
   }
   carte.querySelector(".annuler-sort")?.addEventListener("click", () => {
     rendreMana(fiche, dernierSort.montant, u);

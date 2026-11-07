@@ -22,6 +22,12 @@
 .case-sort input { margin: 0; accent-color: var(--mana); }
 .case-sort.bonus:has(input:checked) { border-color: var(--bonus); color: var(--bonus); font-weight: 600; }
 .case-sort.malus:has(input:checked) { border-color: var(--malus); color: var(--malus); font-weight: 600; }
+/* Interrupteur « Cercle de complexité » (−100 mana en plus) */
+.toggle-cercle { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--doux); cursor: pointer; }
+.toggle-cercle .switch { margin-top: 0; }
+.toggle-cercle small { color: var(--doux); font-weight: 400; }
+.toggle-cercle.on { color: var(--mana); font-weight: 600; }
+.switch.cercle input:checked + span { background: var(--mana); }
 .mana-action { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .mana-action .erreur { font-size: .8rem; }
 .mana-confirmer { display: flex; flex-direction: column; gap: 6px; font-size: .88rem;
