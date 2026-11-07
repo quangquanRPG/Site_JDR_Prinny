@@ -9,7 +9,7 @@ function blocSort(s) {
   const n = (v) => Number(v).toLocaleString("fr-FR");
   const stat = (nom, v, cls) => el("span", { class: cls || "" }, el("small", { text: nom }), el("b", { text: n(v) }));
   return el("div", { class: "sort" },
-    el("div", { class: "titre", text: "Sort · " + n(s.mana) + " mana" }),
+    el("div", { class: "titre", text: "Sort · " + n(s.mana) + " mana" + (s.cercle ? " + cercle 100" : "") }),
     el("div", { class: "jet", text: s.texte }),
     s.mult !== 1 ? el("div", { class: "mult", text: "dégâts × " + n(s.mult) + (s.mods ? " (" + s.mods + ")" : "") }) : null,
     el("div", { class: "stats" }, stat("min", s.min), stat("moy.", s.moyenne, "moy"), stat("max", s.max)),
